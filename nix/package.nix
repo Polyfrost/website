@@ -31,6 +31,7 @@ stdenv.mkDerivation (final: {
     pnpmDeps = corepackHooks.pnpm.fetchDeps {
         hash = pnpmDepsHash;
         inherit (final) pname version src pnpmWorkspaces;
+        fetcherVersion = 2;
     };
 
     buildPhase = ''
