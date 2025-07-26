@@ -7,7 +7,7 @@
 
     # Overridables
     corepackCacheHash ? "sha256-gEIS3bFYznzZJsyPdZjJ+3lULPoJ9owe05OrEHvgWkM=",
-    pnpmDepsHash ? "sha256-Lsq7eh6HTcz8awlIrLJ3ZQx0Wftu+wJNYHXXR2XfwGk=",
+    pnpmDepsHash ? "sha256-gPjZ06byWolGzMrhArPRhQIfITpB2GqnV0uD2+vI5vs=",
 }:
 stdenv.mkDerivation (final: {
     pname = "polyfrost-website";
