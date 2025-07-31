@@ -2,6 +2,7 @@
 import type { HTMLAttributes } from "astro/types";
 import config from "@utils/site-info";
 import NavbarElement from "../navbar/NavbarElement.astro";
+import DarkModeButton from "../DarkModeButton.astro";
 
 interface Props extends HTMLAttributes<"div"> {
 	dark?: boolean;
@@ -31,6 +32,9 @@ const props = Astro.props;
 					<NavbarElement {element} {index} dark={props.dark} />
 				))
 			}
+		</ul>
+		<ul>
+			<DarkModeButton />
 		</ul>
 	</nav>
 </div>

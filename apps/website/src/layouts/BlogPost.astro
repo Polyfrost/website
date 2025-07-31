@@ -15,21 +15,21 @@ const { title, description, publishDate, updatedDate, coverImage } = Astro.props
 	<Layout description={description} title={title}>
 		<article class="mt-80 md:mt-24">
 			<div class="flex items-start flex-col mx-auto mt-32 mb-12 max-w-[calc(65ch+32px)] gap-6 parallax-0">
-				<div class="w-full bg-gray-50 p-4 ring-1 ring-gray-400/50 rounded-3xl">
-					<div class="text-xs font-light italic">
+				<div class="w-full bg-gray-50 dark:bg-dark-600 p-4 ring-1 ring-gray-400/50 rounded-3xl">
+					<div class="text-xs font-light dark:text-dark-secondary italic">
 						<FormattedDate date={publishDate} />
 						{
 							updatedDate && (<span class="">- Last updated on <FormattedDate date={updatedDate} /></span>)
 
 						}
 					</div>
-					<h1 class="text-3xl font-bold text-navy-peony mb-1">{title}</h1>
-					<p class="text-sm text-gray-700">
+					<h1 class="text-3xl font-bold text-navy-peony dark:text-dark-primary mb-1">{title}</h1>
+					<p class="text-sm text-gray-700 dark:text-dark-secondary">
 						{description}
 					</p>
 				</div>
-				<div class="bg-gray-50 p-4 ring-1 ring-gray-400/50 rounded-3xl">
-					<article class="prose" >
+				<div class="bg-gray-50 dark:bg-dark-600 p-4 ring-1 ring-gray-400/50 rounded-3xl">
+					<article class="prose dark:text-dark-secondary" >
 						<slot/>
 					</article>
 				</div>

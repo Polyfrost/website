@@ -1,24 +1,26 @@
 ---
 import Footer from '@components/base/Footer.astro';
 import Navbar from '../components/base/navbar/Navbar.astro';
-import BaseHead, { type Props as HeadProps } from '../components/shared/BaseHead.astro';
+import BaseHead from '../components/shared/BaseHead.astro';
 import '../styles/global.css';
-
-export interface Props extends HeadProps{
-	dark?:boolean
-};
-
-const { dark, ...head } = Astro.props;
+const { ...head } = Astro.props;
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
 		<BaseHead {...head} />
+		<script>
+			document.documentElement.classList.toggle(
+				"dark",
+				localStorage.theme === "dark" ||
+				(!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches),
+			);
+		</script>
 	</head>
 
-	<body class={`overflow-x-hidden ${dark ? "bg-dark-background" : "bg-gray-50"}`}>
-		<Navbar {dark} />
+	<body class={`overflow-x-hidden bg-gray-50 dark:bg-dark-background`}>
+		<Navbar />
 
 		<main class="h-auto min-h-screen flex flex-col gap-40">
 			<slot />

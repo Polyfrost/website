@@ -36,6 +36,9 @@ export default defineConfig({
 				"h1, h2, h3": {
 					color: "rgba(32, 55, 91)",
 				},
+				":global(.dark) h1, h2, h3": {
+					color: "rgba(213, 219, 255)",
+				},
 			},
 		}),
 	],

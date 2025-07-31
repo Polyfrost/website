@@ -25,7 +25,8 @@
 		"sharp": "^0.34.3",
 		"smartypants": "^0.2.2",
 		"ua-parser-js": "^2.0.4",
-		"unocss": "^66.3.3"
+		"unocss": "^66.3.3",
+		"@playform/compress": "^0.2.0"
 	},
 	"devDependencies": {
 		"@octokit/openapi-types": "^25.1.0",

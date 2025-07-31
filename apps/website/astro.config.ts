@@ -2,6 +2,7 @@ import node from '@astrojs/node';
 import mdx from '@astrojs/mdx';
 import partytown from '@astrojs/partytown';
 import sitemap from '@astrojs/sitemap';
+import playCompress from '@playform/compress'
 import { defineConfig, envField } from 'astro/config';
 
 import icons from 'astro-icon';
@@ -25,6 +26,11 @@ export default defineConfig({
 			svgoOptions: {
 				plugins: [],
 			},
+		}),
+		playCompress({
+			CSS: {
+				csso: true,
+			}
 		}),
 	],
 	vite: {

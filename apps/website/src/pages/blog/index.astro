@@ -12,7 +12,7 @@ const posts = await getCollection("blog");
 		<div class="flex flex-col gap-5 content-center mx-auto min-h-100">
 			{
 				posts.length == 0 && (
-					<p class="italic text-gray-500">No posts yet</p>
+					<p class="italic text-gray-500 dark:text-dark-secondary">No posts yet</p>
 				)
 			}
 			{
@@ -33,17 +33,17 @@ const posts = await getCollection("blog");
 									class="w-full md:w-100 rounded-xl ring-1 ring-gray-400/50 bg-gray-400/40 object-cover aspect-video"
 								/>
 								<div class="p-1">
-									<p class="date text-xs font-light text-nowrap">
+									<p class="date text-xs font-light dark:text-dark-secondary text-nowrap">
 										<FormattedDate
 											date={post.data.publishDate}
 										/>
 									</p>
 									<div class="flex justify-between">
-										<h3 class="text-lg font-semibold text-navy-peony">
+										<h3 class="text-lg font-semibold text-navy-peony dark:text-dark-primary">
 											{post.data.title}
 										</h3>
 									</div>
-									<p class="text-sm font-light">
+									<p class="text-sm font-light dark:text-dark-secondary">
 										{post.data.description}
 									</p>
 								</div>

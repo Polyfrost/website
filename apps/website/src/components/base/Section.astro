@@ -25,7 +25,7 @@ const twoColumn = Astro.slots.has("left") || Astro.slots.has("right");
 const twoColumnClasses = ` ${maxWidth === "none" ? "justify-center" : "justify-center lg:justify-between"}
 	${colReverse ? "flex-col-reverse" : "flex-col"} lg:flex-row items-center`;
 
-const className = `max-w-[${maxWidth}] ${hFull ? "min-h-screen" : "h-auto"} ${wFull ? "w-full" : `w-[${maxWidth}]`} px-5 xl:px-0 flex gap-x-20 gap-y-4${twoColumn ? twoColumnClasses : ""}${props.class ? ` ${props.class}` : ""}`;
+const className = `${hFull ? "min-h-screen" : "h-auto"} ${wFull ? "w-full" : ``} px-5 xl:px-0 flex gap-x-20 gap-y-4${twoColumn ? twoColumnClasses : ""}${props.class ? ` ${props.class}` : ""}`;
 const childClassName =
 	"flex flex-col items-center text-center w-full md:w-auto md:items-start md:text-left relative";
 ---
@@ -33,7 +33,8 @@ const childClassName =
 <section
 	class={`w-full outline-none flex justify-center first:max-md:mt-24 ${wrapperClass ?? ""}`}
 >
-	<div class={className} {...props}>
+	<div class={className} {...props}
+		 style={maxWidth !== "none" ? `max-width: ${maxWidth}${!wFull ? `; width: ${maxWidth}` : ""}` : undefined}>
 		{
 			twoColumn ? (
 				<>

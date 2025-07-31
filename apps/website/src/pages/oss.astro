@@ -41,17 +41,17 @@ const rightCodeBlock = leftCodeBlock;
 
 <Layout description="Our unwavering commitment to open source" title="Open Source">
 	<Section class="relative h-screen flex-row items-center justify-center md:min-h-[600px]" maxWidth="1920px" wFull>
-		<div class="codeblock_container codeblock_left -left-12">
+		<div class="codeblock_container dark:codeblock_container codeblock_left -left-12">
 			<Code code={leftCodeBlock} lang="java" theme="github-light" />
 		</div>
 		<div class="flex flex-col items-center justify-center gap-y-4">
-			<Header align="center" class="max-w-[600px] text-navy-peony" size="xxl"> Open Source, Forever </Header>
-			<Paragraph class="max-w-[400px] text-center text-navy-peony lg:max-w-[600px]">
+			<Header align="center" class="max-w-[600px] text-navy-peony dark:text-dark-primary" size="xxl"> Open Source, Forever </Header>
+			<Paragraph class="max-w-[400px] text-center text-navy-peony dark:text-dark-primary lg:max-w-[600px]">
 				We believe it is the right of the user and developer to know what code they are trusting to run behind the scenes.
 			</Paragraph>
 			<Button href={configConst.socials.github} iconLeft="github" style="secondary">GitHub </Button>
 		</div>
-		<div class="codeblock_container -right-12 after:-scale-x-125">
+		<div class="codeblock_container dark:codeblock_container -right-12 after:-scale-x-125">
 			<Code code={rightCodeBlock} lang="java" theme="github-light" />
 		</div>
 	</Section>
@@ -62,7 +62,7 @@ const rightCodeBlock = leftCodeBlock;
 		</div>
 
 		<div slot="right">
-			<Header class="text-navy-peony" size="xl"> Rooted from the developers </Header>
+			<Header class="text-navy-peony dark:text-dark-primary" size="xl"> Rooted from the developers </Header>
 			<Paragraph class="max-w-[500px] text-gray-400" size="md">
 				Our developers learned and built on open source for years. Many even made their own contributions on our projects before joining our team.
 			</Paragraph>
@@ -71,7 +71,7 @@ const rightCodeBlock = leftCodeBlock;
 
 	<Section tabindex="0">
 		<div slot="left">
-			<Header class="text-navy-peony" size="xl"> Makes development faster </Header>
+			<Header class="text-navy-peony dark:text-dark-primary" size="xl"> Makes development faster </Header>
 			<Paragraph class="max-w-[500px] text-gray-400" size="md">
 				Open source lets us join forces with other developers in our community. This means new features and bug fixes come much faster, and way better.
 			</Paragraph>
@@ -88,7 +88,7 @@ const rightCodeBlock = leftCodeBlock;
 		</div>
 
 		<div slot="right">
-			<Header class="text-navy-peony" size="xl"> Makes our code safer </Header>
+			<Header class="text-navy-peony dark:text-dark-primary" size="xl"> Makes our code safer </Header>
 			<Paragraph class="max-w-[500px] text-gray-400" size="md">
 				There's no definite way to prevent anything from becoming malicious. But, open sourcing our code brings extra eyes to catch, and fix exploits before they’re abused.
 			</Paragraph>
@@ -97,7 +97,7 @@ const rightCodeBlock = leftCodeBlock;
 
 	<Section class="flex-col items-center justify-center" wrapperClass="flex justify-center items-center mb-40">
 		<div class="relative flex flex-col items-center justify-center gap-y-1">
-			<Header class="text-center text-header-page text-navy-peony" size="xl"> Contribute to our GitHub! </Header>
+			<Header class="text-center text-header-page text-navy-peony dark:text-dark-primary" size="xl"> Contribute to our GitHub! </Header>
 			<div class="flex flex-row items-center justify-center gap-x-2">
 				<Button href={configConst.socials.github} iconLeft="github" style="secondary">GitHub </Button>
 			</div>
@@ -143,6 +143,13 @@ const rightCodeBlock = leftCodeBlock;
 			position: absolute;
 			top: 0;
 			background-image: linear-gradient(to right, rgba(255, 255, 255, 0), theme('colors.gray.50 / 75%') 90%, theme('colors.gray.50') 100%);
+		}
+	}
+
+
+	:global(.dark) .codeblock_container {
+		&::after {
+			background-image: linear-gradient(to right, rgba(255, 255, 255, 0), theme('colors.dark.background / 75%') 90%, theme('colors.dark.background') 100%);
 		}
 	}
 </style>
