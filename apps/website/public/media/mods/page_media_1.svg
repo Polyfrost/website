@@ -181,10 +181,6 @@
 	<stop stop-color="#0A5BE8"/>
 	<stop offset="1" stop-color="#00348E"/>
 	</linearGradient>
-	<linearGradient id="paint23_linear_76_726" x1="416" y1="91" x2="517" y2="91" gradientUnits="userSpaceOnUse">
-	<stop stop-color="#F7F7F7" stop-opacity="0"/>
-	<stop offset="0.492115" stop-color="#F0F2F4"/>
-	</linearGradient>
 	<clipPath id="clip0_76_726">
 	<rect width="84.0336" height="84.0336" fill="white" transform="translate(209.244)"/>
 	</clipPath>
