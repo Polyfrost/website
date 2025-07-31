@@ -14,7 +14,6 @@ To familiarize yourself with the project, please read the [README](README.md). H
 - [Setting up Git](https://docs.github.com/en/get-started/quickstart/set-up-git)
 - [GitHub flow](https://docs.github.com/en/get-started/quickstart/github-flow)
 - [Collaborating with pull requests](https://docs.github.com/en/github/collaborating-with-pull-requests)
-- [Getting started with Tauri](https://tauri.app/v1/guides/getting-started/prerequisites)
 - [pnpm CLI](https://pnpm.io/pnpm-cli)
 
 ## Getting Started
@@ -33,40 +32,17 @@ To find an issue that interests you, you can browse through our [existing issues
 
 #### Making Changes Locally
 
-The system setup script requires [Cargo](https://doc.rust-lang.org/cargo/getting-started/installation.html) and [pnpm](https://pnpm.io/installation). Make sure you have them installed before proceeding.
+Our setup requires [pnpm](https://pnpm.io/installation). Make sure you have it installed before proceeding.
 
 To make changes locally, follow these steps:
 
-1. Clone the repository: `git clone https://github.com/Polyfrost/Nexus`
-2. Navigate to the project directory: `cd Nexus`
-3. For Linux or MacOS users, run: `./.github/scripts/setup.sh`
-   - This will install all required dependencies for Nexus to build.
-4. For Windows users, run the following command in PowerShell: `.\.github\scripts\setup.ps1`
-   - This will install pnpm and any other required dependencies for Nexus to build.
-   - Soon, this will be deprecated in favor of a build CLI system.
-5. Install dependencies: `pnpm i`
-6. Prepare the build: `pnpm prep` (This will run all necessary codegen and build required dependencies)
+1. Clone the repository: `git clone https://github.com/Polyfrost/website`
+2. Navigate to the project directory: `cd website`
+3. Install dependencies: `pnpm i`
 
-To quickly run only the launcher after `prep`, you can use:
-
-- `pnpm desktop dev`
-
-  If necessary, react-devtools can be launched using `pnpm react-devtools`.
-  However, it must be executed before starting the desktop app for it to connect.
-
-To run the website app:
+To run the website:
 
 - `pnpm website dev`
-
-If you encounter any issues, ensure that you are using the following versions of Rust, Node and Pnpm:
-
-- Rust version: **1.70+**
-- Node version: **18+**
-- Pnpm version: **8.0+**
-
-After cleaning out your build artifacts using `pnpm clean`, `git clean`, or `cargo clean`, it is necessary to re-run the `setup-system` script.
-
-Make sure to read the [guidelines](https://docs.polyfrost.org/nexus/developers/prerequisites/guidelines) to ensure that your code follows a similar style to ours.
 
 ### Pull Request
 
