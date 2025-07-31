@@ -9,19 +9,19 @@ import { Icon } from 'astro-icon/components';
 
 <Layout description="Learn how to reach out to the Polyfrost team and community" title="Contact us">
 	<Section class="my-40 flex-col items-center justify-center 2xl:my-20 md:my-40 xl:my-20" wrapperClass="min-h-screen">
-		<Header class="text-center text-navy-peony" size="xl">Feeling social? Come chat with us </Header>
+		<Header class="text-center text-navy-peony dark:text-dark-primary" size="xl">Feeling social? Come chat with us </Header>
 		<Paragraph class="max-w-2xl text-center text-lightslategray"> We primarily connect with our community with Discord, however we regularly check Github as well. </Paragraph>
 		<div class="w-full flex flex-row flex-wrap items-center justify-center gap-8 p-5">
 			{/* GitHub */}
-			<div class="flex flex-col items-center justify-start gap-y-0.5 rounded-2xl bg-blue-75 p-5">
+			<div class="flex flex-col items-center justify-start gap-y-0.5 rounded-2xl bg-blue-75 dark:bg-dark-600 p-5">
 				<Icon class="text-lightslategray" name="github" size={48} />
-				<Header class="mt-2 text-navy-peony" size="md">GitHub</Header>
+				<Header class="mt-2 text-navy-peony dark:text-dark-primary" size="md">GitHub</Header>
 				<!-- <div class="flex flex-row items-center justify-center gap-x-1">
 					<span class="h-1.5 w-1.5 rounded-full bg-green-300"></span>
 					<Paragraph class="text-lightslategray" size="sm">69 commits a week</Paragraph>
 				</div> -->
 
-				<Paragraph class="my-4 max-w-48 text-center text-lightslategray" size="sm">
+				<Paragraph class="my-4 max-w-48 text-center text-lightslategray dark:text-dark-secondary" size="sm">
 					We love open source, so all of our projects are OSS. Anyone is welcome to contribute new features (and bugs) to our mods.
 				</Paragraph>
 
@@ -29,15 +29,15 @@ import { Icon } from 'astro-icon/components';
 			</div>
 
 			{/* Discord */}
-			<div class="flex flex-col items-center justify-start gap-y-0.5 rounded-2xl bg-blue-75 p-5">
+			<div class="flex flex-col items-center justify-start gap-y-0.5 rounded-2xl bg-blue-75 dark:bg-dark-600 p-5">
 				<Icon class="text-lightslategray" name="discord" size={48} />
-				<Header class="mt-2 text-navy-peony" size="md">Discord</Header>
+				<Header class="mt-2 text-navy-peony dark:text-dark-primary" size="md">Discord</Header>
 				<!-- <div class="flex flex-row items-center justify-center gap-x-1">
 					<span class="h-1.5 w-1.5 rounded-full bg-green-300"></span>
 					<Paragraph class="text-lightslategray" size="sm">69 messages a week</Paragraph>
 				</div> -->
 
-				<Paragraph class="my-4 max-w-48 text-center text-lightslategray" size="sm">
+				<Paragraph class="my-4 max-w-48 text-center text-lightslategray dark:text-dark-secondary" size="sm">
 					Join us today! It's the easiest way to chat with other members, suggest new features, and get support with your mods.
 				</Paragraph>
 

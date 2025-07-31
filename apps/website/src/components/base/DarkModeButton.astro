@@ -1,0 +1,56 @@
+---
+// https://tailwindcss.com/docs/dark-mode
+---
+
+<li>
+	<button
+		type="button"
+		id="dark-toggle"
+		class="rounded p-2 text-xl leading-none text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
+		aria-label="Toggle dark mode"
+	>
+		<span id="dark-toggle-icon">🌙</span>
+	</button>
+
+	<script is:inline>
+		const toggle = document.getElementById("dark-toggle");
+		const icon = document.getElementById("dark-toggle-icon");
+		const root = document.documentElement;
+
+		function updateIcon() {
+			icon.textContent = root.classList.contains('dark') ? "☀️" : "🌙";
+		}
+
+		document.addEventListener('DOMContentLoaded', () => {
+			const storedTheme = localStorage.getItem('theme');
+
+			if (storedTheme) {
+				if (storedTheme === 'dark') {
+					root.classList.add('dark');
+				} else {
+					root.classList.remove('dark');
+				}
+			} else {
+				if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+					root.classList.add('dark');
+				}
+			}
+
+			updateIcon();
+		});
+
+		toggle?.addEventListener("click", () => {
+			const isDark = root.classList.contains('dark');
+
+			if (isDark) {
+				root.classList.remove('dark');
+				localStorage.setItem('theme', 'light');
+			} else {
+				root.classList.add('dark');
+				localStorage.setItem('theme', 'dark');
+			}
+
+			updateIcon();
+		});
+	</script>
+</li>

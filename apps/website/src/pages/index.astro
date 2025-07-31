@@ -30,7 +30,7 @@ import { Icon } from 'astro-icon/components';
 		</div>
 		<div class="mx-auto max-w-3xl py-36 lg:py-48">
 			<div class="mb-8 mt-4 flex md:justify-center">
-				<div class="relative flex flex-row items-center justify-center border border-1 border-gray-800/20 rounded-full px-3 py-1 text-sm text-blue-450 font-medium hover:border-blue-600 hover:text-blue-600">
+				<div class="relative flex flex-row items-center justify-center border border-1 border-gray-800/20 dark:border-[#D6DEF173] rounded-full px-3 py-1 text-sm text-blue-450 dark:text-blue font-medium hover:border-blue-600 hover:text-blue-600">
 					The anti-client - OneClient
 					<Link class="transition-none" href="/projects/oneclient">
 						<span aria-hidden="true" class="absolute inset-0"></span>
@@ -39,8 +39,8 @@ import { Icon } from 'astro-icon/components';
 				</div>
 			</div>
 			<div class="text-left md:text-center">
-				<Header class="text-navy-peony tracking-tight max-sm:!text-header" size="xxl"> Passionate creators redefining the modding community </Header>
-				<Paragraph class="mt-6 text-lg text-navy-peony leading-8">
+				<Header class="text-navy-peony dark:text-dark-primary tracking-tight max-sm:!text-header" size="xxl"> Passionate creators redefining the modding community </Header>
+				<Paragraph class="mt-6 text-lg text-navy-peony dark:text-dark-secondary leading-8">
 					With a dedicated team of developers and a passionate community of players, Polyfrost continues to push the boundaries of what's possible in Minecraft modding.
 				</Paragraph>
 				<div class="mt-7 flex items-center justify-start gap-x-6 md:justify-center">
@@ -67,16 +67,16 @@ import { Icon } from 'astro-icon/components';
 		</div>
 	</Section>
 	<Section class="mt-0 items-center justify-center !px-5 sm:-mt-52 max-sm:!px-0" maxWidth="1024px" wFull>
-		<div class="flex flex-col items-center justify-center px-0 py-12 sm:py-12">
-			<div class="lg:justify-normal relative isolate z-50 flex flex-col-reverse flex-wrap justify-center gap-6 overflow-hidden bg-blue-75 px-6 py-6 md:flex-row lg:flex-nowrap lg:gap-20 sm:rounded-3xl lg:px-8 lg:py-0 md:shadow md:ring-1 md:ring-gray-400/50">
+		<div class="flex flex-col items-center justify-center px-0 py-12 sm:py-">
+			<div class="lg:justify-normal relative isolate z-50 flex flex-col-reverse flex-wrap justify-center gap-6 overflow-hidden bg-blue-75 dark:bg-dark-600 px-6 py-6 md:flex-row lg:flex-nowrap lg:gap-20 sm:rounded-3xl lg:px-8 lg:py-0 md:shadow md:ring-1 md:ring-gray-400/50">
 				<div class="max-w-screen-md flex flex-col items-center justify-center text-center lg:items-start lg:justify-start lg:py-8 lg:text-left">
 					<div class="flex flex-col items-start justify-center">
 						<Icon class="mb-4 hidden text-blue-500 md:block" name="oneconfig" size={38} />
-						<Header class="text-3xl text-navy-peony font-semibold tracking-tight" size="lg">
+						<Header class="text-3xl text-navy-peony dark:text-dark-primary font-semibold tracking-tight" size="lg">
 							OneConfig has <br />finally arrived.
 						</Header>
 					</div>
-					<Paragraph class="mt-6 text-lg text-gray-700 leading-8"> Learn more about what OneConfig is, and how it's changing modding and user experience for all. </Paragraph>
+					<Paragraph class="mt-6 text-lg text-gray-700 dark:text-dark-secondary leading-8"> Learn more about what OneConfig is, and how it's changing modding and user experience for all. </Paragraph>
 					<div class="mt-10 flex items-center justify-center gap-x-4 lg:justify-start">
 						<Button href="/projects/oneconfig" iconLeft="oneconfig" size="sm" style="secondary">Learn more </Button>
 						<Button href="/mods" iconLeft="link-external" size="sm" style="secondary">Discover mods </Button>
@@ -95,11 +95,11 @@ import { Icon } from 'astro-icon/components';
 		</div>
 	</Section>
 
-	<Section class="flex flex-col -mt-20" maxWidth="1024px" wFull wrapperClass="bg-blue-100 mb-10">
+	<Section class="flex flex-col -mt-20" maxWidth="1024px" wFull wrapperClass="bg-blue-100 dark:bg-dark-600">  <!--mb-10-->
 		<div class="relative isolate mt-10 overflow-hidden pt-24 lg:-ml-10">
 			<div class="mx-auto max-w-7xl">
-				<Header class="mt-8 text-5xl text-navy-peony font-bold tracking-tight">Who we are </Header>
-				<Paragraph class="mt-3 text-md text-navy-peony leading-8">
+				<Header class="mt-8 text-5xl text-navy-peony dark:text-dark-primary font-bold tracking-tight">Who we are </Header>
+				<Paragraph class="mt-3 text-md text-navy-peony dark:text-dark-secondary leading-8">
 					We're a group of passionate, self-driven designers, developers, and modders creating mods and libraries for the Minecraft community.
 				</Paragraph>
 				<div class="mt-3 flex flex-row gap-x-8 gap-y-6 text-base text-gray-600 font-semibold leading-7 lg:gap-x-10">
@@ -109,8 +109,8 @@ import { Icon } from 'astro-icon/components';
 		</div>
 		<div class="mb-20 flex justify-start md:justify-end lg:-mr-10">
 			<div class="flex flex-col text-right">
-				<Header class="mt-8 text-5xl text-navy-peony font-bold tracking-tight"> Our commitment </Header>
-				<Paragraph class="mt-3 text-md text-navy-peony leading-8">
+				<Header class="mt-8 text-5xl text-navy-peony dark:text-dark-primary font-bold tracking-tight"> Our commitment </Header>
+				<Paragraph class="mt-3 text-md text-navy-peony dark:text-dark-secondary leading-8">
 					Above all, we're committed to bringing quality, open sourced tools built <br /> around usability, accessibility to the greater modding community.
 				</Paragraph>
 				<div class="text-brand-600 mt-3 flex flex-row items-end justify-end gap-x-4 gap-y-6 text-base font-semibold leading-7">

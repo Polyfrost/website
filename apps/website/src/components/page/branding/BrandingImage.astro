@@ -16,7 +16,7 @@ const path = `/media/branding/${type}/${name}`;
 
 <div class={`relative rounded-md bg-${background} border border-1 border-gray-400 flex flex-col justify-center items-center p-8`}>
 	<div class="absolute right-0 top-0 flex flex-row gap-x-2">
-		{extensions.map(ext => <a class="px-0.5 text-xs hover:underline" href={`${path}.${ext}`} target="_blank">.{ext.toUpperCase()}</a>)}
+		{extensions.map(ext => <a class="px-0.5 text-xs hover:underline dark:text-dark-secondary" href={`${path}.${ext}`} target="_blank">.{ext.toUpperCase()}</a>)}
 	</div>
 	<img alt={altText} src={`${path}.svg`} style={`max-width: ${maxWidth}px;`} />
 	{nameFormatted && <span class="absolute bottom-0 left-1/2 text-xxs opacity-50 -translate-x-1/2">{nameFormatted}</span>}

@@ -18,7 +18,7 @@ const modrinthUrl = `https://modrinth.com/${modrinthType}/${modrinthId}`;
 	<Section class="mt-32 h-full flex flex-col items-center justify-center md:mt-28 max-xl:px-0" maxWidth="1920px" wFull={true} wrapperClass="h-3/5">
 		<div class="max-w-full flex flex-col items-center justify-center overflow-hidden">
 			<div class="relative h-auto max-w-[1920px] flex flex-col items-center justify-between overflow-hidden lg:h-[290px]">
-				<div class="absolute z-10 h-full w-full -bottom-[1px] lg:h-1/2" style="background-image: linear-gradient(180deg, rgba(0, 0, 0, 0), rgb(240, 242, 244));"></div>
+				<div class="absolute z-10 h-full w-full -bottom-[1px] lg:h-1/2 mods-gradient dark:mods-gradient"></div>
 				<Slider childrenNum={8} wrapperClass="-mb-40 mb-2 hidden lg:block">
 					<Card icon="chatting" text="Chatting" />
 					<Card icon="polysprint" text="PolySprint" />
@@ -43,13 +43,13 @@ const modrinthUrl = `https://modrinth.com/${modrinthType}/${modrinthId}`;
 		</div>
 
 		<div class="mt-6 max-w-full flex flex-col items-center justify-start gap-6 px-4">
-			<Header align="center" class="max-w-[600px] text-navy-peony" size="xxl">Creating the next big mod, one at a time </Header>
+			<Header align="center" class="max-w-[600px] text-navy-peony dark:text-dark-primary" size="xxl">Creating the next big mod, one at a time </Header>
 			<div class="flex flex-row items-center justify-center gap-x-2">
 				<Button href={modrinthUrl} iconLeft="download" style="primary">Download </Button>
 				<Button href={configConst.socials.github} iconLeft="github" style="secondary">Source </Button>
 			</div>
 
-			<Paragraph class="mt-20 max-w-screen-sm text-center text-lg text-navy-peony font-semibold">
+			<Paragraph class="mt-20 max-w-screen-sm text-center text-lg text-navy-peony dark:text-dark-secondary font-semibold">
 				<span id="mod_count">20</span>+ mods. Unparalleled new features. OneConfig. We combine our groundbreaking library with mods with no equivalent anywhere else.
 			</Paragraph>
 		</div>
@@ -57,13 +57,13 @@ const modrinthUrl = `https://modrinth.com/${modrinthType}/${modrinthId}`;
 
 	<Section tabindex="0">
 		<div slot="left">
-			<Header class="text-navy-peony" size="lg"><b id="mod_count_maintained_mods">20</b> maintained mods </Header>
+			<Header class="text-navy-peony dark:text-dark-primary" size="lg"><b id="mod_count_maintained_mods">20</b> maintained mods </Header>
 			<Paragraph class="max-w-[500px] text-gray-400" size="sm">
 				Built with OneConfig, a completely new way to configure mods.
 			</Paragraph>
 		</div>
 		<div slot="right">
-			<div class="absolute z-10 ml-[21rem] h-full w-1/4" style="background: linear-gradient(90deg, rgba(246, 246, 246, 0.00) 0%, #F0F2F4 49.21%);"></div>
+			<div class="absolute z-10 ml-[21rem] h-full w-1/4 mod-gradient-extra dark:mod-gradient-extra"></div>
 			<img alt="stuff" class="w-[120%] overflow-x-clip" src="/media/mods/page_media_1.svg" />
 		</div>
 	</Section>
@@ -80,7 +80,7 @@ const modrinthUrl = `https://modrinth.com/${modrinthType}/${modrinthId}`;
 		</div>
 	</Section>
 
-	<Section class="pt-10 md:py-20" maxWidth="1120px" wFull={false} wrapperClass="bg-blue-75 -mb-40">
+	<Section class="pt-10 md:py-20" maxWidth="1120px" wFull={false} wrapperClass="bg-blue-75 dark:bg-dark-600 -mb-40">
 		<div slot="left">
 			<!-- TODO: FIX Codeblock overflowing on mobile -->
 			<div class="max-sm:hidden">
@@ -106,7 +106,7 @@ const modrinthUrl = `https://modrinth.com/${modrinthType}/${modrinthId}`;
 
 		<div class="flex flex-col items-start gap-2 text-left" slot="right">
 			<Header class="text-blue-500" size="lg">Open source</Header>
-			<Paragraph class="max-w-[500px] text-blue-400">
+			<Paragraph class="max-w-[500px] text-blue-400 dark:text-dark-primary">
 				All of our mods are open source, and will continue to be open source. Anyone can learn, contribute, or take from our code (as long as it follows our license).
 			</Paragraph>
 			<div class="flex">
@@ -115,10 +115,10 @@ const modrinthUrl = `https://modrinth.com/${modrinthType}/${modrinthId}`;
 		</div>
 	</Section>
 
-	<Section class="gap-4 py-10 md:py-20" maxWidth="1120px" wFull={false} wrapperClass="bg-blue-75">
+	<Section class="gap-4 py-10 md:py-20" maxWidth="1120px" wFull={false} wrapperClass="bg-blue-75 dark:bg-dark-600">
 		<div class="flex flex-col items-start gap-2 text-left" slot="left">
 			<Header class="text-blue-500" size="lg">Powered by OneConfig</Header>
-			<Paragraph class="max-w-[500px] text-blue-400">
+			<Paragraph class="max-w-[500px] text-blue-400 dark:text-dark-primary">
 				OneConfig brings the simplicity of a client to the everyday user, gives advanced users and developers complete control over everything, while remaining free and open-source.
 			</Paragraph>
 			<div class="flex">
@@ -132,7 +132,7 @@ const modrinthUrl = `https://modrinth.com/${modrinthType}/${modrinthId}`;
 
 	<Section class="flex-col items-center justify-center" wrapperClass="flex justify-center items-center min-h-screen -mt-40">
 		<div class="relative flex flex-col items-center justify-center gap-y-1">
-			<Header class="w-11/12 text-center text-header-page text-navy-peony md:max-w-lg" size="xl">Get our mods, available on Modrinth and GitHub. </Header>
+			<Header class="w-11/12 text-center text-header-page text-navy-peony dark:text-dark-primary md:max-w-lg" size="xl">Get our mods, available on Modrinth and GitHub. </Header>
 			<div class="flex flex-row items-center justify-center gap-x-2">
 				<Button href={modrinthUrl} iconLeft="link-external" style="primary">Modrinth </Button>
 				<Button href={configConst.socials.github} iconLeft="github" style="primary">GitHub </Button>
@@ -163,3 +163,21 @@ getModCount().then((size) => {
 		modCountMaintainedMods.textContent = size;
 });
 </script>
+
+<style>
+	.mods-gradient {
+		background-image: linear-gradient(180deg, rgba(0, 0, 0, 0), rgb(240, 242, 244));
+	}
+
+	:global(.dark) .mods-gradient {
+		background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgb(22, 66, 117));
+	}
+
+	.mod-gradient-extra {
+		background: linear-gradient(90deg, rgba(246, 246, 246, 0.00) 0%, #F0F2F4 49.21%);
+	}
+
+	:global(.dark) .mod-gradient-extra {
+		background: linear-gradient(90deg, rgba(246, 246, 246, 0) 0%, theme('colors.dark.background') 49.21%);
+	}
+</style>

@@ -14,7 +14,7 @@ import { Icon } from 'astro-icon/components';
 	<Section class="h-screen flex-col items-center justify-center md:min-h-[600px]">
 		<div class="flex flex-col items-center justify-center gap-y-4">
 			<Icon height={56} name="oneconfig.minimal" width={56} />
-			<Header align="center" class="max-w-[600px]" size="xxl">
+			<Header align="center" class="max-w-[600px] dark:text-dark-primary" size="xxl">
 				Meet <b>OneConfig</b>, the library designed for <b>everyone</b>.
 			</Header>
 			<div class="flex flex-row items-center justify-center gap-2">
@@ -26,8 +26,8 @@ import { Icon } from 'astro-icon/components';
 
 	<Section tabindex="0">
 		<div slot="left">
-			<Header class="text-navy-peony" size="xl">Mod loaders are complicated</Header>
-			<Paragraph class="max-w-[500px] text-gray-400" size="md">Modding Minecraft has always been difficult, particularly with their configuration. Remembering all of the keybinds, commands; it just isn't intuitive.</Paragraph>
+			<Header class="text-navy-peony dark:text-dark-primary" size="xl">Mod loaders are complicated</Header>
+			<Paragraph class="max-w-[500px] text-gray-400 dark:text-dark-secondary" size="md">Modding Minecraft has always been difficult, particularly with their configuration. Remembering all of the keybinds, commands; it just isn't intuitive.</Paragraph>
 		</div>
 		<div class="max-w-80 w-3/4 md:max-w-none md:w-auto" slot="right">
 			<img alt="stuff" class="w-full md:w-[20rem]" src="/media/oneconfig/page_media_1.svg" />
@@ -40,15 +40,15 @@ import { Icon } from 'astro-icon/components';
 		</div>
 
 		<div slot="right">
-			<Header class="text-navy-peony" size="xl">Clients are locked-down</Header>
-			<Paragraph class="max-w-[500px] text-gray-400" size="md">While they improve usability, they're slow to adopt new mods absent from the community and force unwanted features onto users to profit off of them.</Paragraph>
+			<Header class="text-navy-peony dark:text-dark-primary" size="xl">Clients are locked-down</Header>
+			<Paragraph class="max-w-[500px] text-gray-400 dark:text-dark-secondary" size="md">While they improve usability, they're slow to adopt new mods absent from the community and force unwanted features onto users to profit off of them.</Paragraph>
 		</div>
 	</Section>
 
 	<Section tabindex="0">
 		<div slot="left">
-			<Header class="text-navy-peony" size="xl">Best of both worlds</Header>
-			<Paragraph class="max-w-[500px] text-gray-400" size="md">OneConfig brings the simplicity of a client to the everyday user, gives advanced users and developers complete control over everything, while remaining free and open-source.</Paragraph>
+			<Header class="text-navy-peony dark:text-dark-primary" size="xl">Best of both worlds</Header>
+			<Paragraph class="max-w-[500px] text-gray-400 dark:text-dark-secondary" size="md">OneConfig brings the simplicity of a client to the everyday user, gives advanced users and developers complete control over everything, while remaining free and open-source.</Paragraph>
 		</div>
 
 		<div class="max-w-80 w-3/4 flex justify-center md:max-w-none md:w-auto" slot="right">
@@ -56,7 +56,7 @@ import { Icon } from 'astro-icon/components';
 		</div>
 	</Section>
 
-	<div class="section min-h-screen flex flex-col items-center justify-center bg-blue-75">
+	<div class="section min-h-screen flex flex-col items-center justify-center bg-blue-75 dark:bg-dark-600">
 		<Section class="pt-10 max-sm:h-screen md:py-20" colReverse={false} maxWidth="1120px" wFull={false}>
 			<div class="w-full" slot="left">
 				<div class="grid overflow-x-auto lg:block">
@@ -82,7 +82,7 @@ import { Icon } from 'astro-icon/components';
 
 			<div class="flex flex-col items-start gap-2 text-left" slot="right">
 				<Header class="text-blue-500" size="xl">Written for developers</Header>
-				<Paragraph class="max-w-[500px] text-blue-400"> With our simple APIs and documentation, it's easier than ever to integrate your mods with OneConfig. </Paragraph>
+				<Paragraph class="max-w-[500px] text-blue-400 dark:text-dark-primary"> With our simple APIs and documentation, it's easier than ever to integrate your mods with OneConfig. </Paragraph>
 				<div class="flex">
 					<Button href="https://docs.polyfrost.org" iconLeft="book-open" style="secondary" text="Documentation" />
 				</div>
@@ -92,7 +92,7 @@ import { Icon } from 'astro-icon/components';
 		<Section class="gap-4 py-10 max-sm:h-screen md:py-20" maxWidth="1120px" wFull={false}>
 			<div class="flex flex-col items-start gap-2 text-left" slot="left">
 				<Header class="text-blue-500" size="xl">Designed for users</Header>
-				<Paragraph class="max-w-[500px] text-blue-400"> We take pride in having the cleanest and most intuitive UI of any mod, config library, or client out there. </Paragraph>
+				<Paragraph class="max-w-[500px] text-blue-400 dark:text-dark-primary"> We take pride in having the cleanest and most intuitive UI of any mod, config library, or client out there. </Paragraph>
 				<div class="flex">
 					<Button href="/projects/oneconfig/download" iconLeft="download" style="secondary" text="Download" />
 				</div>
@@ -113,24 +113,24 @@ import { Icon } from 'astro-icon/components';
 			src="/media/oneconfig/page_media_5.png"
 		/>
 		<div class="flex flex-col items-center justify-center gap-y-4" data-scroll data-scroll-speed="2">
-			<Header align="center" class="w-96" size="xl">A unified HUD editor</Header>
-			<Paragraph class="w-96 text-center text-gray-400">
+			<Header align="center" class="w-96 dark:text-dark-primary" size="xl">A unified HUD editor</Header>
+			<Paragraph class="w-96 text-center text-gray-400 dark:text-dark-secondary">
 				Thanks to OneConfig's HUD API, you can customize any OneConfig-powered HUD to your liking, without having to worry about the hassle of finding the right command or keybind.
 			</Paragraph>
 		</div>
 	</Section>
 
-	<Section class="flex flex-col items-center justify-center gap-4 py-10 !px-0 md:py-20" maxWidth="none" wFull wrapperClass="bg-blue-100 -mb-40">
+	<Section class="flex flex-col items-center justify-center gap-4 py-10 !px-0 md:py-20" maxWidth="none" wFull wrapperClass="bg-blue-100 dark:bg-dark-600 -mb-40">
 		<div class="max-w-[1024px] w-full flex flex-col items-start gap-2 px-5 text-left">
 			<Header class="text-blue-500" size="xl">With many fabulous mods</Header>
-			<Paragraph class="max-w-[500px] text-blue-400"> Discover a wide range of mods integrated with OneConfig to enhance your experience. </Paragraph>
+			<Paragraph class="max-w-[500px] text-blue-400 dark:text-dark-primary"> Discover a wide range of mods integrated with OneConfig to enhance your experience. </Paragraph>
 			<div class="flex flex-col items-start gap-x-1 md:flex-row max-sm:gap-y-1">
 				<Button href="/mods" iconLeft="link-external" style="secondary" text="Discover mods" />
 			</div>
 		</div>
-		<div class="max-w-full flex flex-col items-center justify-center overflow-x-hidden bg-blue-100 pb-10">
+		<div class="max-w-full flex flex-col items-center justify-center overflow-x-hidden bg-blue-100 dark:bg-dark-600 pb-10">
 			<div class="h-[290px] max-w-[1920px] flex flex-col items-center justify-between overflow-x-hidden">
-				<Slider childrenNum={8} wrapperClass="-mb-40 mb-2 bg-blue-100">
+				<Slider childrenNum={8} wrapperClass="-mb-40 mb-2 bg-blue-100 dark:bg-dark-600">
 					<Card icon="chatting" text="Chatting" />
 					<Card icon="polysprint" text="PolySprint" />
 					<Card icon="vanillahud" text="VanillaHUD" />
@@ -140,7 +140,7 @@ import { Icon } from 'astro-icon/components';
 					<Card icon="polyweather" text="PolyWeather" />
 					<Card icon="keystrokes" text="Keystrokes" />
 				</Slider>
-				<Slider childrenNum={8} dir="right" wrapperClass="bg-blue-100">
+				<Slider childrenNum={8} dir="right" wrapperClass="bg-blue-100 dark:bg-dark-600">
 					<Card icon="chatting" text="Chatting" />
 					<Card icon="polysprint" text="PolySprint" />
 					<Card icon="vanillahud" text="VanillaHUD" />
