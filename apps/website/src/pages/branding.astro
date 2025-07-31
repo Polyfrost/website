@@ -50,33 +50,33 @@ function formatModName(name: string): string {
 		<div class="mt-8 flex flex-col gap-y-12">
 			<div class="flex flex-col">
 				<Header class="text-navy-peony dark:text-dark-primary" size="sm"> Our Logo, with text </Header>
-				<Paragraph class="max-w-[500px] text-gray-400" size="xs"> Super cool. </Paragraph>
+				<Paragraph class="max-w-[500px] text-gray-400 dark:text-dark-secondary" size="xs"> Super cool. </Paragraph>
 				<div class="my-8 flex flex-row flex-wrap items-center justify-evenly gap-2">
-					<BrandingImage name="logo_1" type="logos" />
-					<BrandingImage name="logo_2" type="logos" />
+					<BrandingImage backgroundDark="white" name="logo_1" type="logos" />
+					<BrandingImage backgroundDark="dark-800" name="logo_2" type="logos" />
 				</div>
 			</div>
 			<div class="flex flex-col">
 				<Header class="text-navy-peony dark:text-dark-primary" size="sm"> Our Logo, when you don't wanna read </Header>
-				<Paragraph class="max-w-[500px] text-gray-400" size="xs"> Even cooler. </Paragraph>
+				<Paragraph class="max-w-[500px] text-gray-400 dark:text-dark-secondary" size="xs"> Even cooler. </Paragraph>
 				<div class="my-8 flex flex-row flex-wrap items-center justify-evenly gap-2">
-					<BrandingImage name="logo_3" type="logos" />
-					<BrandingImage name="logo_4" type="logos" />
+					<BrandingImage backgroundDark="white" name="logo_3" type="logos" />
+					<BrandingImage backgroundDark="dark-800" name="logo_4" type="logos" />
 				</div>
 			</div>
 			<div class="flex flex-col">
 				<Header class="text-navy-peony dark:text-dark-primary" size="sm"> OneConfig logo, with text </Header>
-				<Paragraph class="max-w-[500px] text-gray-400" size="xs"> The one and only. </Paragraph>
+				<Paragraph class="max-w-[500px] text-gray-400 dark:text-dark-secondary" size="xs"> The one and only. </Paragraph>
 				<div class="my-8 flex flex-row flex-wrap items-center justify-evenly gap-2">
-					<BrandingImage name="logo_5" type="logos" />
-					<BrandingImage name="logo_6" type="logos" />
+					<BrandingImage backgroundDark="dark-800" name="logo_5" type="logos" />
+					<BrandingImage backgroundDark="dark-800" name="logo_6" type="logos" />
 				</div>
 			</div>
 			<div class="flex flex-col">
 				<Header class="text-navy-peony dark:text-dark-primary" size="sm"> OneConfig logo, when you don't wanna read </Header>
-				<Paragraph class="max-w-[500px] text-gray-400" size="xs"> Nevermind there's two more </Paragraph>
+				<Paragraph class="max-w-[500px] text-gray-400 dark:text-dark-secondary" size="xs"> Nevermind there's two more </Paragraph>
 				<div class="my-8 flex flex-row flex-wrap items-center justify-evenly gap-2">
-					<BrandingImage name="logo_7" type="logos" />
+					<BrandingImage backgroundDark="dark-800" name="logo_7" type="logos" />
 					<BrandingImage name="logo_8" type="logos" />
 				</div>
 			</div>
@@ -86,14 +86,14 @@ function formatModName(name: string): string {
 	<Section class="flex-col gap-y-8 py-12 text-blue-100 dark:text-dark-primary" wrapperClass="-mt-40 bg-[#11171C]">
 		<div class="flex flex-col items-start justify-start">
 			<Header size="md"> OneConfig badges </Header>
-			<Paragraph class="text-[#78818D]" size="sm"> When you want to show off OneConfig in your mods. Credits to Devin's Badges for the design. </Paragraph>
+			<Paragraph class="text-[#78818D] dark:text-dark-secondary" size="sm"> When you want to show off OneConfig in your mods. Credits to Devin's Badges for the design. </Paragraph>
 			<div class="my-4 flex flex-row flex-wrap gap-2 text-white">
 				{Array.from({ length: 4 }, (_, i) => <BrandingImage background="transparent" name={`badge_${i + 1}`} type="badges" />)}
 			</div>
 		</div>
 		<div class="flex flex-col items-start justify-start">
 			<Header size="md"> All of our mod icons </Header>
-			<Paragraph class="text-[#78818D]" size="sm"> We have... a lot of those... (original EvergreenHUD logo by isXander) </Paragraph>
+			<Paragraph class="text-[#78818D] dark:text-dark-secondary" size="sm"> We have... a lot of those... (original EvergreenHUD logo by isXander) </Paragraph>
 			<div class="my-4 flex flex-row flex-wrap gap-2 text-white">
 				{mods.map(mod => <BrandingImage background="transparent" name={mod} nameFormatted={formatModName(mod)} type="mods" />)}
 			</div>

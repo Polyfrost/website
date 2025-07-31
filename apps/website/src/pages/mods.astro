@@ -63,7 +63,7 @@ const modrinthUrl = `https://modrinth.com/${modrinthType}/${modrinthId}`;
 			</Paragraph>
 		</div>
 		<div slot="right">
-			<div class="absolute z-10 ml-[21rem] h-full w-1/4 mod-gradient-extra dark:mod-gradient-extra"></div>
+			<div class="absolute z-10 h-full w-[100%] mod-gradient-extra dark:mod-gradient-extra"></div>
 			<img alt="stuff" class="w-[120%] overflow-x-clip" src="/media/mods/page_media_1.svg" />
 		</div>
 	</Section>
@@ -73,7 +73,7 @@ const modrinthUrl = `https://modrinth.com/${modrinthType}/${modrinthId}`;
 			<img alt="stuff" class="mx-auto max-sm:w-full" src="/media/mods/page_media_2.svg" />
 		</div>
 		<div slot="right">
-			<Header class="text-navy-peony" size="lg">We <b>listen</b> to community feedback </Header>
+			<Header class="text-navy-peony dark:text-dark-primary" size="lg">We <b>listen</b> to community feedback </Header>
 			<Paragraph class="max-w-[500px] text-gray-400" size="sm">
 				No more are the days where developers ignore your great new idea. Some of our best mods and ideas are user-suggested, such as BehindYouV3, various Chatting features, and more.
 			</Paragraph>
@@ -170,14 +170,14 @@ getModCount().then((size) => {
 	}
 
 	:global(.dark) .mods-gradient {
-		background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgb(22, 66, 117));
+		background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), theme('colors.dark.background'));
 	}
 
 	.mod-gradient-extra {
-		background: linear-gradient(90deg, rgba(246, 246, 246, 0.00) 0%, #F0F2F4 49.21%);
+		background: linear-gradient(90deg, rgba(246, 246, 246, 0.00) 20%, #F0F2F4 80%);
 	}
 
 	:global(.dark) .mod-gradient-extra {
-		background: linear-gradient(90deg, rgba(246, 246, 246, 0) 0%, theme('colors.dark.background') 49.21%);
+		background: linear-gradient(to right, rgba(0, 0, 0, 0) 20%, theme('colors.dark.background') 80%);
 	}
 </style>

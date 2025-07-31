@@ -9,12 +9,12 @@ interface Props {
 	background?: string;
 }
 
-const { name, type, altText, nameFormatted, background = 'white', maxWidth = 300, extensions = ['png', 'svg'] } = Astro.props;
+const { name, type, altText, nameFormatted, background = 'white', backgroundDark = 'transparent', maxWidth = 300, extensions = ['png', 'svg'] } = Astro.props;
 
 const path = `/media/branding/${type}/${name}`;
 ---
 
-<div class={`relative rounded-md bg-${background} border border-1 border-gray-400 flex flex-col justify-center items-center p-8`}>
+<div class={`relative rounded-md bg-${background} dark:bg-${backgroundDark} border border-1 border-gray-400 flex flex-col justify-center items-center p-8`}>
 	<div class="absolute right-0 top-0 flex flex-row gap-x-2">
 		{extensions.map(ext => <a class="px-0.5 text-xs hover:underline dark:text-dark-secondary" href={`${path}.${ext}`} target="_blank">.{ext.toUpperCase()}</a>)}
 	</div>
