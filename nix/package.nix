@@ -49,7 +49,7 @@ mkPnpmPackage {
     installPhase = ''
         runHook preInstall
 
-        mkdir -p "$out"/{bin,lib}
+        mkdir -p "$out"/{bin,share}
 
         # Copy all the astro files to the output
         cp -r ./apps/website/dist/* "$out"/share/
