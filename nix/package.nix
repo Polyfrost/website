@@ -3,9 +3,10 @@
     lib,
     nodejs,
     callPackage,
+    makeBinaryWrapper,
 
     # non-nixpkgs dependencies
-    mkPnpmPackage, # https://github.com/FliegendeWurst/pnpm2nix
+    mkPnpmPackage, # https://github.com/FliegendeWurst/pnpm2nix-nzbr
     corepackCompat ? callPackage ./corepack-compat.nix {},
     customPnpm ? corepackCompat.pnpmFromPackageJson ../package.json,
 
@@ -46,6 +47,10 @@ mkPnpmPackage {
         ASTRO_TELEMETRY_DISABLED = "1";
     };
 
+    extraNativeBuildInputs = [
+        makeBinaryWrapper
+    ];
+
     installPhase = ''
         runHook preInstall
 
@@ -55,11 +60,11 @@ mkPnpmPackage {
         cp -r ./apps/website/dist/* "$out"/share/
 
         # Make a wrapper command to start the server
-        cat << EOF > "$out"/bin/start-server
-        #!/usr/bin/env bash
-        ${lib.getExe nodejs} "$out"/share/server/entry.mjs
-        EOF
-        chmod +x "$out"/bin/start-server
+        makeWrapper ${lib.getExe nodejs} "$out"/bin/start-server \
+             --inherit-argv0 \
+             --add-flags $out/share/server/entry.mjs
+
+        # chmod +x "$out"/bin/start-server
 
         runHook postInstall
     '';
