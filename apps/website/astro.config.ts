@@ -33,4 +33,9 @@ export default defineConfig({
 	experimental: {
 		contentIntellisense: true
 	},
+	redirects: {
+		"/discord": "https://discord.gg/N4qW7TW3dv",
+		"/oneconfig": "/projects/oneconfig",
+		"/oneclient-blog": "/blog/oneclient-announcement"
+	}
 });
