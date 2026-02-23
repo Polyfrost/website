@@ -4,6 +4,110 @@ import Header from "@components/base/Header.astro";
 import Section from "@components/base/Section.astro";
 import Dropdown from "@components/base/Dropdown.astro";
 import Layout from "@layouts/Layout.astro";
+import type { Icon as IconType } from "virtual:astro-icon";
+import { UAParser } from "ua-parser-js";
+import { Icon } from "astro-icon/components";
+
+export const prerender = false;
+
+type OS = "Windows" | "macOS" | "Linux";
+type Architecture = "x64" | "x86" | "Arm";
+
+type Platform = {
+	os: OS;
+	architecture?: Architecture;
+};
+
+function getPlatform(): Platform | undefined {
+	const agent = Astro.request.headers.get("User-Agent");
+	if (!agent) return;
+	const { browser, cpu, device, os } = UAParser(agent);
+
+	let architecture: Architecture | undefined;
+	if (cpu.is("arm64") || cpu.is("armhf") || cpu.is("arm")) architecture = "Arm";
+	else if (cpu.architecture == "amd64") architecture = "x64";
+	else if (cpu.architecture == "ia32") architecture = "x86";
+
+	if (os.is("Windows")) return { os: "Windows", architecture };
+	else if (os.is("macOS")) return { os: "macOS", architecture };
+	else return { os: "Linux", architecture };
+}
+
+type Version = {
+	os: OS;
+	architecture: Architecture | "Universal";
+	name?: string;
+	url: string;
+	icon?: IconType;
+};
+
+// Fetch the latest release from GitHub and parse assets into our Version list.
+// Priority per OS: prefer the best installer format, skip .sig and updater tarballs.
+const RELEASES_PAGE = "https://github.com/Polyfrost/OneLauncher/releases/latest";
+
+async function fetchVersions(): Promise<Version[]> {
+	try {
+		const res = await fetch(
+			"https://api.github.com/repos/Polyfrost/OneLauncher/releases/latest",
+			{ headers: { Accept: "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28" } },
+		);
+		if (!res.ok) return [];
+
+		const release = await res.json();
+		const assets: { name: string; browser_download_url: string }[] = release.assets ?? [];
+
+		const versions: Version[] = [];
+
+		// Helper: find the first asset whose filename matches a predicate (exclude .sig/.json)
+		const find = (pred: (name: string) => boolean) =>
+			assets.find((a) => !a.name.endsWith(".sig") && !a.name.endsWith(".json") && pred(a.name));
+
+		// Windows x64 — .exe installer
+		const winX64 = find((n) => n.endsWith(".exe"));
+		if (winX64) versions.push({ os: "Windows", architecture: "x64", url: winX64.browser_download_url });
+
+		// macOS Apple Silicon (aarch64) — .dmg
+		const macArm = find((n) => n.includes("aarch64") && n.endsWith(".dmg"));
+		if (macArm) versions.push({ os: "macOS", architecture: "Arm", url: macArm.browser_download_url });
+
+		// macOS Intel (x64) — .dmg
+		const macX64 = find((n) => n.includes("x64") && n.endsWith(".dmg"));
+		if (macX64) versions.push({ os: "macOS", architecture: "x64", url: macX64.browser_download_url });
+
+		// Linux x64 — AppImage preferred, then .deb
+		const linuxX64 =
+			find((n) => (n.includes("amd64") || n.includes("x86_64")) && n.endsWith(".AppImage")) ??
+			find((n) => (n.includes("amd64") || n.includes("x86_64")) && n.endsWith(".deb"));
+		if (linuxX64) versions.push({ os: "Linux", architecture: "x64", name: "AppImage (Linux x64)", url: linuxX64.browser_download_url });
+
+		// Linux aarch64 — AppImage preferred, then .deb
+		const linuxArm =
+			find((n) => n.includes("aarch64") && n.endsWith(".AppImage")) ??
+			find((n) => n.includes("aarch64") && n.endsWith(".deb"));
+		if (linuxArm) versions.push({ os: "Linux", architecture: "Arm", name: "AppImage (Linux ARM)", url: linuxArm.browser_download_url });
+
+		return versions;
+	} catch {
+		return [];
+	}
+}
+
+const icons: Record<OS | (string & {}), IconType> = {
+	Windows: "windows",
+	macOS: "apple",
+	Linux: "linux",
+};
+
+const versions = await fetchVersions();
+
+const platform = getPlatform();
+
+// Find the best match: exact OS + architecture first, then OS + "Universal" fallback,
+// then any version for the OS, then the releases page.
+const version =
+	versions.find((v) => v.os === platform?.os && v.architecture === platform?.architecture) ||
+	versions.find((v) => v.os === platform?.os && v.architecture === "Universal") ||
+	versions.find((v) => v.os === platform?.os);
 ---
 
 <div class="w-screen h-screen fixed bg-dark-background -z-1"></div>
@@ -33,11 +137,40 @@ import Layout from "@layouts/Layout.astro";
 			>
 				<Dropdown
 					iconLeft="download"
-					text="Download"
-					disabled="true"
-					class="cursor-not-allowed"
-					tooltip="Coming soon!"
+					text={version
+						? version.name
+							? `Download ${version.name}`
+							: `Download for ${version.os} ${version.architecture}`
+						: "Download"}
+					href={version?.url ?? RELEASES_PAGE}
 				>
+					<div class="flex flex-col gap-1">
+						<div
+							class="bg-dark-background border border-gray-700 text-dark-secondary rounded-xl p-2 gap-1 flex flex-col"
+						>
+							{
+								versions.map((version) => (
+									<a
+										href={version.url}
+										class="flex items-center gap-1 border-1 border-gray-700 rounded-lg p-2 hover:bg-blue-600/5 min-w-[200px]"
+									>
+										<Icon
+											name={
+												version.icon ??
+												icons[version.os] ??
+												"download"
+											}
+											size={18}
+										/>
+										<h3>
+											{version.name ??
+												`${version.os} ${version.architecture}`}
+										</h3>
+									</a>
+								))
+							}
+						</div>
+					</div>
 				</Dropdown>
 				<Button
 					href="/blog/oneclient-announcement"
