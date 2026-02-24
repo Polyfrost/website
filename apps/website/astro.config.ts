@@ -28,7 +28,7 @@ export default defineConfig({
 		}),
 	],
 	vite: {
-		ssr: { noExternal: ['smartypants'] },
+		ssr: { noExternal: ['smartypants', 'ua-parser-js'] },
 	},
 	experimental: {
 		contentIntellisense: true
