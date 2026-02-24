@@ -198,7 +198,6 @@ function getProjects(): Project[] {
 				"The anti-client.",
 			logo: "oneclient.minimal",
 			hasPage: true,
-			tag: "SOON",
 		},
 		{
 			name: "OneLauncher",
