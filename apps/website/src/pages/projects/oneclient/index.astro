@@ -11,7 +11,7 @@ import { Icon } from "astro-icon/components";
 export const prerender = false;
 
 type OS = "Windows" | "macOS" | "Linux";
-type Architecture = "x64" | "x86" | "Arm";
+type Architecture = "x64" | "x86" | "ARM";
 
 type Platform = {
 	os: OS;
@@ -24,7 +24,7 @@ function getPlatform(): Platform | undefined {
 	const { browser, cpu, device, os } = UAParser(agent);
 
 	let architecture: Architecture | undefined;
-	if (cpu.is("arm64") || cpu.is("armhf") || cpu.is("arm")) architecture = "Arm";
+	if (cpu.is("arm64") || cpu.is("armhf") || cpu.is("arm")) architecture = "ARM";
 	else if (cpu.architecture == "amd64") architecture = "x64";
 	else if (cpu.architecture == "ia32") architecture = "x86";
 
@@ -68,7 +68,7 @@ async function fetchVersions(): Promise<Version[]> {
 
 		// macOS Apple Silicon (aarch64) — .dmg
 		const macArm = find((n) => n.includes("aarch64") && n.endsWith(".dmg"));
-		if (macArm) versions.push({ os: "macOS", architecture: "Arm", url: macArm.browser_download_url });
+		if (macArm) versions.push({ os: "macOS", architecture: "ARM", url: macArm.browser_download_url });
 
 		// macOS Intel (x64) — .dmg
 		const macX64 = find((n) => n.includes("x64") && n.endsWith(".dmg"));
@@ -84,7 +84,7 @@ async function fetchVersions(): Promise<Version[]> {
 		const linuxArm =
 			find((n) => n.includes("aarch64") && n.endsWith(".AppImage")) ??
 			find((n) => n.includes("aarch64") && n.endsWith(".deb"));
-		if (linuxArm) versions.push({ os: "Linux", architecture: "Arm", name: "AppImage (Linux ARM)", url: linuxArm.browser_download_url });
+		if (linuxArm) versions.push({ os: "Linux", architecture: "ARM", name: "AppImage (Linux ARM)", url: linuxArm.browser_download_url });
 
 		return versions;
 	} catch {
