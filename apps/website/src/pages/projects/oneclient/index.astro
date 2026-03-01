@@ -21,7 +21,7 @@ type Platform = {
 function getPlatform(): Platform | undefined {
 	const agent = Astro.request.headers.get("User-Agent");
 	if (!agent) return;
-	const { browser, cpu, device, os } = UAParser(agent);
+	const { cpu, os } = UAParser(agent);
 
 	let architecture: Architecture | undefined;
 	if (cpu.is("arm64") || cpu.is("armhf") || cpu.is("arm")) architecture = "ARM";
@@ -29,8 +29,9 @@ function getPlatform(): Platform | undefined {
 	else if (cpu.architecture == "ia32") architecture = "x86";
 
 	if (os.is("Windows")) return { os: "Windows", architecture };
-	else if (os.is("macOS")) return { os: "macOS", architecture };
-	else return { os: "Linux", architecture };
+	if (os.is("macOS")) return { os: "macOS", architecture };
+	if (os.is("Linux")) return { os: "Linux", architecture };
+	return;
 }
 
 type Version = {
@@ -44,6 +45,7 @@ type Version = {
 // Fetch the latest release from GitHub and parse assets into our Version list.
 // Priority per OS: prefer the best installer format, skip .sig and updater tarballs.
 const RELEASES_PAGE = "https://github.com/Polyfrost/OneLauncher/releases/latest";
+const LINUX_GUIDE_PAGE = "/projects/oneclient/linux";
 
 async function fetchVersions(): Promise<Version[]> {
 	try {
@@ -60,7 +62,14 @@ async function fetchVersions(): Promise<Version[]> {
 
 		// Helper: find the first asset whose filename matches a predicate (exclude .sig/.json)
 		const find = (pred: (name: string) => boolean) =>
-			assets.find((a) => !a.name.endsWith(".sig") && !a.name.endsWith(".json") && pred(a.name));
+			assets.find((a) => {
+				const name = a.name.toLowerCase();
+				return !name.endsWith(".sig") && !name.endsWith(".json") && pred(name);
+			});
+
+		const isLinuxX64 = (name: string) =>
+			name.includes("amd64") || name.includes("x86_64") || name.includes("_x64") || name.includes("-x64");
+		const isLinuxArm = (name: string) => name.includes("aarch64") || name.includes("arm64");
 
 		// Windows x64 — .exe installer
 		const winX64 = find((n) => n.endsWith(".exe"));
@@ -74,17 +83,61 @@ async function fetchVersions(): Promise<Version[]> {
 		const macX64 = find((n) => n.includes("x64") && n.endsWith(".dmg"));
 		if (macX64) versions.push({ os: "macOS", architecture: "x64", url: macX64.browser_download_url });
 
-		// Linux x64 — AppImage preferred, then .deb
-		const linuxX64 =
-			find((n) => (n.includes("amd64") || n.includes("x86_64")) && n.endsWith(".AppImage")) ??
-			find((n) => (n.includes("amd64") || n.includes("x86_64")) && n.endsWith(".deb"));
-		if (linuxX64) versions.push({ os: "Linux", architecture: "x64", name: "AppImage (Linux x64)", url: linuxX64.browser_download_url });
+		// Linux x64 — include AppImage, .deb, and .rpm (in default preference order)
+		const linuxX64AppImage = find((n) => isLinuxX64(n) && n.endsWith(".appimage"));
+		if (linuxX64AppImage)
+			versions.push({
+				os: "Linux",
+				architecture: "x64",
+				name: "AppImage (Linux x64)",
+				url: linuxX64AppImage.browser_download_url,
+			});
 
-		// Linux aarch64 — AppImage preferred, then .deb
-		const linuxArm =
-			find((n) => n.includes("aarch64") && n.endsWith(".AppImage")) ??
-			find((n) => n.includes("aarch64") && n.endsWith(".deb"));
-		if (linuxArm) versions.push({ os: "Linux", architecture: "ARM", name: "AppImage (Linux ARM)", url: linuxArm.browser_download_url });
+		const linuxX64Deb = find((n) => isLinuxX64(n) && n.endsWith(".deb"));
+		if (linuxX64Deb)
+			versions.push({
+				os: "Linux",
+				architecture: "x64",
+				name: "Debian package (Linux x64)",
+				url: linuxX64Deb.browser_download_url,
+			});
+
+		const linuxX64Rpm = find((n) => isLinuxX64(n) && n.endsWith(".rpm"));
+		if (linuxX64Rpm)
+			versions.push({
+				os: "Linux",
+				architecture: "x64",
+				name: "RPM package (Linux x64)",
+				url: linuxX64Rpm.browser_download_url,
+			});
+
+		// Linux ARM — include AppImage, .deb, and .rpm (in default preference order)
+		const linuxArmAppImage = find((n) => isLinuxArm(n) && n.endsWith(".appimage"));
+		if (linuxArmAppImage)
+			versions.push({
+				os: "Linux",
+				architecture: "ARM",
+				name: "AppImage (Linux ARM)",
+				url: linuxArmAppImage.browser_download_url,
+			});
+
+		const linuxArmDeb = find((n) => isLinuxArm(n) && n.endsWith(".deb"));
+		if (linuxArmDeb)
+			versions.push({
+				os: "Linux",
+				architecture: "ARM",
+				name: "Debian package (Linux ARM)",
+				url: linuxArmDeb.browser_download_url,
+			});
+
+		const linuxArmRpm = find((n) => isLinuxArm(n) && n.endsWith(".rpm"));
+		if (linuxArmRpm)
+			versions.push({
+				os: "Linux",
+				architecture: "ARM",
+				name: "RPM package (Linux ARM)",
+				url: linuxArmRpm.browser_download_url,
+			});
 
 		return versions;
 	} catch {
@@ -108,6 +161,27 @@ const version =
 	versions.find((v) => v.os === platform?.os && v.architecture === platform?.architecture) ||
 	versions.find((v) => v.os === platform?.os && v.architecture === "Universal") ||
 	versions.find((v) => v.os === platform?.os);
+
+const defaultDownloadHref = platform?.os === "Linux" ? LINUX_GUIDE_PAGE : version?.url ?? RELEASES_PAGE;
+const defaultDownloadText =
+	platform?.os === "Linux"
+		? "Install on Linux"
+		: version
+			? version.name
+				? `Download ${version.name}`
+				: `Download for ${version.os} ${version.architecture}`
+			: "Download";
+
+const dropdownVersions: Version[] = [
+	...versions.filter((v) => v.os !== "Linux"),
+	{
+		os: "Linux",
+		architecture: "Universal",
+		name: "Linux (All distros)",
+		url: LINUX_GUIDE_PAGE,
+		icon: "linux",
+	},
+];
 ---
 
 <div class="w-screen h-screen fixed bg-dark-background -z-1"></div>
@@ -137,19 +211,15 @@ const version =
 			>
 				<Dropdown
 					iconLeft="download"
-					text={version
-						? version.name
-							? `Download ${version.name}`
-							: `Download for ${version.os} ${version.architecture}`
-						: "Download"}
-					href={version?.url ?? RELEASES_PAGE}
+					text={defaultDownloadText}
+					href={defaultDownloadHref}
 				>
 					<div class="flex flex-col gap-1">
 						<div
 							class="bg-dark-background border border-gray-700 text-dark-secondary rounded-xl p-2 gap-1 flex flex-col"
 						>
 							{
-								versions.map((version) => (
+								dropdownVersions.map((version) => (
 									<a
 										href={version.url}
 										class="flex items-center gap-1 border-1 border-gray-700 rounded-lg p-2 hover:bg-blue-600/5 min-w-[200px]"
