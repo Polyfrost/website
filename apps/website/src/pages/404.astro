@@ -1,0 +1,66 @@
+---
+import Button from '@components/base/Button.astro';
+import Header from '@components/base/Header.astro';
+import Paragraph from '@components/base/Paragraph.astro';
+import Section from '@components/base/Section.astro';
+import Layout from '@layouts/Layout.astro';
+---
+
+<Layout title="404" description="The page you requested could not be found.">
+	<Section class="relative isolate flex-col items-center justify-center py-28 text-center lg:py-36" wrapperClass="min-h-screen">
+		<div class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden opacity-50 blur-3xl sm:-top-80">
+			<svg
+				class="relative left-[calc(50%-11rem)] h-[21.1875rem] max-w-none -translate-x-1/2 rotate-[30deg] sm:left-[calc(50%-30rem)] sm:h-[42.375rem]"
+				viewBox="0 0 1155 678"
+			>
+				<path
+					d="M317.219 518.975L203.852 678 0 438.341l317.219 80.634 204.172-286.402c1.307 132.337 45.083 346.658 209.733 145.248C936.936 126.058 882.053-94.234 1031.02 41.331c119.18 108.451 130.68 295.337 121.53 375.223L855 299l21.173 362.054-558.954-142.079z"
+					fill="url(#not-found-top)"
+					fill-opacity=".3"
+				></path>
+				<defs>
+					<linearGradient id="not-found-top" gradientUnits="userSpaceOnUse" x1="1155.49" x2="-78.208" y1=".177" y2="474.645">
+						<stop stop-color="#2463EB"></stop>
+						<stop offset={1} stop-color="#0080B5"></stop>
+					</linearGradient>
+				</defs>
+			</svg>
+		</div>
+
+		<div class="mx-auto flex w-full max-w-3xl flex-col items-center gap-y-4">
+			<span class="rounded-full border border-gray-800/20 bg-blue-50 px-4 py-1 text-sm font-medium text-blue-600">
+				Error 404
+			</span>
+			<Header align="center" class="text-navy-peony tracking-tight" size="xxl">
+				This page does not exist
+			</Header>
+			<Paragraph class="max-w-2xl text-lightslategray" size="lg">
+				The link may be outdated, the page may have moved, or the URL might be mistyped.
+			</Paragraph>
+
+			<div class="mt-4 flex flex-wrap items-center justify-center gap-3">
+				<Button href="/" style="secondary">Back to Home</Button>
+				<Button href="/projects/oneclient" style="secondary">Explore OneClient</Button>
+			</div>
+		</div>
+
+		<div class="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden opacity-50 blur-3xl sm:top-[calc(100%-35rem)]">
+			<svg
+				class="relative left-[calc(50%+3rem)] h-[21.1875rem] max-w-none -translate-x-1/2 sm:left-[calc(50%+36rem)] sm:h-[42.375rem]"
+				viewBox="0 0 1155 678"
+			>
+				<path
+					d="M317.219 518.975L203.852 678 0 438.341l317.219 80.634 204.172-286.402c1.307 132.337 45.083 346.658 209.733 145.248C936.936 126.058 882.053-94.234 1031.02 41.331c119.18 108.451 130.68 295.337 121.53 375.223L855 299l21.173 362.054-558.954-142.079z"
+					fill="url(#not-found-bottom)"
+					fill-opacity=".3"
+				></path>
+				<defs>
+					<linearGradient id="not-found-bottom" gradientUnits="userSpaceOnUse" x1="1155.49" x2="-78.208" y1=".177" y2="474.645">
+						<stop stop-color="#2463EB"></stop>
+						<stop offset={1} stop-color="#0080B5"></stop>
+					</linearGradient>
+				</defs>
+			</svg>
+		</div>
+	</Section>
+</Layout>
