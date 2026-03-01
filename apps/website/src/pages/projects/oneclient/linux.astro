@@ -1,0 +1,191 @@
+---
+import Button from "@components/base/Button.astro";
+import Header from "@components/base/Header.astro";
+import Paragraph from "@components/base/Paragraph.astro";
+import Section from "@components/base/Section.astro";
+import Layout from "@layouts/Layout.astro";
+
+export const prerender = false;
+
+const RELEASES_PAGE = "https://github.com/Polyfrost/OneLauncher/releases/latest";
+const RELEASES_API = "https://api.github.com/repos/Polyfrost/OneLauncher/releases/latest";
+
+type LinuxArchitecture = "x64" | "ARM";
+type LinuxFormat = "AppImage" | "deb" | "rpm";
+
+type LinuxDownload = {
+	architecture: LinuxArchitecture;
+	format: LinuxFormat;
+	url: string;
+};
+
+function linuxArchitecture(name: string): LinuxArchitecture | undefined {
+	if (name.includes("aarch64") || name.includes("arm64")) return "ARM";
+	if (name.includes("amd64") || name.includes("x86_64") || name.includes("_x64") || name.includes("-x64")) return "x64";
+	return;
+}
+
+function linuxFormat(name: string): LinuxFormat | undefined {
+	if (name.endsWith(".appimage")) return "AppImage";
+	if (name.endsWith(".deb")) return "deb";
+	if (name.endsWith(".rpm")) return "rpm";
+	return;
+}
+
+async function fetchLinuxDownloads(): Promise<LinuxDownload[]> {
+	try {
+		const res = await fetch(RELEASES_API, {
+			headers: { Accept: "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28" },
+		});
+		if (!res.ok) return [];
+
+		const release = await res.json();
+		const assets: { name: string; browser_download_url: string }[] = release.assets ?? [];
+		const downloads: LinuxDownload[] = [];
+
+		for (const asset of assets) {
+			const normalizedName = asset.name.toLowerCase();
+			if (normalizedName.endsWith(".sig") || normalizedName.endsWith(".json")) continue;
+
+			const architecture = linuxArchitecture(normalizedName);
+			const format = linuxFormat(normalizedName);
+			if (!architecture || !format) continue;
+
+			downloads.push({
+				architecture,
+				format,
+				url: asset.browser_download_url,
+			});
+		}
+
+		const formatOrder: Record<LinuxFormat, number> = { AppImage: 0, deb: 1, rpm: 2 };
+		const architectureOrder: Record<LinuxArchitecture, number> = { x64: 0, ARM: 1 };
+
+		return downloads.sort((a, b) => {
+			const byFormat = formatOrder[a.format] - formatOrder[b.format];
+			if (byFormat !== 0) return byFormat;
+			return architectureOrder[a.architecture] - architectureOrder[b.architecture];
+		});
+	} catch {
+		return [];
+	}
+}
+
+const downloads = await fetchLinuxDownloads();
+const appImageDownloads = downloads.filter((download) => download.format === "AppImage");
+const debDownloads = downloads.filter((download) => download.format === "deb");
+const rpmDownloads = downloads.filter((download) => download.format === "rpm");
+---
+
+<div class="w-screen h-screen fixed bg-dark-background -z-1"></div>
+<Layout
+	title="Install OneClient on Linux"
+	description="Install OneClient on Linux with AppImage, Debian, and RPM packages."
+	dark
+>
+	<Section class="flex-col items-center justify-start gap-y-4 pt-36">
+		<Header align="center" class="max-w-[780px] text-dark-primary" size="lg">
+			Install OneClient on Linux
+		</Header>
+		<Paragraph class="max-w-[820px] text-center text-dark-secondary">
+			Choose the package format that matches your distro. For now you can install
+			with AppImage, <code>.deb</code>, or <code>.rpm</code>. Package manager install
+			commands will be added here in a future update.
+		</Paragraph>
+		<div class="flex flex-wrap items-center justify-center gap-2">
+			<Button href="/projects/oneclient" style="secondary" text="Back to OneClient" />
+			<Button href={RELEASES_PAGE} iconLeft="link-external" style="secondary" text="All Release Assets" />
+		</div>
+	</Section>
+
+	<Section class="pt-0 pb-20" maxWidth="1200px" wFull>
+		<div class="grid w-full gap-4 px-4 md:px-6 lg:px-8 md:grid-cols-3">
+			<article class="rounded-2xl border border-gray-700 bg-dark-background p-5">
+				<Header class="text-dark-primary" size="md">AppImage</Header>
+				<Paragraph class="mt-1 text-dark-secondary" size="sm">
+					Portable install that works on most distros without a package manager.
+				</Paragraph>
+				<div class="mt-3 flex flex-wrap gap-2">
+					{
+						appImageDownloads.length > 0 ? (
+							appImageDownloads.map((download) => (
+								<Button
+									href={download.url}
+									iconLeft="download"
+									size="sm"
+									text={`${download.architecture} AppImage`}
+								/>
+							))
+						) : (
+							<Paragraph class="text-dark-secondary" size="sm">No AppImage asset found in the latest release.</Paragraph>
+						)
+					}
+				</div>
+				<div class="mt-4 rounded-xl border border-gray-700 bg-black/20 p-3">
+					<Paragraph class="text-dark-secondary" size="sm">Run after downloading:</Paragraph>
+					<pre class="mt-2 overflow-x-auto text-sm text-dark-primary"><code>chmod +x OneClient*.AppImage
+./OneClient*.AppImage</code></pre>
+				</div>
+			</article>
+
+			<article class="rounded-2xl border border-gray-700 bg-dark-background p-5">
+				<Header class="text-dark-primary" size="md">Debian Package (.deb)</Header>
+				<Paragraph class="mt-1 text-dark-secondary" size="sm">
+					Best for Ubuntu, Debian, Pop!_OS, Linux Mint, and other apt-based distros.
+				</Paragraph>
+				<div class="mt-3 flex flex-wrap gap-2">
+					{
+						debDownloads.length > 0 ? (
+							debDownloads.map((download) => (
+								<Button
+									href={download.url}
+									iconLeft="download"
+									size="sm"
+									text={`${download.architecture} .deb`}
+								/>
+							))
+						) : (
+							<Paragraph class="text-dark-secondary" size="sm">No .deb asset found in the latest release.</Paragraph>
+						)
+					}
+				</div>
+				<div class="mt-4 rounded-xl border border-gray-700 bg-black/20 p-3">
+					<Paragraph class="text-dark-secondary" size="sm">Install with apt:</Paragraph>
+					<pre class="mt-2 overflow-x-auto text-sm text-dark-primary"><code>sudo apt install ./OneClient*.deb</code></pre>
+					<Paragraph class="mt-2 text-dark-secondary" size="sm">If dependencies are missing:</Paragraph>
+					<pre class="mt-2 overflow-x-auto text-sm text-dark-primary"><code>sudo dpkg -i ./OneClient*.deb
+sudo apt -f install</code></pre>
+				</div>
+			</article>
+
+			<article class="rounded-2xl border border-gray-700 bg-dark-background p-5">
+				<Header class="text-dark-primary" size="md">RPM Package (.rpm)</Header>
+				<Paragraph class="mt-1 text-dark-secondary" size="sm">
+					Best for Fedora, RHEL, Rocky, AlmaLinux, and openSUSE systems.
+				</Paragraph>
+				<div class="mt-3 flex flex-wrap gap-2">
+					{
+						rpmDownloads.length > 0 ? (
+							rpmDownloads.map((download) => (
+								<Button
+									href={download.url}
+									iconLeft="download"
+									size="sm"
+									text={`${download.architecture} .rpm`}
+								/>
+							))
+						) : (
+							<Paragraph class="text-dark-secondary" size="sm">No .rpm asset found in the latest release.</Paragraph>
+						)
+					}
+				</div>
+				<div class="mt-4 rounded-xl border border-gray-700 bg-black/20 p-3">
+					<Paragraph class="text-dark-secondary" size="sm">Install with dnf:</Paragraph>
+					<pre class="mt-2 overflow-x-auto text-sm text-dark-primary"><code>sudo dnf install ./OneClient*.rpm</code></pre>
+					<Paragraph class="mt-2 text-dark-secondary" size="sm">Or with zypper:</Paragraph>
+					<pre class="mt-2 overflow-x-auto text-sm text-dark-primary"><code>sudo zypper install ./OneClient*.rpm</code></pre>
+				</div>
+			</article>
+		</div>
+	</Section>
+</Layout>
