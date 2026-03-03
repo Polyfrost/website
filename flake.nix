@@ -30,5 +30,7 @@
                     pkgs.corepack
                 ];
             };
-        });
+        }) // {
+            hydraJobs.build = self.packages.x86_64-linux.website;
+        };
 }
