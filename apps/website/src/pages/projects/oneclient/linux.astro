@@ -88,9 +88,8 @@ const rpmDownloads = downloads.filter((download) => download.format === "rpm");
 			Install OneClient on Linux
 		</Header>
 		<Paragraph class="max-w-[820px] text-center text-dark-secondary">
-			Choose the package format that matches your distro. For now you can install
-			with AppImage, <code>.deb</code>, or <code>.rpm</code>. Package manager install
-			commands will be added here in a future update.
+			Choose the package format that matches your distro. Install with AppImage,
+			<code>.deb</code>, <code>.rpm</code>, or via the AUR.
 		</Paragraph>
 		<div class="flex flex-wrap items-center justify-center gap-2">
 			<Button href="/projects/oneclient" style="secondary" text="Back to OneClient" />
@@ -99,7 +98,7 @@ const rpmDownloads = downloads.filter((download) => download.format === "rpm");
 	</Section>
 
 	<Section class="pt-0 pb-20" maxWidth="1200px" wFull>
-		<div class="grid w-full gap-4 px-4 md:px-6 lg:px-8 md:grid-cols-3">
+		<div class="grid w-full gap-4 px-4 md:px-6 lg:px-8 md:grid-cols-2 lg:grid-cols-4">
 			<article class="rounded-2xl border border-gray-700 bg-dark-background p-5">
 				<Header class="text-dark-primary" size="md">AppImage</Header>
 				<Paragraph class="mt-1 text-dark-secondary" size="sm">
@@ -184,6 +183,18 @@ sudo apt -f install</code></pre>
 					<pre class="mt-2 overflow-x-auto text-sm text-dark-primary"><code>sudo dnf install ./OneClient*.rpm</code></pre>
 					<Paragraph class="mt-2 text-dark-secondary" size="sm">Or with zypper:</Paragraph>
 					<pre class="mt-2 overflow-x-auto text-sm text-dark-primary"><code>sudo zypper install ./OneClient*.rpm</code></pre>
+				</div>
+			</article>
+			<article class="rounded-2xl border border-gray-700 bg-dark-background p-5">
+				<Header class="text-dark-primary" size="md">AUR</Header>
+				<Paragraph class="mt-1 text-dark-secondary" size="sm">
+					Best for Arch Linux, Manjaro, EndeavourOS, and other Arch-based distros.
+				</Paragraph>
+				<div class="mt-4 rounded-xl border border-gray-700 bg-black/20 p-3">
+					<Paragraph class="text-dark-secondary" size="sm">Install the latest release binary:</Paragraph>
+					<pre class="mt-2 overflow-x-auto text-sm text-dark-primary"><code>yay -S oneclient-bin</code></pre>
+					<Paragraph class="mt-2 text-dark-secondary" size="sm">Or build from source:</Paragraph>
+					<pre class="mt-2 overflow-x-auto text-sm text-dark-primary"><code>yay -S oneclient</code></pre>
 				</div>
 			</article>
 		</div>
