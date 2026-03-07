@@ -120,31 +120,46 @@ import { Icon } from 'astro-icon/components';
 			</div>
 		</div>
 	</Section>
-	<!-- <Section>
-		<div class="bg-white pt-12 sm:pt-16">
-			<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-				<div class="max-w-4xl mx-auto text-center">
-					<h2 class="text-4xl font-semibold tracking-tight text-gray-800">About our projects</h2>
-					<p class="mt-3 text-xl text-gray-500 sm:mt-4"></p>
+	<Section class="flex items-center justify-center -mt-10 mb-40" maxWidth="1024px" wFull>
+		<div class="mx-auto max-w-3xl w-full flex flex-col">
+			<dl class="grid grid-cols-1 gap-4 sm:grid-cols-2" id="download-stats">
+				<div class="flex flex-col rounded-2xl bg-blue-75 px-14 pt-14 pb-8 text-center ring-1 ring-gray-400/30 shadow-sm">
+					<dt class="order-2 mt-3 text-lg text-gray-600 font-medium leading-6">Total Downloads</dt>
+					<dd class="order-1 text-6xl text-blue-500 font-bold tracking-tight" id="stat-total">—</dd>
 				</div>
-			</div>
-			<div class="mt-10 pb-12 bg-white sm:pb-16">
-				<div class="relative">
-					<div class="absolute inset-0 h-1/2 bg-white" />
-					<div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-						<div class="max-w-3xl mx-auto">
-							<dl class="sm:grid sm:grid-cols-3">
-								{lang.home.blocks.stats.items.map((item, index) => (
-									<div key={item.name} class="flex flex-col p-3 text-center">
-										<dt class="order-2 mt-2 text-lg leading-6 font-medium text-gray-500">{item.name}</dt>
-										<dd class="order-1 text-5xl font-extrabold text-brand-600">{humanNumber(item.number)}</dd>
-									</div>
-								))}
-							</dl>
-						</div>
-					</div>
+				<div class="flex flex-col rounded-2xl bg-blue-75 px-14 pt-14 pb-8 text-center ring-1 ring-gray-400/30 shadow-sm">
+					<dt class="order-2 mt-3 text-lg text-gray-600 font-medium leading-6">Open Source</dt>
+					<dd class="order-1 text-6xl text-blue-500 font-bold tracking-tight">100%</dd>
 				</div>
-			</div>
+			</dl>
+			<p class="mt-4 text-xs text-gray-400 text-center leading-5">
+				Download counts are aggregated across all public GitHub release assets and Modrinth project downloads for the <a class="underline underline-offset-2 hover:text-gray-500 transition-colors" href="https://github.com/polyfrost">Polyfrost</a>, <a class="underline underline-offset-2 hover:text-gray-500 transition-colors" href="https://github.com/w-overflow">W-OVERFLOW</a> (the previous home for Polyfrost mods), and <a class="underline underline-offset-2 hover:text-gray-500 transition-colors" href="https://github.com/skyblockclient">SkyClient</a> (the mod downloader) GitHub organizations. Cached and refreshed hourly.
+			</p>
 		</div>
-	</Section> -->
+	</Section>
+
+	<script>
+		function formatNumber(n: number): string {
+			if (n >= 1_000_000)
+				return `${(n / 1_000_000).toFixed(1)}M`;
+			if (n >= 1_000)
+				return `${(n / 1_000).toFixed(1)}K`;
+			return n.toString();
+		}
+
+		async function loadStats() {
+			try {
+				const res = await fetch('/api/downloads');
+				if (!res.ok)
+					return;
+				const data = await res.json();
+				const el = document.getElementById('stat-total');
+				if (el && data.total)
+					el.textContent = formatNumber(data.total);
+			}
+			catch { /* silently fail */ }
+		}
+
+		loadStats();
+	</script>
 </Layout>
