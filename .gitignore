@@ -733,3 +733,6 @@ gradle-app.setting
 .github/scripts/deps
 .direnv
 result
+
+# Ty
+.jj

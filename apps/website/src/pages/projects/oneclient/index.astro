@@ -7,6 +7,7 @@ import Layout from "@layouts/Layout.astro";
 import type { Icon as IconType } from "virtual:astro-icon";
 import { UAParser } from "ua-parser-js";
 import { Icon } from "astro-icon/components";
+import { FETCH_META } from '@utils/github';
 
 export const prerender = false;
 
@@ -51,7 +52,7 @@ async function fetchVersions(): Promise<Version[]> {
 	try {
 		const res = await fetch(
 			"https://api.github.com/repos/Polyfrost/OneLauncher/releases/latest",
-			{ headers: { Accept: "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28" } },
+			{ ...FETCH_META },
 		);
 		if (!res.ok) return [];
 

@@ -2,7 +2,7 @@ import type { components } from '@octokit/openapi-types';
 
 type Release = components['schemas']['release'];
 
-const FETCH_META = {
+export const FETCH_META = {
 	headers: new Headers({
 		'Accept': 'application/vnd.github+json',
 		'X-GitHub-Api-Version': '2022-11-28',
