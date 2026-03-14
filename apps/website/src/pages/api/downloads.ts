@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { github } from '@utils/github';
 
 export const prerender = false;
 
@@ -12,39 +13,11 @@ const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
 let cache: DownloadStats | null = null;
 
 const ORGS = ['polyfrost', 'w-overflow', 'skyblockclient'];
-
-function githubHeaders(): HeadersInit {
-	const headers: Record<string, string> = {
-		'Accept': 'application/vnd.github+json',
-		'X-GitHub-Api-Version': '2022-11-28',
-		'User-Agent': 'Polyfrost/1.0.0',
-	};
-
-	const pat = import.meta.env.GITHUB_PAT;
-	if (pat)
-		headers.Authorization = `Bearer ${pat}`;
-
-	return headers;
-}
-
-async function fetchJson<T>(url: string, headers?: HeadersInit): Promise<T> {
-	const res = await fetch(url, { headers });
+async function fetchJson<T>(url: string): Promise<T> {
+	const res = await fetch(url);
 	if (!res.ok)
 		throw new Error(`Fetch failed: ${res.status} ${res.statusText} for ${url}`);
 	return res.json();
-}
-
-interface GitHubRepo {
-	name: string;
-	homepage: string | null;
-}
-
-interface GitHubAsset {
-	download_count: number;
-}
-
-interface GitHubRelease {
-	assets: GitHubAsset[];
 }
 
 interface ModrinthProject {
@@ -52,24 +25,24 @@ interface ModrinthProject {
 }
 
 async function countDownloads(): Promise<DownloadStats> {
-	const headers = githubHeaders();
 	let total = 0;
 	const orgs: Record<string, number> = {};
 
 	for (const org of ORGS) {
 		let orgDownloads = 0;
-		const repos = await fetchJson<GitHubRepo[]>(
-			`https://api.github.com/orgs/${org}/repos?per_page=100`,
-			headers,
-		);
+		const { data: repos } = await github.request('GET /orgs/{org}/repos', {
+			org,
+			per_page: 100,
+		});
 
 		const repoResults = await Promise.allSettled(repos.map(async (repo) => {
 			let repoTotal = 0;
 
-			const releases = await fetchJson<GitHubRelease[]>(
-				`https://api.github.com/repos/${org}/${repo.name}/releases?per_page=100`,
-				headers,
-			);
+			const { data: releases } = await github.request('GET /repos/{owner}/{repo}/releases', {
+				owner: org,
+				repo: repo.name,
+				per_page: 100,
+			});
 
 			for (const release of releases)
 				for (const asset of release.assets)

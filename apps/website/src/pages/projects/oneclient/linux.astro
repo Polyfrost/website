@@ -4,12 +4,11 @@ import Header from '@components/base/Header.astro';
 import Paragraph from '@components/base/Paragraph.astro';
 import Section from '@components/base/Section.astro';
 import Layout from '@layouts/Layout.astro';
-import { FETCH_META } from '@utils/github';
+import { github, ONE_LAUNCHER_REPOSITORY } from '@utils/github';
 
 export const prerender = false;
 
 const RELEASES_PAGE = 'https://github.com/Polyfrost/OneLauncher/releases/latest';
-const RELEASES_API = 'https://api.github.com/repos/Polyfrost/OneLauncher/releases/latest';
 
 type LinuxArchitecture = 'x64' | 'ARM';
 type LinuxFormat = 'AppImage' | 'deb' | 'rpm';
@@ -38,13 +37,10 @@ return 'rpm';
 
 async function fetchLinuxDownloads(): Promise<LinuxDownload[]> {
 	try {
-		const res = await fetch(RELEASES_API, {
-			...FETCH_META,
-		});
-		if (!res.ok)
-return [];
-
-		const release = await res.json();
+		const { data: release } = await github.request(
+			'GET /repos/{owner}/{repo}/releases/latest',
+			ONE_LAUNCHER_REPOSITORY,
+		);
 		const assets: { name: string; browser_download_url: string }[] = release.assets ?? [];
 		const downloads: LinuxDownload[] = [];
 
