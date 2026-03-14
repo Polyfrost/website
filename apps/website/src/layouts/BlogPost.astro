@@ -8,14 +8,14 @@ type Props = CollectionEntry<'blog'>['data'];
 const { title, description, publishDate, updatedDate, coverImage } = Astro.props;
 ---
 
-<div class="parallax-container overflow-x-clip overflow-y-auto max-h-screen">
-	<div class="flex justify-center parallax-4 absolute w-full mt-80 md:mt-24">
-		{coverImage && <img alt="Hero Image" class="object-cover  object-c rounded-t-2xl md:rounded-2xl ring-1 ring-gray-400/50 -z-1 aspect-[3/2]" height={510} src={coverImage} width={1020} />}
+<div class="max-h-screen overflow-x-clip overflow-y-auto parallax-container">
+	<div class="absolute mt-80 w-full flex justify-center parallax-4 md:mt-24">
+		{coverImage && <img alt="Hero Image" class="aspect-[3/2] rounded-t-2xl object-cover object-c ring-1 ring-gray-400/50 -z-1 md:rounded-2xl" height={510} src={coverImage} width={1020} />}
 	</div>
 	<Layout description={description} title={title}>
 		<article class="mt-80 md:mt-24">
-			<div class="flex items-start flex-col mx-auto mt-32 mb-12 max-w-[calc(65ch+32px)] gap-6 parallax-0">
-				<div class="w-full bg-gray-50 p-4 ring-1 ring-gray-400/50 rounded-3xl">
+			<div class="mx-auto mb-12 mt-32 max-w-[calc(65ch+32px)] flex flex-col items-start gap-6 parallax-0">
+				<div class="w-full rounded-3xl bg-gray-50 p-4 ring-1 ring-gray-400/50">
 					<div class="text-xs font-light italic">
 						<FormattedDate date={publishDate} />
 						{
@@ -23,14 +23,14 @@ const { title, description, publishDate, updatedDate, coverImage } = Astro.props
 
 						}
 					</div>
-					<h1 class="text-3xl font-bold text-navy-peony mb-1">{title}</h1>
+					<h1 class="mb-1 text-3xl text-navy-peony font-bold">{title}</h1>
 					<p class="text-sm text-gray-700">
 						{description}
 					</p>
 				</div>
-				<div class="bg-gray-50 p-4 ring-1 ring-gray-400/50 rounded-3xl">
-					<article class="prose" >
-						<slot/>
+				<div class="rounded-3xl bg-gray-50 p-4 ring-1 ring-gray-400/50">
+					<article class="prose">
+						<slot />
 					</article>
 				</div>
 			</div>

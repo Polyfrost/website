@@ -22,7 +22,7 @@ function githubHeaders(): HeadersInit {
 
 	const pat = import.meta.env.GITHUB_PAT;
 	if (pat)
-		headers['Authorization'] = `Bearer ${pat}`;
+		headers.Authorization = `Bearer ${pat}`;
 
 	return headers;
 }
@@ -71,14 +71,13 @@ async function countDownloads(): Promise<DownloadStats> {
 				headers,
 			);
 
-			for (const release of releases) {
+			for (const release of releases)
 				for (const asset of release.assets)
 					repoTotal += asset.download_count;
-			}
 
 			if (repo.homepage?.includes('modrinth')) {
 				const slug = repo.homepage.replace(/\/+$/, '').split('/').pop();
-				if (slug) {
+				if (slug)
 					try {
 						const project = await fetchJson<ModrinthProject>(
 							`https://api.modrinth.com/v2/project/${slug}`,
@@ -86,16 +85,14 @@ async function countDownloads(): Promise<DownloadStats> {
 						repoTotal += project.downloads;
 					}
 					catch { /* modrinth project may not exist */ }
-				}
 			}
 
 			return repoTotal;
 		}));
 
-		for (const result of repoResults) {
+		for (const result of repoResults)
 			if (result.status === 'fulfilled')
 				orgDownloads += result.value;
-		}
 
 		orgs[org] = orgDownloads;
 		total += orgDownloads;

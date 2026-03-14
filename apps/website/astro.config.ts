@@ -1,8 +1,8 @@
-import node from '@astrojs/node';
 import mdx from '@astrojs/mdx';
+import node from '@astrojs/node';
 import partytown from '@astrojs/partytown';
 import sitemap from '@astrojs/sitemap';
-import { defineConfig, envField } from 'astro/config';
+import { defineConfig } from 'astro/config';
 
 import icons from 'astro-icon';
 import unocss from 'unocss/astro';
@@ -11,7 +11,7 @@ import unocss from 'unocss/astro';
 export default defineConfig({
 	site: 'https://polyfrost.org',
 	adapter: node({
-		mode: "standalone"
+		mode: 'standalone',
 	}),
 	output: 'static',
 	integrations: [
@@ -31,11 +31,11 @@ export default defineConfig({
 		ssr: { noExternal: ['smartypants', 'ua-parser-js'] },
 	},
 	experimental: {
-		contentIntellisense: true
+		contentIntellisense: true,
 	},
 	redirects: {
-		"/discord": "https://discord.gg/N4qW7TW3dv",
-		"/oneconfig": "/projects/oneconfig",
-		"/oneclient-blog": "/blog/oneclient-announcement"
-	}
+		'/discord': 'https://discord.gg/N4qW7TW3dv',
+		'/oneconfig': '/projects/oneconfig',
+		'/oneclient-blog': '/blog/oneclient-announcement',
+	},
 });

@@ -6,11 +6,11 @@ import Section from '@components/base/Section.astro';
 import Layout from '@layouts/Layout.astro';
 ---
 
-<Layout title="404" description="The page you requested could not be found.">
+<Layout description="The page you requested could not be found." title="404">
 	<Section class="relative isolate flex-col items-center justify-center py-28 text-center lg:py-36" wrapperClass="min-h-screen">
-		<div class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden opacity-50 blur-3xl sm:-top-80">
+		<div class="absolute inset-x-0 transform-gpu overflow-hidden opacity-50 blur-3xl -top-40 -z-10 sm:-top-80">
 			<svg
-				class="relative left-[calc(50%-11rem)] h-[21.1875rem] max-w-none -translate-x-1/2 rotate-[30deg] sm:left-[calc(50%-30rem)] sm:h-[42.375rem]"
+				class="relative left-[calc(50%-11rem)] h-[21.1875rem] max-w-none rotate-[30deg] sm:left-[calc(50%-30rem)] sm:h-[42.375rem] -translate-x-1/2"
 				viewBox="0 0 1155 678"
 			>
 				<path
@@ -19,7 +19,7 @@ import Layout from '@layouts/Layout.astro';
 					fill-opacity=".3"
 				></path>
 				<defs>
-					<linearGradient id="not-found-top" gradientUnits="userSpaceOnUse" x1="1155.49" x2="-78.208" y1=".177" y2="474.645">
+					<linearGradient gradientUnits="userSpaceOnUse" id="not-found-top" x1="1155.49" x2="-78.208" y1=".177" y2="474.645">
 						<stop stop-color="#2463EB"></stop>
 						<stop offset={1} stop-color="#0080B5"></stop>
 					</linearGradient>
@@ -27,8 +27,8 @@ import Layout from '@layouts/Layout.astro';
 			</svg>
 		</div>
 
-		<div class="mx-auto flex w-full max-w-3xl flex-col items-center gap-y-4">
-			<span class="rounded-full border border-gray-800/20 bg-blue-50 px-4 py-1 text-sm font-medium text-blue-600">
+		<div class="mx-auto max-w-3xl w-full flex flex-col items-center gap-y-4">
+			<span class="border border-gray-800/20 rounded-full bg-blue-50 px-4 py-1 text-sm text-blue-600 font-medium">
 				Error 404
 			</span>
 			<Header align="center" class="text-navy-peony tracking-tight" size="xxl">
@@ -44,9 +44,9 @@ import Layout from '@layouts/Layout.astro';
 			</div>
 		</div>
 
-		<div class="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden opacity-50 blur-3xl sm:top-[calc(100%-35rem)]">
+		<div class="absolute inset-x-0 top-[calc(100%-13rem)] transform-gpu overflow-hidden opacity-50 blur-3xl sm:top-[calc(100%-35rem)] -z-10">
 			<svg
-				class="relative left-[calc(50%+3rem)] h-[21.1875rem] max-w-none -translate-x-1/2 sm:left-[calc(50%+36rem)] sm:h-[42.375rem]"
+				class="relative left-[calc(50%+3rem)] h-[21.1875rem] max-w-none sm:left-[calc(50%+36rem)] sm:h-[42.375rem] -translate-x-1/2"
 				viewBox="0 0 1155 678"
 			>
 				<path
@@ -55,7 +55,7 @@ import Layout from '@layouts/Layout.astro';
 					fill-opacity=".3"
 				></path>
 				<defs>
-					<linearGradient id="not-found-bottom" gradientUnits="userSpaceOnUse" x1="1155.49" x2="-78.208" y1=".177" y2="474.645">
+					<linearGradient gradientUnits="userSpaceOnUse" id="not-found-bottom" x1="1155.49" x2="-78.208" y1=".177" y2="474.645">
 						<stop stop-color="#2463EB"></stop>
 						<stop offset={1} stop-color="#0080B5"></stop>
 					</linearGradient>
