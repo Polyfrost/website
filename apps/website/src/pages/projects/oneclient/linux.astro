@@ -71,7 +71,8 @@ return byFormat;
 			return architectureOrder[a.architecture] - architectureOrder[b.architecture];
 		});
 	}
- catch {
+ catch (e) {
+		console.error('[/projects/oneclient/linux]', e);
 		return [];
 	}
 }
