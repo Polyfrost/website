@@ -5,7 +5,7 @@ import Dropdown from '@components/base/Dropdown.astro';
 import Header from '@components/base/Header.astro';
 import Section from '@components/base/Section.astro';
 import Layout from '@layouts/Layout.astro';
-import { FETCH_META } from '@utils/github';
+import { github, ONE_LAUNCHER_REPOSITORY } from '@utils/github';
 import { Icon } from 'astro-icon/components';
 import { UAParser } from 'ua-parser-js';
 
@@ -56,14 +56,10 @@ const LINUX_GUIDE_PAGE = '/projects/oneclient/linux';
 
 async function fetchVersions(): Promise<Version[]> {
 	try {
-		const res = await fetch(
-			'https://api.github.com/repos/Polyfrost/OneLauncher/releases/latest',
-			{ ...FETCH_META },
+		const { data: release } = await github.request(
+			'GET /repos/{owner}/{repo}/releases/latest',
+			ONE_LAUNCHER_REPOSITORY,
 		);
-		if (!res.ok)
-return [];
-
-		const release = await res.json();
 		const assets: { name: string; browser_download_url: string }[] = release.assets ?? [];
 
 		const versions: Version[] = [];
