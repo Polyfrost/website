@@ -1,10 +1,10 @@
 ---
-import type { NavbarElement } from "@utils/site-info";
-import { Icon } from "astro-icon/components";
-import Header from "../Header.astro";
-import ScreenOverlay from "../ScreenOverlay.astro";
-import ScrollbarOverlayContainer from "../ScrollbarOverlayContainer.astro";
-import Tag from "../Tag.astro";
+import type { NavbarElement } from '@utils/site-info';
+import { Icon } from 'astro-icon/components';
+import Header from '../Header.astro';
+import ScreenOverlay from '../ScreenOverlay.astro';
+import ScrollbarOverlayContainer from '../ScrollbarOverlayContainer.astro';
+import Tag from '../Tag.astro';
 
 interface Props {
 	element: NavbarElement;
@@ -18,17 +18,18 @@ function isCurrentPage(url: string): boolean {
 	return Astro.url.pathname === url;
 }
 
-const color = dark ? "text-dark-secondary" : "text-gray-700";
+const color = dark ? 'text-dark-secondary' : 'text-gray-700';
 ---
 
 <li
 	class="flex flex-row items-center justify-center text-center sm:relative max-sm:overflow-hidden"
 >
 	{
-		element.path ? (
+		element.path
+? (
 			<a
 				aria-label="polyfrost logo"
-				class={`p-2 flex flex-row justify-center items-center hover:text-blue-500 ${isCurrentPage(element.path) ? "text-blue-400" : color}`}
+				class={`p-2 flex flex-row justify-center items-center hover:text-blue-500 ${isCurrentPage(element.path) ? 'text-blue-400' : color}`}
 				href={element.path}
 			>
 				{element.text && element.text}
@@ -44,25 +45,26 @@ const color = dark ? "text-dark-secondary" : "text-gray-700";
 				)}
 				{element.dropdown && <Icon name="chevron-down" />}
 			</a>
-		) : (
+		)
+: (
 			<label class="group" for={`navbar-input-${index}`}>
 				{element.dropdown && (
 					<>
 						<p
-							class={`p-2 flex flex-row justify-center items-center hover:text-blue-500 cursor-default ${element.dropdown.filter((element) => isCurrentPage(element.path ?? "")).length > 0 ? "text-blue-400" : color}`}
+							class={`p-2 flex flex-row justify-center items-center hover:text-blue-500 cursor-default ${element.dropdown.filter(element => isCurrentPage(element.path ?? '')).length > 0 ? 'text-blue-400' : color}`}
 						>
 							{element.text && element.text}
 							{element.logo && (
 								<Icon
 									height={
 										element.logo[2] < 0
-											? "auto"
+											? 'auto'
 											: element.logo[2]
 									}
 									name={element.logo[0]}
 									width={
 										element.logo[1] < 0
-											? "auto"
+											? 'auto'
 											: element.logo[1]
 									}
 								/>
@@ -108,14 +110,14 @@ const color = dark ? "text-dark-secondary" : "text-gray-700";
 								tabindex="-1"
 							>
 								<ul class="p-4">
-									{element.dropdown.map((item) => (
+									{element.dropdown.map(item => (
 										<li>
 											<a
 												class="flex sm:max-w-[400px] sm:min-w-[400px]"
 												href={item.path}
 											>
 												<div
-													class={`transition-[color,background-color,filter] text-left w-full flex flex-row justify-start rounded-md items-center px-6 py-4 gap-6 ${item.path ? "hover:bg-blue-50 active:bg-blue-100" : "grayscale hover:brightness-75"}`}
+													class={`transition-[color,background-color,filter] text-left w-full flex flex-row justify-start rounded-md items-center px-6 py-4 gap-6 ${item.path ? 'hover:bg-blue-50 active:bg-blue-100' : 'grayscale hover:brightness-75'}`}
 												>
 													<div class="w-[36px]">
 														{item.logo && (

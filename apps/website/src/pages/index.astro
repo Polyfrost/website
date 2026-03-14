@@ -68,7 +68,7 @@ import { Icon } from 'astro-icon/components';
 	</Section>
 	<Section class="mt-0 items-center justify-center !px-5 sm:-mt-52 max-sm:!px-0" maxWidth="1024px" wFull>
 		<div class="flex flex-col items-center justify-center px-0 py-12 sm:py-12">
-			<div class="lg:justify-normal relative isolate z-50 flex flex-col-reverse flex-wrap justify-center gap-6 overflow-hidden bg-blue-75 px-6 py-6 md:flex-row lg:flex-nowrap lg:gap-20 sm:rounded-3xl lg:px-8 lg:py-0 md:shadow md:ring-1 md:ring-gray-400/50">
+			<div class="relative isolate z-50 flex flex-col-reverse flex-wrap justify-center gap-6 overflow-hidden bg-blue-75 px-6 py-6 md:flex-row lg:flex-nowrap lg:justify-normal lg:gap-20 sm:rounded-3xl lg:px-8 lg:py-0 md:shadow md:ring-1 md:ring-gray-400/50">
 				<div class="max-w-screen-md flex flex-col items-center justify-center text-center lg:items-start lg:justify-start lg:py-8 lg:text-left">
 					<div class="flex flex-col items-start justify-center">
 						<Icon class="mb-4 hidden text-blue-500 md:block" name="oneconfig" size={38} />
@@ -120,20 +120,20 @@ import { Icon } from 'astro-icon/components';
 			</div>
 		</div>
 	</Section>
-	<Section class="flex items-center justify-center -mt-10 mb-40" maxWidth="1024px" wFull>
+	<Section class="mb-40 flex items-center justify-center -mt-10" maxWidth="1024px" wFull>
 		<div class="mx-auto max-w-3xl w-full flex flex-col">
 			<dl class="grid grid-cols-1 gap-4 sm:grid-cols-2" id="download-stats">
-				<div class="flex flex-col rounded-2xl bg-blue-75 px-14 pt-14 pb-8 text-center ring-1 ring-gray-400/30 shadow-sm">
+				<div class="flex flex-col rounded-2xl bg-blue-75 px-14 pb-8 pt-14 text-center shadow-sm ring-1 ring-gray-400/30">
 					<dt class="order-2 mt-3 text-lg text-gray-600 font-medium leading-6">Total Downloads</dt>
 					<dd class="order-1 text-6xl text-blue-500 font-bold tracking-tight" id="stat-total">—</dd>
 				</div>
-				<div class="flex flex-col rounded-2xl bg-blue-75 px-14 pt-14 pb-8 text-center ring-1 ring-gray-400/30 shadow-sm">
+				<div class="flex flex-col rounded-2xl bg-blue-75 px-14 pb-8 pt-14 text-center shadow-sm ring-1 ring-gray-400/30">
 					<dt class="order-2 mt-3 text-lg text-gray-600 font-medium leading-6">Open Source</dt>
 					<dd class="order-1 text-6xl text-blue-500 font-bold tracking-tight">100%</dd>
 				</div>
 			</dl>
-			<p class="mt-4 text-xs text-gray-400 text-center leading-5">
-				Download counts are aggregated across all public GitHub release assets and Modrinth project downloads for the <a class="underline underline-offset-2 hover:text-gray-500 transition-colors" href="https://github.com/polyfrost">Polyfrost</a>, <a class="underline underline-offset-2 hover:text-gray-500 transition-colors" href="https://github.com/w-overflow">W-OVERFLOW</a> (the previous home for Polyfrost mods), and <a class="underline underline-offset-2 hover:text-gray-500 transition-colors" href="https://github.com/skyblockclient">SkyClient</a> (the mod downloader) GitHub organizations. Cached and refreshed hourly.
+			<p class="mt-4 text-center text-xs text-gray-400 leading-5">
+				Download counts are aggregated across all public GitHub release assets and Modrinth project downloads for the <a class="underline underline-offset-2 transition-colors hover:text-gray-500" href="https://github.com/polyfrost">Polyfrost</a>, <a class="underline underline-offset-2 transition-colors hover:text-gray-500" href="https://github.com/w-overflow">W-OVERFLOW</a> (the previous home for Polyfrost mods), and <a class="underline underline-offset-2 transition-colors hover:text-gray-500" href="https://github.com/skyblockclient">SkyClient</a> (the mod downloader) GitHub organizations. Cached and refreshed hourly.
 			</p>
 		</div>
 	</Section>

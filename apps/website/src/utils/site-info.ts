@@ -1,9 +1,9 @@
-import type { Icon } from "virtual:astro-icon";
+import type { Icon } from 'virtual:astro-icon';
 
 export interface ProjectDownload {
 	url: string;
-	platform?: "windows" | "mac" | "linux" | "universal";
-	architecture?: "x86" | "x64" | "arm" | "arm64" | "universal";
+	platform?: 'windows' | 'mac' | 'linux' | 'universal';
+	architecture?: 'x86' | 'x64' | 'arm' | 'arm64' | 'universal';
 }
 
 export interface Project {
@@ -55,7 +55,7 @@ export interface Config {
 		discord: string;
 		github: string;
 		modrinth: {
-			type: "user" | "organization";
+			type: 'user' | 'organization';
 			id: string;
 		};
 		skyclient: string;
@@ -68,115 +68,115 @@ export interface Config {
 }
 
 export const configConst = {
-	name: "Polyfrost",
-	title: "Polyfrost",
-	description: "Building beautiful mods and tools, byte by byte",
+	name: 'Polyfrost',
+	title: 'Polyfrost',
+	description: 'Building beautiful mods and tools, byte by byte',
 	image: {
-		src: "/media/polyfrost/minimal.svg",
-		alt: "Polyfrost Logo",
+		src: '/media/polyfrost/minimal.svg',
+		alt: 'Polyfrost Logo',
 	},
 	projects: getProjects(),
 	socials: {
-		youtube: "https://youtube.com/@Polyfrost",
-		discord: "https://discord.gg/N4qW7TW3dv",
-		github: "https://github.com/Polyfrost",
+		youtube: 'https://youtube.com/@Polyfrost',
+		discord: 'https://discord.gg/N4qW7TW3dv',
+		github: 'https://github.com/Polyfrost',
 		modrinth: {
-			id: "polyfrost",
-			type: "organization",
+			id: 'polyfrost',
+			type: 'organization',
 		},
-		skyclient: "https://skyclient.co",
+		skyclient: 'https://skyclient.co',
 	},
 	navbar: {
 		left: [
 			{
-				logo: ["polyfrost.full", 174, 30],
-				path: "/",
+				logo: ['polyfrost.full', 174, 30],
+				path: '/',
 			},
 		],
 		right: [
 			{
-				text: "Home",
-				path: "/",
+				text: 'Home',
+				path: '/',
 			},
 			{
-				text: "Mods",
-				path: "/mods",
+				text: 'Mods',
+				path: '/mods',
 			},
 			{
-				text: "Projects",
+				text: 'Projects',
 				dropdown: getProjects().map((project) => {
 					if (project.hasPage)
-						(project as any).path =
-							`/projects/${project.name.toLowerCase()}`;
+						(project as any).path
+							= `/projects/${project.name.toLowerCase()}`;
 
 					return project;
 				}) as unknown as NavbarDropdown[],
 			},
 			{
-				text: "About Us",
-				path: "/about",
+				text: 'About Us',
+				path: '/about',
 			},
 			{
-				text: "Blog",
-				path: "/blog",
+				text: 'Blog',
+				path: '/blog',
 			},
 		],
 	},
 	footer: [
 		{
-			header: "Products",
+			header: 'Products',
 			links: getProjects()
-				.filter((project) => project.hasPage === true)
-				.map((project) => ({
+				.filter(project => project.hasPage === true)
+				.map(project => ({
 					text: project.name,
 					url: `/projects/${project.name.toLowerCase()}`,
 				}))
 				.concat([
 					{
-						text: "Mods",
-						url: "/mods",
+						text: 'Mods',
+						url: '/mods',
 					},
 				]),
 		},
 		{
-			header: "Organization",
+			header: 'Organization',
 			links: [
 				{
-					text: "About us",
-					url: "/about",
+					text: 'About us',
+					url: '/about',
 				},
 				{
-					text: "Blog",
-					url: "/blog",
+					text: 'Blog',
+					url: '/blog',
 				},
 				{
-					text: "Branding",
-					url: "/branding",
+					text: 'Branding',
+					url: '/branding',
 				},
 				{
-					text: "Contact us",
-					url: "/contact",
+					text: 'Contact us',
+					url: '/contact',
 				},
 				{
-					text: "Documentation",
-					url: "https://docs.polyfrost.org",
+					text: 'Documentation',
+					url: 'https://docs.polyfrost.org',
 				},
 				{
-					text: "Open source",
-					url: "/oss",
+					text: 'Open source',
+					url: '/oss',
 				},
 			],
 		},
 		{
-			header: "Legal",
+			header: 'Legal',
 			links: [
 				{
-					text: "Terms of service",
-					url: "/legal/terms",
+					text: 'Terms of service',
+					url: '/legal/terms',
 				},
 				{
-					text: "Privacy policy",
-					url: "/legal/privacy",
+					text: 'Privacy policy',
+					url: '/legal/privacy',
 				},
 			],
 		},
@@ -186,25 +186,25 @@ export const configConst = {
 function getProjects(): Project[] {
 	return [
 		{
-			name: "OneConfig",
+			name: 'OneConfig',
 			description:
-				"The next-generation config library for Forge and Fabric",
-			logo: "oneconfig.minimal",
+				'The next-generation config library for Forge and Fabric',
+			logo: 'oneconfig.minimal',
 			hasPage: true,
 		},
 		{
-			name: "OneClient",
+			name: 'OneClient',
 			description:
-				"The anti-client.",
-			logo: "oneclient.minimal",
+				'The anti-client.',
+			logo: 'oneclient.minimal',
 			hasPage: true,
 		},
 		{
-			name: "OneLauncher",
+			name: 'OneLauncher',
 			description:
-				"The next-generation launcher for all your Minecraft needs",
-			logo: "onelauncher.minimal",
-			tag: "SOON",
+				'The next-generation launcher for all your Minecraft needs',
+			logo: 'onelauncher.minimal',
+			tag: 'SOON',
 		},
 	];
 }

@@ -1,18 +1,18 @@
 ---
-import Button from "@components/base/Button.astro";
-import Header from "@components/base/Header.astro";
-import Section from "@components/base/Section.astro";
-import Dropdown from "@components/base/Dropdown.astro";
-import Layout from "@layouts/Layout.astro";
-import type { Icon as IconType } from "virtual:astro-icon";
-import { UAParser } from "ua-parser-js";
-import { Icon } from "astro-icon/components";
+import type { Icon as IconType } from 'virtual:astro-icon';
+import Button from '@components/base/Button.astro';
+import Dropdown from '@components/base/Dropdown.astro';
+import Header from '@components/base/Header.astro';
+import Section from '@components/base/Section.astro';
+import Layout from '@layouts/Layout.astro';
 import { FETCH_META } from '@utils/github';
+import { Icon } from 'astro-icon/components';
+import { UAParser } from 'ua-parser-js';
 
 export const prerender = false;
 
-type OS = "Windows" | "macOS" | "Linux";
-type Architecture = "x64" | "x86" | "ARM";
+type OS = 'Windows' | 'macOS' | 'Linux';
+type Architecture = 'x64' | 'x86' | 'ARM';
 
 type Platform = {
 	os: OS;
@@ -20,24 +20,30 @@ type Platform = {
 };
 
 function getPlatform(): Platform | undefined {
-	const agent = Astro.request.headers.get("User-Agent");
-	if (!agent) return;
+	const agent = Astro.request.headers.get('User-Agent');
+	if (!agent)
+return;
 	const { cpu, os } = UAParser(agent);
 
 	let architecture: Architecture | undefined;
-	if (cpu.is("arm64") || cpu.is("armhf") || cpu.is("arm")) architecture = "ARM";
-	else if (cpu.architecture == "amd64") architecture = "x64";
-	else if (cpu.architecture == "ia32") architecture = "x86";
+	if (cpu.is('arm64') || cpu.is('armhf') || cpu.is('arm'))
+architecture = 'ARM';
+	else if (cpu.architecture == 'amd64')
+architecture = 'x64';
+	else if (cpu.architecture == 'ia32')
+architecture = 'x86';
 
-	if (os.is("Windows")) return { os: "Windows", architecture };
-	if (os.is("macOS")) return { os: "macOS", architecture };
-	if (os.is("Linux")) return { os: "Linux", architecture };
-	return;
+	if (os.is('Windows'))
+return { os: 'Windows', architecture };
+	if (os.is('macOS'))
+return { os: 'macOS', architecture };
+	if (os.is('Linux'))
+return { os: 'Linux', architecture };
 }
 
 type Version = {
 	os: OS;
-	architecture: Architecture | "Universal";
+	architecture: Architecture | 'Universal';
 	name?: string;
 	url: string;
 	icon?: IconType;
@@ -45,16 +51,17 @@ type Version = {
 
 // Fetch the latest release from GitHub and parse assets into our Version list.
 // Priority per OS: prefer the best installer format, skip .sig and updater tarballs.
-const RELEASES_PAGE = "https://github.com/Polyfrost/OneLauncher/releases/latest";
-const LINUX_GUIDE_PAGE = "/projects/oneclient/linux";
+const RELEASES_PAGE = 'https://github.com/Polyfrost/OneLauncher/releases/latest';
+const LINUX_GUIDE_PAGE = '/projects/oneclient/linux';
 
 async function fetchVersions(): Promise<Version[]> {
 	try {
 		const res = await fetch(
-			"https://api.github.com/repos/Polyfrost/OneLauncher/releases/latest",
+			'https://api.github.com/repos/Polyfrost/OneLauncher/releases/latest',
 			{ ...FETCH_META },
 		);
-		if (!res.ok) return [];
+		if (!res.ok)
+return [];
 
 		const release = await res.json();
 		const assets: { name: string; browser_download_url: string }[] = release.assets ?? [];
@@ -65,91 +72,95 @@ async function fetchVersions(): Promise<Version[]> {
 		const find = (pred: (name: string) => boolean) =>
 			assets.find((a) => {
 				const name = a.name.toLowerCase();
-				return !name.endsWith(".sig") && !name.endsWith(".json") && pred(name);
+				return !name.endsWith('.sig') && !name.endsWith('.json') && pred(name);
 			});
 
 		const isLinuxX64 = (name: string) =>
-			name.includes("amd64") || name.includes("x86_64") || name.includes("_x64") || name.includes("-x64");
-		const isLinuxArm = (name: string) => name.includes("aarch64") || name.includes("arm64");
+			name.includes('amd64') || name.includes('x86_64') || name.includes('_x64') || name.includes('-x64');
+		const isLinuxArm = (name: string) => name.includes('aarch64') || name.includes('arm64');
 
 		// Windows x64 — .exe installer
-		const winX64 = find((n) => n.endsWith(".exe"));
-		if (winX64) versions.push({ os: "Windows", architecture: "x64", url: winX64.browser_download_url });
+		const winX64 = find(n => n.endsWith('.exe'));
+		if (winX64)
+versions.push({ os: 'Windows', architecture: 'x64', url: winX64.browser_download_url });
 
 		// macOS Apple Silicon (aarch64) — .dmg
-		const macArm = find((n) => n.includes("aarch64") && n.endsWith(".dmg"));
-		if (macArm) versions.push({ os: "macOS", architecture: "ARM", url: macArm.browser_download_url });
+		const macArm = find(n => n.includes('aarch64') && n.endsWith('.dmg'));
+		if (macArm)
+versions.push({ os: 'macOS', architecture: 'ARM', url: macArm.browser_download_url });
 
 		// macOS Intel (x64) — .dmg
-		const macX64 = find((n) => n.includes("x64") && n.endsWith(".dmg"));
-		if (macX64) versions.push({ os: "macOS", architecture: "x64", url: macX64.browser_download_url });
+		const macX64 = find(n => n.includes('x64') && n.endsWith('.dmg'));
+		if (macX64)
+versions.push({ os: 'macOS', architecture: 'x64', url: macX64.browser_download_url });
 
 		// Linux x64 — include AppImage, .deb, and .rpm (in default preference order)
-		const linuxX64AppImage = find((n) => isLinuxX64(n) && n.endsWith(".appimage"));
+		const linuxX64AppImage = find(n => isLinuxX64(n) && n.endsWith('.appimage'));
 		if (linuxX64AppImage)
 			versions.push({
-				os: "Linux",
-				architecture: "x64",
-				name: "AppImage (Linux x64)",
+				os: 'Linux',
+				architecture: 'x64',
+				name: 'AppImage (Linux x64)',
 				url: linuxX64AppImage.browser_download_url,
 			});
 
-		const linuxX64Deb = find((n) => isLinuxX64(n) && n.endsWith(".deb"));
+		const linuxX64Deb = find(n => isLinuxX64(n) && n.endsWith('.deb'));
 		if (linuxX64Deb)
 			versions.push({
-				os: "Linux",
-				architecture: "x64",
-				name: "Debian package (Linux x64)",
+				os: 'Linux',
+				architecture: 'x64',
+				name: 'Debian package (Linux x64)',
 				url: linuxX64Deb.browser_download_url,
 			});
 
-		const linuxX64Rpm = find((n) => isLinuxX64(n) && n.endsWith(".rpm"));
+		const linuxX64Rpm = find(n => isLinuxX64(n) && n.endsWith('.rpm'));
 		if (linuxX64Rpm)
 			versions.push({
-				os: "Linux",
-				architecture: "x64",
-				name: "RPM package (Linux x64)",
+				os: 'Linux',
+				architecture: 'x64',
+				name: 'RPM package (Linux x64)',
 				url: linuxX64Rpm.browser_download_url,
 			});
 
 		// Linux ARM — include AppImage, .deb, and .rpm (in default preference order)
-		const linuxArmAppImage = find((n) => isLinuxArm(n) && n.endsWith(".appimage"));
+		const linuxArmAppImage = find(n => isLinuxArm(n) && n.endsWith('.appimage'));
 		if (linuxArmAppImage)
 			versions.push({
-				os: "Linux",
-				architecture: "ARM",
-				name: "AppImage (Linux ARM)",
+				os: 'Linux',
+				architecture: 'ARM',
+				name: 'AppImage (Linux ARM)',
 				url: linuxArmAppImage.browser_download_url,
 			});
 
-		const linuxArmDeb = find((n) => isLinuxArm(n) && n.endsWith(".deb"));
+		const linuxArmDeb = find(n => isLinuxArm(n) && n.endsWith('.deb'));
 		if (linuxArmDeb)
 			versions.push({
-				os: "Linux",
-				architecture: "ARM",
-				name: "Debian package (Linux ARM)",
+				os: 'Linux',
+				architecture: 'ARM',
+				name: 'Debian package (Linux ARM)',
 				url: linuxArmDeb.browser_download_url,
 			});
 
-		const linuxArmRpm = find((n) => isLinuxArm(n) && n.endsWith(".rpm"));
+		const linuxArmRpm = find(n => isLinuxArm(n) && n.endsWith('.rpm'));
 		if (linuxArmRpm)
 			versions.push({
-				os: "Linux",
-				architecture: "ARM",
-				name: "RPM package (Linux ARM)",
+				os: 'Linux',
+				architecture: 'ARM',
+				name: 'RPM package (Linux ARM)',
 				url: linuxArmRpm.browser_download_url,
 			});
 
 		return versions;
-	} catch {
+	}
+ catch {
 		return [];
 	}
 }
 
 const icons: Record<OS | (string & {}), IconType> = {
-	Windows: "windows",
-	macOS: "apple",
-	Linux: "linux",
+	Windows: 'windows',
+	macOS: 'apple',
+	Linux: 'linux',
 };
 
 const versions = await fetchVersions();
@@ -158,46 +169,47 @@ const platform = getPlatform();
 
 // Find the best match: exact OS + architecture first, then OS + "Universal" fallback,
 // then any version for the OS, then the releases page.
-const version =
-	versions.find((v) => v.os === platform?.os && v.architecture === platform?.architecture) ||
-	versions.find((v) => v.os === platform?.os && v.architecture === "Universal") ||
-	versions.find((v) => v.os === platform?.os);
+const version
+	= versions.find(v => v.os === platform?.os && v.architecture === platform?.architecture)
+		|| versions.find(v => v.os === platform?.os && v.architecture === 'Universal')
+		|| versions.find(v => v.os === platform?.os);
 
-const defaultDownloadHref = platform?.os === "Linux" ? LINUX_GUIDE_PAGE : version?.url ?? RELEASES_PAGE;
-const defaultDownloadText =
-	platform?.os === "Linux"
-		? "Install on Linux"
+const defaultDownloadHref = platform?.os === 'Linux' ? LINUX_GUIDE_PAGE : version?.url ?? RELEASES_PAGE;
+const defaultDownloadText
+	= platform?.os === 'Linux'
+		? 'Install on Linux'
 		: version
 			? version.name
 				? `Download ${version.name}`
 				: `Download for ${version.os} ${version.architecture}`
-			: "Download";
+			: 'Download';
 
 const dropdownVersions: Version[] = [
-	...versions.filter((v) => v.os !== "Linux"),
+	...versions.filter(v => v.os !== 'Linux'),
 	{
-		os: "Linux",
-		architecture: "Universal",
-		name: "Linux (All distros)",
+		os: 'Linux',
+		architecture: 'Universal',
+		name: 'Linux (All distros)',
 		url: LINUX_GUIDE_PAGE,
-		icon: "linux",
+		icon: 'linux',
 	},
 ];
 ---
 
-<div class="w-screen h-screen fixed bg-dark-background -z-1"></div>
-<Layout title="OneClient" dark>
+<div class="fixed h-screen w-screen bg-dark-background -z-1"></div>
+<Layout dark title="OneClient">
 	<Section
-		class="h-screen flex-col items-center justify-center md:min-h-[600px] mb-12 mt-12"
+		class="mb-12 mt-12 h-screen flex-col items-center justify-center md:min-h-[600px]"
 	>
-		<div class="w-full max-w-2xl bg-gray-50 h-auto aspect-video">
+		<div class="aspect-video h-auto max-w-2xl w-full bg-gray-50">
 			<iframe
+				allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+				allowfullscreen
+				class="h-full w-full"
+				referrerpolicy="strict-origin-when-cross-origin"
 				src="https://www.youtube.com/embed/al-59UpjjLw?color=white&autoplay=1&disablekb=1&cc_load_policy=0&loop=1&playsinline=1"
 				title="YouTube video player"
-				allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-				referrerpolicy="strict-origin-when-cross-origin"
-				allowfullscreen
-				class="w-full h-full"></iframe>
+			></iframe>
 		</div>
 		<div class="flex flex-col items-center justify-center gap-y-4">
 			<Header
@@ -211,31 +223,31 @@ const dropdownVersions: Version[] = [
 				class="flex flex-row flex-wrap items-center justify-center gap-2"
 			>
 				<Dropdown
+					href={defaultDownloadHref}
 					iconLeft="download"
 					text={defaultDownloadText}
-					href={defaultDownloadHref}
 				>
 					<div class="flex flex-col gap-1">
 						<div
-							class="bg-dark-background border border-gray-700 text-dark-secondary rounded-xl p-2 gap-1 flex flex-col"
+							class="flex flex-col gap-1 border border-gray-700 rounded-xl bg-dark-background p-2 text-dark-secondary"
 						>
 							{
-								dropdownVersions.map((version) => (
+								dropdownVersions.map(version => (
 									<a
+										class="min-w-[200px] flex items-center gap-1 border-1 border-gray-700 rounded-lg p-2 hover:bg-blue-600/5"
 										href={version.url}
-										class="flex items-center gap-1 border-1 border-gray-700 rounded-lg p-2 hover:bg-blue-600/5 min-w-[200px]"
 									>
 										<Icon
 											name={
-												version.icon ??
-												icons[version.os] ??
-												"download"
+												version.icon
+												?? icons[version.os]
+												?? 'download'
 											}
 											size={18}
 										/>
 										<h3>
-											{version.name ??
-												`${version.os} ${version.architecture}`}
+											{version.name
+											?? `${version.os} ${version.architecture}`}
 										</h3>
 									</a>
 								))
