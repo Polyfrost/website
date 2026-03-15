@@ -53,6 +53,11 @@ type Version = {
 // Priority per OS: prefer the best installer format, skip .sig and updater tarballs.
 const RELEASES_PAGE = 'https://github.com/Polyfrost/OneLauncher/releases/latest';
 const LINUX_GUIDE_PAGE = '/projects/oneclient/linux';
+const VERSIONS_CACHE_TTL_MS = 60 * 60 * 1000;
+
+let versionsCache: Version[] | undefined;
+let versionsCacheFetchedAt = 0;
+let versionsInFlight: Promise<Version[]> | undefined;
 
 async function fetchVersions(): Promise<Version[]> {
 	try {
@@ -153,13 +158,32 @@ versions.push({ os: 'macOS', architecture: 'x64', url: macX64.browser_download_u
 	}
 }
 
+async function getCachedVersions(): Promise<Version[]> {
+	const now = Date.now();
+	if (versionsCache && now - versionsCacheFetchedAt < VERSIONS_CACHE_TTL_MS)
+		return versionsCache;
+
+	if (!versionsInFlight)
+		versionsInFlight = fetchVersions()
+			.then((versions) => {
+				versionsCache = versions;
+				versionsCacheFetchedAt = Date.now();
+				return versions;
+			})
+			.finally(() => {
+				versionsInFlight = undefined;
+			});
+
+	return versionsInFlight;
+}
+
 const icons: Record<OS | (string & {}), IconType> = {
 	Windows: 'windows',
 	macOS: 'apple',
 	Linux: 'linux',
 };
 
-const versions = await fetchVersions();
+const versions = await getCachedVersions();
 
 const platform = getPlatform();
 
