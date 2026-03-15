@@ -8,14 +8,12 @@
 		"build": "astro build",
 		"preview": "astro preview",
 		"check": "astro check",
-		"astro": "astro",
-		"test": "vitest"
+		"astro": "astro"
 	},
 	"dependencies": {
 		"@astrojs/check": "^0.9.4",
 		"@astrojs/mdx": "^4.3.1",
 		"@astrojs/node": "^9.3.0",
-		"@astrojs/partytown": "^2.1.4",
 		"@astrojs/rss": "^4.0.12",
 		"@astrojs/sitemap": "^3.4.1",
 		"@octokit/core": "^7.0.6",
