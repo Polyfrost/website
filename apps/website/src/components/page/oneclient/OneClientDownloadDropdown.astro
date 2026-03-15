@@ -1,0 +1,212 @@
+---
+import type { Icon as IconType } from 'virtual:astro-icon';
+import Dropdown from '@components/base/Dropdown.astro';
+import { github, ONE_LAUNCHER_REPOSITORY } from '@utils/github';
+import { Icon } from 'astro-icon/components';
+import { UAParser } from 'ua-parser-js';
+
+const RELEASES_PAGE = 'https://github.com/Polyfrost/OneLauncher/releases/latest';
+const LINUX_GUIDE_PAGE = '/projects/oneclient/linux';
+
+type OS = 'Windows' | 'macOS' | 'Linux';
+type Architecture = 'x64' | 'x86' | 'ARM';
+
+interface Platform {
+	os: OS;
+	architecture?: Architecture;
+}
+
+interface Version {
+	os: OS;
+	architecture: Architecture | 'Universal';
+	name?: string;
+	url: string;
+}
+
+interface DropdownVersion extends Version {
+	icon?: IconType;
+}
+
+function getPlatform(agent?: string | null): Platform | undefined {
+	if (!agent)
+		return;
+
+	const { cpu, os } = UAParser(agent);
+
+	let architecture: Architecture | undefined;
+	if (cpu.is('arm64') || cpu.is('armhf') || cpu.is('arm'))
+		architecture = 'ARM';
+	else if (cpu.architecture === 'amd64')
+		architecture = 'x64';
+	else if (cpu.architecture === 'ia32')
+		architecture = 'x86';
+
+	if (os.is('Windows'))
+		return { os: 'Windows', architecture };
+	if (os.is('macOS'))
+		return { os: 'macOS', architecture };
+	if (os.is('Linux'))
+		return { os: 'Linux', architecture };
+}
+
+const icons: Record<OS | (string & {}), IconType> = {
+	Windows: 'windows',
+	macOS: 'apple',
+	Linux: 'linux',
+};
+
+function isLinuxX64(name: string): boolean {
+	return name.includes('amd64') || name.includes('x86_64') || name.includes('_x64') || name.includes('-x64');
+}
+
+function isLinuxArm(name: string): boolean {
+	return name.includes('aarch64') || name.includes('arm64');
+}
+
+async function fetchVersions(): Promise<Version[]> {
+	try {
+		const { data: release } = await github.request(
+			'GET /repos/{owner}/{repo}/releases/latest',
+			ONE_LAUNCHER_REPOSITORY,
+		);
+		const assets: { name: string; browser_download_url: string }[] = release.assets ?? [];
+		const versions: Version[] = [];
+
+		const find = (pred: (name: string) => boolean) =>
+			assets.find((asset) => {
+				const name = asset.name.toLowerCase();
+				return !name.endsWith('.sig') && !name.endsWith('.json') && pred(name);
+			});
+
+		const winX64 = find(name => name.endsWith('.exe'));
+		if (winX64)
+			versions.push({ os: 'Windows', architecture: 'x64', url: winX64.browser_download_url });
+
+		const macArm = find(name => name.includes('aarch64') && name.endsWith('.dmg'));
+		if (macArm)
+			versions.push({ os: 'macOS', architecture: 'ARM', url: macArm.browser_download_url });
+
+		const macX64 = find(name => name.includes('x64') && name.endsWith('.dmg'));
+		if (macX64)
+			versions.push({ os: 'macOS', architecture: 'x64', url: macX64.browser_download_url });
+
+		const linuxX64AppImage = find(name => isLinuxX64(name) && name.endsWith('.appimage'));
+		if (linuxX64AppImage)
+			versions.push({
+				os: 'Linux',
+				architecture: 'x64',
+				name: 'AppImage (Linux x64)',
+				url: linuxX64AppImage.browser_download_url,
+			});
+
+		const linuxX64Deb = find(name => isLinuxX64(name) && name.endsWith('.deb'));
+		if (linuxX64Deb)
+			versions.push({
+				os: 'Linux',
+				architecture: 'x64',
+				name: 'Debian package (Linux x64)',
+				url: linuxX64Deb.browser_download_url,
+			});
+
+		const linuxX64Rpm = find(name => isLinuxX64(name) && name.endsWith('.rpm'));
+		if (linuxX64Rpm)
+			versions.push({
+				os: 'Linux',
+				architecture: 'x64',
+				name: 'RPM package (Linux x64)',
+				url: linuxX64Rpm.browser_download_url,
+			});
+
+		const linuxArmAppImage = find(name => isLinuxArm(name) && name.endsWith('.appimage'));
+		if (linuxArmAppImage)
+			versions.push({
+				os: 'Linux',
+				architecture: 'ARM',
+				name: 'AppImage (Linux ARM)',
+				url: linuxArmAppImage.browser_download_url,
+			});
+
+		const linuxArmDeb = find(name => isLinuxArm(name) && name.endsWith('.deb'));
+		if (linuxArmDeb)
+			versions.push({
+				os: 'Linux',
+				architecture: 'ARM',
+				name: 'Debian package (Linux ARM)',
+				url: linuxArmDeb.browser_download_url,
+			});
+
+		const linuxArmRpm = find(name => isLinuxArm(name) && name.endsWith('.rpm'));
+		if (linuxArmRpm)
+			versions.push({
+				os: 'Linux',
+				architecture: 'ARM',
+				name: 'RPM package (Linux ARM)',
+				url: linuxArmRpm.browser_download_url,
+			});
+
+		return versions;
+	}
+	catch {
+		return [];
+	}
+}
+
+const versions = await fetchVersions();
+const platform = getPlatform(Astro.request.headers.get('User-Agent'));
+
+const version
+	= versions.find(entry => entry.os === platform?.os && entry.architecture === platform?.architecture)
+		|| versions.find(entry => entry.os === platform?.os && entry.architecture === 'Universal')
+		|| versions.find(entry => entry.os === platform?.os);
+
+const defaultDownloadHref = platform?.os === 'Linux' ? LINUX_GUIDE_PAGE : version?.url ?? RELEASES_PAGE;
+const defaultDownloadText
+	= platform?.os === 'Linux'
+		? 'Install on Linux'
+		: version
+			? version.name
+				? `Download ${version.name}`
+				: `Download for ${version.os} ${version.architecture}`
+			: 'Download';
+
+const dropdownVersions: DropdownVersion[] = [
+	...versions.filter(entry => entry.os !== 'Linux'),
+	{
+		os: 'Linux',
+		architecture: 'Universal',
+		name: 'Linux (All distros)',
+		url: LINUX_GUIDE_PAGE,
+		icon: 'linux',
+	},
+];
+---
+
+<Dropdown
+	href={defaultDownloadHref}
+	iconLeft="download"
+	text={defaultDownloadText}
+>
+	<div class="flex flex-col gap-1">
+		<div
+			class="flex flex-col gap-1 border border-gray-700 rounded-xl bg-dark-background p-2 text-dark-secondary"
+		>
+			{
+				dropdownVersions.map(version => (
+					<a
+						class="min-w-[200px] flex items-center gap-1 border-1 border-gray-700 rounded-lg p-2 hover:bg-blue-600/5"
+						href={version.url}
+					>
+						<Icon
+							name={version.icon ?? icons[version.os] ?? 'download'}
+							size={18}
+						/>
+						<h3>
+							{version.name
+							?? `${version.os} ${version.architecture}`}
+						</h3>
+					</a>
+				))
+			}
+		</div>
+	</div>
+</Dropdown>
