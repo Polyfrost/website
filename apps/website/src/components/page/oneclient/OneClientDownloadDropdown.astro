@@ -63,6 +63,8 @@ function isLinuxArm(name: string): boolean {
 	return name.includes('aarch64') || name.includes('arm64');
 }
 
+// Fetch the latest release from GitHub and parse assets into our Version list.
+// Priority per OS: prefer the best installer format, skip .sig and updater tarballs.
 async function fetchVersions(): Promise<Version[]> {
 	try {
 		const { data: release } = await github.request(
@@ -72,24 +74,29 @@ async function fetchVersions(): Promise<Version[]> {
 		const assets: { name: string; browser_download_url: string }[] = release.assets ?? [];
 		const versions: Version[] = [];
 
+		// Helper: find the first asset whose filename matches a predicate (exclude .sig/.json)
 		const find = (pred: (name: string) => boolean) =>
 			assets.find((asset) => {
 				const name = asset.name.toLowerCase();
 				return !name.endsWith('.sig') && !name.endsWith('.json') && pred(name);
 			});
 
+		// Windows x64 -- .exe installer
 		const winX64 = find(name => name.endsWith('.exe'));
 		if (winX64)
 			versions.push({ os: 'Windows', architecture: 'x64', url: winX64.browser_download_url });
 
+		// macOS Apple Silicon (aarch64) -- .dmg
 		const macArm = find(name => name.includes('aarch64') && name.endsWith('.dmg'));
 		if (macArm)
 			versions.push({ os: 'macOS', architecture: 'ARM', url: macArm.browser_download_url });
 
+		// macOS Intel (x64) -- .dmg
 		const macX64 = find(name => name.includes('x64') && name.endsWith('.dmg'));
 		if (macX64)
 			versions.push({ os: 'macOS', architecture: 'x64', url: macX64.browser_download_url });
 
+		// Linux x64 -- include AppImage, .deb, and .rpm (in default preference order)
 		const linuxX64AppImage = find(name => isLinuxX64(name) && name.endsWith('.appimage'));
 		if (linuxX64AppImage)
 			versions.push({
@@ -117,6 +124,7 @@ async function fetchVersions(): Promise<Version[]> {
 				url: linuxX64Rpm.browser_download_url,
 			});
 
+		// Linux ARM -- include AppImage, .deb, and .rpm (in default preference order)
 		const linuxArmAppImage = find(name => isLinuxArm(name) && name.endsWith('.appimage'));
 		if (linuxArmAppImage)
 			versions.push({
@@ -146,7 +154,8 @@ async function fetchVersions(): Promise<Version[]> {
 
 		return versions;
 	}
-	catch {
+	catch (e) {
+		console.error('[oneclient downloads]', e);
 		return [];
 	}
 }
@@ -154,6 +163,8 @@ async function fetchVersions(): Promise<Version[]> {
 const versions = await fetchVersions();
 const platform = getPlatform(Astro.request.headers.get('User-Agent'));
 
+// Find the best match: exact OS + architecture first, then OS + "Universal" fallback,
+// then any version for the OS, then the releases page.
 const version
 	= versions.find(entry => entry.os === platform?.os && entry.architecture === platform?.architecture)
 		|| versions.find(entry => entry.os === platform?.os && entry.architecture === 'Universal')
