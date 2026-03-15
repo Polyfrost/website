@@ -7,6 +7,7 @@ import { UAParser } from 'ua-parser-js';
 
 const RELEASES_PAGE = 'https://github.com/Polyfrost/OneLauncher/releases/latest';
 const LINUX_GUIDE_PAGE = '/projects/oneclient/linux';
+const VERSIONS_CACHE_TTL_MS = 60 * 60 * 1000;
 
 type OS = 'Windows' | 'macOS' | 'Linux';
 type Architecture = 'x64' | 'x86' | 'ARM';
@@ -26,6 +27,10 @@ interface Version {
 interface DropdownVersion extends Version {
 	icon?: IconType;
 }
+
+let versionsCache: Version[] | undefined;
+let versionsCacheFetchedAt = 0;
+let versionsInFlight: Promise<Version[]> | undefined;
 
 function getPlatform(agent?: string | null): Platform | undefined {
 	if (!agent)
@@ -160,7 +165,26 @@ async function fetchVersions(): Promise<Version[]> {
 	}
 }
 
-const versions = await fetchVersions();
+async function getCachedVersions(): Promise<Version[]> {
+	const now = Date.now();
+	if (versionsCache && now - versionsCacheFetchedAt < VERSIONS_CACHE_TTL_MS)
+		return versionsCache;
+
+	if (!versionsInFlight)
+		versionsInFlight = fetchVersions()
+			.then((versions) => {
+				versionsCache = versions;
+				versionsCacheFetchedAt = Date.now();
+				return versions;
+			})
+			.finally(() => {
+				versionsInFlight = undefined;
+			});
+
+	return versionsInFlight;
+}
+
+const versions = await getCachedVersions();
 const platform = getPlatform(Astro.request.headers.get('User-Agent'));
 
 // Find the best match: exact OS + architecture first, then OS + "Universal" fallback,
