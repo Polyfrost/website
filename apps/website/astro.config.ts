@@ -2,7 +2,7 @@ import mdx from '@astrojs/mdx';
 import node from '@astrojs/node';
 import partytown from '@astrojs/partytown';
 import sitemap from '@astrojs/sitemap';
-import { defineConfig } from 'astro/config';
+import { defineConfig, envField } from 'astro/config';
 
 import icons from 'astro-icon';
 import unocss from 'unocss/astro';
@@ -38,4 +38,9 @@ export default defineConfig({
 		'/oneconfig': '/projects/oneconfig',
 		'/oneclient-blog': '/blog/oneclient-announcement',
 	},
+	env: {
+		schema: {
+			GITHUB_PAT: envField.string({ context: 'server', access: 'secret', optional: true })
+		}
+	}
 });

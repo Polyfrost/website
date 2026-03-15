@@ -1,5 +1,6 @@
 import { Octokit } from '@octokit/core';
 import { throttling } from '@octokit/plugin-throttling';
+import { GITHUB_PAT } from 'astro:env/server';
 
 export const ONE_LAUNCHER_REPOSITORY = {
 	owner: 'Polyfrost',
@@ -54,7 +55,7 @@ const GitHubClient = Octokit.plugin(throttling).defaults({
 		},
 	},
 	userAgent: 'Polyfrost/1.0.0',
-	...(import.meta.env.GITHUB_PAT ? { auth: import.meta.env.GITHUB_PAT } : {}),
+	...(GITHUB_PAT ? { auth: GITHUB_PAT } : {}),
 });
 
 export const github = new GitHubClient();
