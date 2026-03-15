@@ -1,9 +1,9 @@
 import mdx from '@astrojs/mdx';
 import node from '@astrojs/node';
-import partytown from '@astrojs/partytown';
 import sitemap from '@astrojs/sitemap';
-import { defineConfig, envField } from 'astro/config';
+import configConst from '@utils/site-info';
 
+import { defineConfig, envField } from 'astro/config';
 import icons from 'astro-icon';
 import unocss from 'unocss/astro';
 
@@ -20,7 +20,6 @@ export default defineConfig({
 		}),
 		mdx(),
 		sitemap(),
-		partytown(),
 		icons({
 			svgoOptions: {
 				plugins: [],
@@ -34,7 +33,7 @@ export default defineConfig({
 		contentIntellisense: true,
 	},
 	redirects: {
-		'/discord': 'https://discord.gg/N4qW7TW3dv',
+		'/discord': configConst.socials.discord,
 		'/oneconfig': '/projects/oneconfig',
 		'/oneclient-blog': '/blog/oneclient-announcement',
 	},
