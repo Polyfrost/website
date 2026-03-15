@@ -71,98 +71,92 @@ function isLinuxArm(name: string): boolean {
 // Fetch the latest release from GitHub and parse assets into our Version list.
 // Priority per OS: prefer the best installer format, skip .sig and updater tarballs.
 async function fetchVersions(): Promise<Version[]> {
-	try {
-		const { data: release } = await github.request(
-			'GET /repos/{owner}/{repo}/releases/latest',
-			ONE_LAUNCHER_REPOSITORY,
-		);
-		const assets: { name: string; browser_download_url: string }[] = release.assets ?? [];
-		const versions: Version[] = [];
+	const { data: release } = await github.request(
+		'GET /repos/{owner}/{repo}/releases/latest',
+		ONE_LAUNCHER_REPOSITORY,
+	);
+	const assets: { name: string; browser_download_url: string }[] = release.assets ?? [];
+	const versions: Version[] = [];
 
-		// Helper: find the first asset whose filename matches a predicate (exclude .sig/.json)
-		const find = (pred: (name: string) => boolean) =>
-			assets.find((asset) => {
-				const name = asset.name.toLowerCase();
-				return !name.endsWith('.sig') && !name.endsWith('.json') && pred(name);
-			});
+	// Helper: find the first asset whose filename matches a predicate (exclude .sig/.json)
+	const find = (pred: (name: string) => boolean) =>
+		assets.find((asset) => {
+			const name = asset.name.toLowerCase();
+			return !name.endsWith('.sig') && !name.endsWith('.json') && pred(name);
+		});
 
-		// Windows x64 -- .exe installer
-		const winX64 = find(name => name.endsWith('.exe'));
-		if (winX64)
-			versions.push({ os: 'Windows', architecture: 'x64', url: winX64.browser_download_url });
+	// Windows x64 -- .exe installer
+	const winX64 = find(name => name.endsWith('.exe'));
+	if (winX64)
+		versions.push({ os: 'Windows', architecture: 'x64', url: winX64.browser_download_url });
 
-		// macOS Apple Silicon (aarch64) -- .dmg
-		const macArm = find(name => name.includes('aarch64') && name.endsWith('.dmg'));
-		if (macArm)
-			versions.push({ os: 'macOS', architecture: 'ARM', url: macArm.browser_download_url });
+	// macOS Apple Silicon (aarch64) -- .dmg
+	const macArm = find(name => name.includes('aarch64') && name.endsWith('.dmg'));
+	if (macArm)
+		versions.push({ os: 'macOS', architecture: 'ARM', url: macArm.browser_download_url });
 
-		// macOS Intel (x64) -- .dmg
-		const macX64 = find(name => name.includes('x64') && name.endsWith('.dmg'));
-		if (macX64)
-			versions.push({ os: 'macOS', architecture: 'x64', url: macX64.browser_download_url });
+	// macOS Intel (x64) -- .dmg
+	const macX64 = find(name => name.includes('x64') && name.endsWith('.dmg'));
+	if (macX64)
+		versions.push({ os: 'macOS', architecture: 'x64', url: macX64.browser_download_url });
 
-		// Linux x64 -- include AppImage, .deb, and .rpm (in default preference order)
-		const linuxX64AppImage = find(name => isLinuxX64(name) && name.endsWith('.appimage'));
-		if (linuxX64AppImage)
-			versions.push({
-				os: 'Linux',
-				architecture: 'x64',
-				name: 'AppImage (Linux x64)',
-				url: linuxX64AppImage.browser_download_url,
-			});
+	// Linux x64 -- include AppImage, .deb, and .rpm (in default preference order)
+	const linuxX64AppImage = find(name => isLinuxX64(name) && name.endsWith('.appimage'));
+	if (linuxX64AppImage)
+		versions.push({
+			os: 'Linux',
+			architecture: 'x64',
+			name: 'AppImage (Linux x64)',
+			url: linuxX64AppImage.browser_download_url,
+		});
 
-		const linuxX64Deb = find(name => isLinuxX64(name) && name.endsWith('.deb'));
-		if (linuxX64Deb)
-			versions.push({
-				os: 'Linux',
-				architecture: 'x64',
-				name: 'Debian package (Linux x64)',
-				url: linuxX64Deb.browser_download_url,
-			});
+	const linuxX64Deb = find(name => isLinuxX64(name) && name.endsWith('.deb'));
+	if (linuxX64Deb)
+		versions.push({
+			os: 'Linux',
+			architecture: 'x64',
+			name: 'Debian package (Linux x64)',
+			url: linuxX64Deb.browser_download_url,
+		});
 
-		const linuxX64Rpm = find(name => isLinuxX64(name) && name.endsWith('.rpm'));
-		if (linuxX64Rpm)
-			versions.push({
-				os: 'Linux',
-				architecture: 'x64',
-				name: 'RPM package (Linux x64)',
-				url: linuxX64Rpm.browser_download_url,
-			});
+	const linuxX64Rpm = find(name => isLinuxX64(name) && name.endsWith('.rpm'));
+	if (linuxX64Rpm)
+		versions.push({
+			os: 'Linux',
+			architecture: 'x64',
+			name: 'RPM package (Linux x64)',
+			url: linuxX64Rpm.browser_download_url,
+		});
 
-		// Linux ARM -- include AppImage, .deb, and .rpm (in default preference order)
-		const linuxArmAppImage = find(name => isLinuxArm(name) && name.endsWith('.appimage'));
-		if (linuxArmAppImage)
-			versions.push({
-				os: 'Linux',
-				architecture: 'ARM',
-				name: 'AppImage (Linux ARM)',
-				url: linuxArmAppImage.browser_download_url,
-			});
+	// Linux ARM -- include AppImage, .deb, and .rpm (in default preference order)
+	const linuxArmAppImage = find(name => isLinuxArm(name) && name.endsWith('.appimage'));
+	if (linuxArmAppImage)
+		versions.push({
+			os: 'Linux',
+			architecture: 'ARM',
+			name: 'AppImage (Linux ARM)',
+			url: linuxArmAppImage.browser_download_url,
+		});
 
-		const linuxArmDeb = find(name => isLinuxArm(name) && name.endsWith('.deb'));
-		if (linuxArmDeb)
-			versions.push({
-				os: 'Linux',
-				architecture: 'ARM',
-				name: 'Debian package (Linux ARM)',
-				url: linuxArmDeb.browser_download_url,
-			});
+	const linuxArmDeb = find(name => isLinuxArm(name) && name.endsWith('.deb'));
+	if (linuxArmDeb)
+		versions.push({
+			os: 'Linux',
+			architecture: 'ARM',
+			name: 'Debian package (Linux ARM)',
+			url: linuxArmDeb.browser_download_url,
+		});
 
-		const linuxArmRpm = find(name => isLinuxArm(name) && name.endsWith('.rpm'));
-		if (linuxArmRpm)
-			versions.push({
-				os: 'Linux',
-				architecture: 'ARM',
-				name: 'RPM package (Linux ARM)',
-				url: linuxArmRpm.browser_download_url,
-			});
+	const linuxArmRpm = find(name => isLinuxArm(name) && name.endsWith('.rpm'));
+	if (linuxArmRpm)
+		versions.push({
+			os: 'Linux',
+			architecture: 'ARM',
+			name: 'RPM package (Linux ARM)',
+			url: linuxArmRpm.browser_download_url,
+		});
 
-		return versions;
-	}
-	catch (e) {
-		console.error('[oneclient downloads]', e);
-		return [];
-	}
+	return versions;
 }
 
 async function getCachedVersions(): Promise<Version[]> {
@@ -176,6 +170,10 @@ async function getCachedVersions(): Promise<Version[]> {
 				versionsCache = versions;
 				versionsCacheFetchedAt = Date.now();
 				return versions;
+			})
+			.catch((e) => {
+				console.error('[oneclient downloads]', e);
+				return [];
 			})
 			.finally(() => {
 				versionsInFlight = undefined;
@@ -221,27 +219,25 @@ const dropdownVersions: DropdownVersion[] = [
 	iconLeft="download"
 	text={defaultDownloadText}
 >
-	<div class="flex flex-col gap-1">
-		<div
-			class="flex flex-col gap-1 border border-gray-700 rounded-xl bg-dark-background p-2 text-dark-secondary"
-		>
-			{
-				dropdownVersions.map(version => (
-					<a
-						class="min-w-[200px] flex items-center gap-1 border-1 border-gray-700 rounded-lg p-2 hover:bg-blue-600/5"
-						href={version.url}
-					>
-						<Icon
-							name={version.icon ?? icons[version.os] ?? 'download'}
-							size={18}
-						/>
-						<h3>
-							{version.name
-							?? `${version.os} ${version.architecture}`}
-						</h3>
-					</a>
-				))
-			}
-		</div>
+	<div
+		class="flex flex-col gap-1 border border-gray-700 rounded-xl bg-dark-background p-2 text-dark-secondary"
+	>
+		{
+			dropdownVersions.map(version => (
+				<a
+					class="min-w-[200px] flex items-center gap-1 border-1 border-gray-700 rounded-lg p-2 hover:bg-blue-600/5"
+					href={version.url}
+				>
+					<Icon
+						name={version.icon ?? icons[version.os] ?? 'download'}
+						size={18}
+					/>
+					<h3>
+						{version.name
+						?? `${version.os} ${version.architecture}`}
+					</h3>
+				</a>
+			))
+		}
 	</div>
 </Dropdown>
