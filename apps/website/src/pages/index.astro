@@ -147,19 +147,28 @@ import { Icon } from 'astro-icon/components';
 			return n.toString();
 		}
 
+		const statTotal = document.getElementById("stat-total")!;
 		async function loadStats() {
 			try {
 				const res = await fetch('/api/downloads');
-				if (!res.ok)
-					return;
+				if (!res.ok) return;
 				const data = await res.json();
-				const el = document.getElementById('stat-total');
-				if (el && data.total)
-					el.textContent = formatNumber(data.total);
+				if (data.total)
+					statTotal.textContent = formatNumber(data.total);
+			} catch {
+				/* silently fail */
 			}
-			catch { /* silently fail */ }
 		}
-
-		loadStats();
+		const observer = new IntersectionObserver((entries, observer) => {
+			entries.forEach((entry) => {
+				if (entry.isIntersecting) {
+					loadStats();
+					observer.unobserve(entry.target);
+				}
+			});
+		}, {
+			rootMargin: '800px 0px',
+		});
+		observer.observe(statTotal);
 	</script>
 </Layout>
