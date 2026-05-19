@@ -1,4 +1,4 @@
-import petal from '@flowr/eslint-config';
+import petal from '@flowr/eslint';
 
 export default petal({
 	astro: {
