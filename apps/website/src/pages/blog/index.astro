@@ -23,7 +23,7 @@ const posts = await getCollection('blog');
 							- p1.data.publishDate.valueOf(),
 					)
 					.map(post => (
-						<a href={`/blog/${post.slug}/`}>
+						<a href={`/blog/${post.id}/`}>
 							<div class="flex flex-col gap-2 md:flex-row">
 								<img
 									alt="Cover Image"

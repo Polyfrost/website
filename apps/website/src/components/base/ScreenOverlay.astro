@@ -9,5 +9,5 @@ const { zIndex = 0, ...rest } = Astro.props;
 ---
 
 <div class="pointer-events-none absolute left-0 top-0">
-	<div class={`transition-opacity fixed opacity-0 w-screen h-screen z-[${zIndex}] bg-black/30 ${rest.class}`} {...rest}></div>
+	<div class={`z-[ fixed h-screen w-screen opacity-0 transition-opacity${zIndex}] bg-black/30 ${rest.class}`} {...rest}></div>
 </div>

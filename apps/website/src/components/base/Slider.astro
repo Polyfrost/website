@@ -13,9 +13,7 @@ const { dir = 'left', wrapperClass = '', childrenNum, childrenSize = '256px', sp
 ---
 
 <div
-	class={`w-full slider
-	${dir === 'right' ? 'reverse' : ''}
-	${wrapperClass}`}
+	class={`slider w-full ${dir === 'right' ? 'reverse' : ''}  ${wrapperClass}`}
 >
 	<div class="wrapper flex flex-row gap-2.5">
 		<slot class="content" />
