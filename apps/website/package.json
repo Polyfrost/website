@@ -20,6 +20,7 @@
 		"@astrojs/sitemap": "^3.7.2",
 		"@octokit/core": "^7.0.6",
 		"@octokit/plugin-throttling": "^11.0.3",
+		"@unocss/astro": "^66.6.8",
 		"@unocss/reset": "^66.6.8",
 		"astro": "^6.3.5",
 		"astro-icon": "^1.1.5",
