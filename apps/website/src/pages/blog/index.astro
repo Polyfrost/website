@@ -11,7 +11,7 @@ const posts = await getCollection('blog');
 	<Section class="mb-12 mt-96 md:mt-32">
 		<div class="mx-auto min-h-100 flex flex-col content-center gap-5">
 			{
-				posts.length == 0 && (
+				posts.length === 0 && (
 					<p class="text-gray-500 italic">No posts yet</p>
 				)
 			}

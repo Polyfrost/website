@@ -34,10 +34,10 @@ export interface NavbarElement {
 
 export interface FooterColumn {
 	header: string;
-	links: {
+	links: Array<{
 		text: string;
 		url: string;
-	}[];
+	}>;
 }
 
 export interface Config {

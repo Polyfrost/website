@@ -6,8 +6,8 @@ import Paragraph from '@components/base/Paragraph.astro';
 import Section from '@components/base/Section.astro';
 import Layout from '@layouts/Layout.astro';
 import configConst from '@utils/site-info';
-import Image from 'astro/components/Image.astro';
 import { Icon } from 'astro-icon/components';
+import Image from 'astro/components/Image.astro';
 ---
 
 <Layout title="Main Page">
@@ -139,36 +139,38 @@ import { Icon } from 'astro-icon/components';
 	</Section>
 
 	<script>
-		function formatNumber(n: number): string {
-			if (n >= 1_000_000)
-				return `${(n / 1_000_000).toFixed(1)}M`;
-			if (n >= 1_000)
-				return `${(n / 1_000).toFixed(1)}K`;
-			return n.toString();
-		}
+function formatNumber(n: number): string {
+	if (n >= 1_000_000)
+		return `${(n / 1_000_000).toFixed(1)}M`;
+	if (n >= 1_000)
+		return `${(n / 1_000).toFixed(1)}K`;
+	return n.toString();
+}
 
-		const statTotal = document.getElementById("stat-total")!;
-		async function loadStats() {
-			try {
-				const res = await fetch('/api/downloads');
-				if (!res.ok) return;
-				const data = await res.json();
-				if (data.total)
-					statTotal.textContent = formatNumber(data.total);
-			} catch {
-				/* silently fail */
-			}
+const statTotal = document.getElementById('stat-total')!;
+async function loadStats() {
+	try {
+		const res = await fetch('/api/downloads');
+		if (!res.ok)
+			return;
+		const data = await res.json();
+		if (data.total)
+			statTotal.textContent = formatNumber(data.total);
+	}
+	catch {
+		/* silently fail */
+	}
+}
+const observer = new IntersectionObserver((entries, observer) => {
+	entries.forEach((entry) => {
+		if (entry.isIntersecting) {
+			loadStats();
+			observer.unobserve(entry.target);
 		}
-		const observer = new IntersectionObserver((entries, observer) => {
-			entries.forEach((entry) => {
-				if (entry.isIntersecting) {
-					loadStats();
-					observer.unobserve(entry.target);
-				}
-			});
-		}, {
-			rootMargin: '800px 0px',
-		});
-		observer.observe(statTotal);
-	</script>
+	});
+}, {
+	rootMargin: '800px 0px',
+});
+observer.observe(statTotal);
+</script>
 </Layout>

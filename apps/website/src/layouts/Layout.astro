@@ -1,7 +1,8 @@
 ---
+import type { Props as HeadProps } from '../components/shared/BaseHead.astro';
 import Footer from '@components/base/Footer.astro';
 import Navbar from '../components/base/navbar/Navbar.astro';
-import BaseHead, { type Props as HeadProps } from '../components/shared/BaseHead.astro';
+import BaseHead from '../components/shared/BaseHead.astro';
 import '../styles/global.css';
 
 export interface Props extends HeadProps {

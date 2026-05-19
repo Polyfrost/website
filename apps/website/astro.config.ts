@@ -2,9 +2,9 @@ import mdx from '@astrojs/mdx';
 import node from '@astrojs/node';
 import partytown from '@astrojs/partytown';
 import sitemap from '@astrojs/sitemap';
-import { defineConfig, envField } from 'astro/config';
-
 import icons from 'astro-icon';
+
+import { defineConfig, envField } from 'astro/config';
 import unocss from 'unocss/astro';
 
 // https://astro.build/config
@@ -40,7 +40,7 @@ export default defineConfig({
 	},
 	env: {
 		schema: {
-			GITHUB_PAT: envField.string({ context: 'server', access: 'secret', optional: true })
-		}
-	}
+			GITHUB_PAT: envField.string({ context: 'server', access: 'secret', optional: true }),
+		},
+	},
 });
