@@ -8,6 +8,8 @@ import Slider from '@components/base/Slider.astro';
 import Layout from '@layouts/Layout.astro';
 import { Icon } from 'astro-icon/components';
 import { Code } from 'astro:components';
+
+const modrinthUrl = 'https://modrinth.com/mod/oneconfig';
 ---
 
 <Layout description="Simple universal Minecraft modding configuration." title="OneConfig">
@@ -18,7 +20,7 @@ import { Code } from 'astro:components';
 				Meet <b>OneConfig</b>, the library designed for <b>everyone</b>.
 			</Header>
 			<div class="flex flex-row items-center justify-center gap-2">
-				<Button href="/projects/oneconfig/download" iconLeft="download" text="Download" />
+				<Button href={modrinthUrl} iconLeft="download" text="Download" />
 				<Button href="https://docs.polyfrost.org" iconLeft="book-open" style="secondary" text="Documentation" />
 			</div>
 		</div>
@@ -94,7 +96,7 @@ import { Code } from 'astro:components';
 				<Header class="text-blue-500" size="xl">Designed for users</Header>
 				<Paragraph class="max-w-[500px] text-blue-400"> We take pride in having the cleanest and most intuitive UI of any mod, config library, or client out there. </Paragraph>
 				<div class="flex">
-					<Button href="/projects/oneconfig/download" iconLeft="download" style="secondary" text="Download" />
+					<Button href={modrinthUrl} iconLeft="download" style="secondary" text="Download" />
 				</div>
 			</div>
 			<div data-scroll data-scroll-speed="3" slot="right">
@@ -161,7 +163,7 @@ import { Code } from 'astro:components';
 				class="absolute right-1/2 flex flex-col translate-x-1/2 items-center justify-center gap-y-2 border border-gray-200 rounded-3xl bg-gray-50 p-4 shadow-sm -bottom-16 md:translate-x-0 md:items-start md:gap-y-8 md:rounded-4xl md:p-8 md:-bottom-12 md:-right-12"
 			>
 				<Icon class="h-12 w-48 md:h-auto md:min-w-72" name="oneconfig.logo_text" />
-				<Button class="max-w-fit" href="/projects/oneconfig/download" iconLeft="download" text="Download now" />
+				<Button class="max-w-fit" href={modrinthUrl} iconLeft="download" text="Download now" />
 			</div>
 		</div>
 	</Section>
