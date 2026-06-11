@@ -1,7 +1,7 @@
 {
     # nixpkgs dependencies
     lib,
-    nodejs,
+    nodejs-slim,
     callPackage,
     makeBinaryWrapper,
 
@@ -36,7 +36,7 @@ mkPnpmPackage {
     pnpmWorkspaceYaml = ../pnpm-workspace.yaml;
     components = [ "./apps/website" ];
 
-    inherit nodejs;
+    nodejs = nodejs-slim;
     pnpm = customPnpm;
 
     scriptFull = ''
@@ -60,7 +60,7 @@ mkPnpmPackage {
         cp -r ./apps/website/dist/* "$out"/share/
 
         # Make a wrapper command to start the server
-        makeWrapper ${lib.getExe nodejs} "$out"/bin/start-server \
+        makeWrapper ${lib.getExe nodejs-slim} "$out"/bin/start-server \
              --inherit-argv0 \
              --add-flags $out/share/server/entry.mjs
 
