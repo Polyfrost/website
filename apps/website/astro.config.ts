@@ -35,6 +35,7 @@ export default defineConfig({
 	},
 	redirects: {
 		'/discord': 'https://discord.gg/N4qW7TW3dv',
+		'/oneclient': '/projects/oneclient',
 		'/oneconfig': '/projects/oneconfig',
 		'/oneclient-blog': '/blog/oneclient-announcement',
 	},
