@@ -3,18 +3,34 @@ import Header from '@components/base/Header.astro';
 import Paragraph from '@components/base/Paragraph.astro';
 import Section from '@components/base/Section.astro';
 import Layout from '@layouts/Layout.astro';
+import { getLegalDocument } from '@utils/legal';
 
-const tos = `
+export const prerender = false;
+
+const { html } = await getLegalDocument('terms');
+
+const fallback = `
 Currently, we do not offer any services that require a terms of service!
 This will be updated in the future, if necessary.
 `.trim();
+
+Astro.response.headers.set('Cache-Control', 'public, max-age=3600');
 ---
 
 <Layout title="Terms of Service">
 	<Section class="items-start justify-center pt-32" hFull>
 		<div class="w-full flex flex-col items-start justify-start text-navy-peony">
-			<Header>Terms of Service</Header>
-			<Paragraph class="whitespace-pre-line">{tos}</Paragraph>
+			{
+				html
+					// eslint-disable-next-line astro/no-set-html-directive -- sanitized in @utils/legal
+					? <article class="max-w-[70ch] prose" set:html={html} />
+					: (
+						<>
+							<Header>Terms of Service</Header>
+							<Paragraph class="whitespace-pre-line">{fallback}</Paragraph>
+						</>
+					)
+			}
 		</div>
 	</Section>
 </Layout>

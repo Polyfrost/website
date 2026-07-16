@@ -1,38 +1,64 @@
 ---
 import Button from '@components/base/Button.astro';
+import Card from '@components/base/Card.astro';
 import Header from '@components/base/Header.astro';
+import Paragraph from '@components/base/Paragraph.astro';
 import Section from '@components/base/Section.astro';
+import Slider from '@components/base/Slider.astro';
 import OneClientDownloadDropdown from '@components/page/oneclient/OneClientDownloadDropdown.astro';
 import Layout from '@layouts/Layout.astro';
+import { Icon } from 'astro-icon/components';
 
-export const prerender = false;
 ---
 
-<div class="fixed h-screen w-screen bg-dark-background -z-1"></div>
-<Layout dark title="OneClient">
+<Layout
+	dark
+	description="Simple universal Minecraft modding client."
+	title="OneClient"
+>
 	<Section
-		class="mb-12 mt-12 h-screen flex-col items-center justify-center md:min-h-[600px]"
+		class="h-screen flex-col items-center justify-center md:min-h-[600px]"
 	>
-		<div class="aspect-video h-auto max-w-2xl w-full bg-gray-50">
-			<iframe
-				allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-				allowfullscreen
-				class="h-full w-full"
-				referrerpolicy="strict-origin-when-cross-origin"
-				src="https://www.youtube.com/embed/al-59UpjjLw?color=white&autoplay=1&disablekb=1&cc_load_policy=0&loop=1&playsinline=1"
-				title="YouTube video player"
-			></iframe>
+		<div
+			class="absolute inset-x-0 transform-gpu overflow-hidden opacity-20 blur-3xl -top-40 -z-10 sm:-top-80"
+		>
+			<svg
+				class="relative left-[calc(50%-11rem)] h-[21.1875rem] max-w-none rotate-[30deg] sm:left-[calc(50%-30rem)] -z-10 sm:h-[42.375rem] -translate-x-1/2"
+				viewBox="0 0 1155 678"
+			>
+				<path
+					d="M317.219 518.975L203.852 678 0 438.341l317.219 80.634 204.172-286.402c1.307 132.337 45.083 346.658 209.733 145.248C936.936 126.058 882.053-94.234 1031.02 41.331c119.18 108.451 130.68 295.337 121.53 375.223L855 299l21.173 362.054-558.954-142.079z"
+					fill="url(#45de2b6b-92d5-4d68-a6a0-9b9b2abad533)"
+					fill-opacity="0.3"
+				>
+				</path>
+				<defs>
+					<linearGradient
+						gradientUnits="userSpaceOnUse"
+						id="45de2b6b-92d5-4d68-a6a0-9b9b2abad533"
+						x1="1155.49"
+						x2="-78.208"
+						y1=".177"
+						y2="474.645"
+					>
+						<stop stop-color="#2463EB"></stop>
+						<stop offset={1} stop-color="#0080B5"></stop>
+					</linearGradient>
+				</defs>
+			</svg>
 		</div>
 		<div class="flex flex-col items-center justify-center gap-y-4">
-			<Header
-				align="center"
-				class="max-w-[600px] text-dark-primary"
-				size="lg"
-			>
-				A new client, for a new world.
+			<Icon height={56} name="oneclient.minimal" width={56} />
+			<Header align="center" class="max-w-[700px] text-white" size="xxl">
+				Made by the Community, for the Community.
 			</Header>
+			<Paragraph class="max-w-[600px] text-center text-white">
+				100% Open-source and free to use, OneClient is a community
+				driven Minecraft client that aims to provide a fresh and freeing
+				experience for Minecraft players.
+			</Paragraph>
 			<div
-				class="flex flex-row flex-wrap items-center justify-center gap-2"
+				class="mt-2 flex flex-row flex-wrap items-center justify-center gap-2"
 			>
 				<OneClientDownloadDropdown />
 				<Button
@@ -50,4 +76,194 @@ export const prerender = false;
 			</div>
 		</div>
 	</Section>
+
+	<Section tabindex="0">
+		<div slot="left">
+			<Header class="text-white" size="xl">No ads. Ever.</Header>
+			<Paragraph
+				class="max-w-[500px] text-white-light"
+				size="md"
+			>The competitors rely heavily on many forms of advertising
+				inside of their clients. OneClient will never include ads.</Paragraph
+			>
+		</div>
+		<div class="max-w-80 w-3/4 md:max-w-none md:w-auto" slot="right">
+			<div class="absolute inset-0 flex items-center justify-center">
+				<Icon height={220} name="denied" width={220} />
+			</div>
+			<img
+				alt="stuff"
+				class="w-full rounded-md md:w-[20rem]"
+				src="/media/oneclient/ad.jpg"
+			/>
+		</div>
+	</Section>
+
+	<Section colReverse={false} tabindex="0">
+		<div class="flex flex-col justify-center gap-4" slot="left">
+			<Header
+				align="center"
+				class="text-white"
+				size="md"
+			>CPU Usage</Header
+			>
+			<div class="w-75 flex flex-row items-end justify-center gap-12">
+				<div class="flex flex-col items-center justify-center gap-2">
+					<Icon height={56} name="oneclient.minimal" width={56} />
+					<div class="h-6 w-12 bg-green-600"></div>
+					<p class="max-w-12 text-center text-sm text-white-light">
+						6%
+					</p>
+				</div>
+				<div class="flex flex-col items-center justify-center gap-2">
+					<p class="max-w-12 text-center text-sm text-white-light">
+						Other Client
+					</p>
+					<div class="h-24 w-12 bg-red-600"></div>
+					<p class="max-w-12 text-center text-sm text-white-light">
+						72%
+					</p>
+				</div>
+			</div>
+		</div>
+
+		<div slot="right">
+			<Header class="text-white" size="xl">Better Performance</Header>
+			<Paragraph
+				class="max-w-[500px] text-white-light"
+				size="md"
+			>Other clients embed entire chrome instances in their launchers
+				and make them run in the background. OneClient aims to be
+				lightweight and steer away from the bad practices other clients
+				follow.</Paragraph
+			>
+		</div>
+	</Section>
+
+		<Section
+			class="flex flex-col items-center justify-center gap-4"
+			maxWidth="none"
+			wFull
+		>
+		<div
+			class="max-w-[1024px] w-full flex flex-col items-start gap-2 px-5 text-left"
+		>
+			<Header
+				class="text-white"
+				size="xl"
+			>Support for hundreds of mods</Header
+			>
+			<Paragraph class="max-w-[500px] text-white-light">
+				OneClient integrates all of your 3rd party mods into a single, unified experience.
+			</Paragraph>
+			<div
+				class="flex flex-col items-start gap-x-1 md:flex-row max-sm:gap-y-1"
+			>
+				<Button
+					href="/mods"
+					iconLeft="link-external"
+					style="secondary"
+					text="Discover mods"
+				/>
+			</div>
+		</div>
+		<div
+			class="max-w-full flex flex-col items-center justify-center overflow-x-hidden pb-10"
+		>
+			<div
+				class="h-[290px] max-w-[1920px] flex flex-col items-center justify-between overflow-x-hidden"
+			>
+				<Slider childrenNum={8} wrapperClass="-mb-40 mb-2">
+					<Card icon="chatting" text="Chatting" />
+					<Card icon="polysprint" text="PolySprint" />
+					<Card icon="vanillahud" text="VanillaHUD" />
+					<Card icon="overflowanimations" text="OverflowAnimations" />
+					<Card icon="crashpatch" text="CrashPatch" />
+					<Card icon="polytime" text="PolyTime" />
+					<Card icon="polyweather" text="PolyWeather" />
+					<Card icon="keystrokes" text="Keystrokes" />
+				</Slider>
+				<Slider childrenNum={8} dir="right">
+					<Card icon="chatting" text="Chatting" />
+					<Card icon="polysprint" text="PolySprint" />
+					<Card icon="vanillahud" text="VanillaHUD" />
+					<Card icon="overflowanimations" text="OverflowAnimations" />
+					<Card icon="crashpatch" text="CrashPatch" />
+					<Card icon="polytime" text="PolyTime" />
+					<Card icon="polyweather" text="PolyWeather" />
+					<Card icon="keystrokes" text="Keystrokes" />
+				</Slider>
+			</div>
+		</div>
+	</Section>
+
+	<Section
+		class="my-20 flex-col items-center justify-center md:min-h-[600px]"
+		id="ui"
+		wrapperClass="bg-primary-100"
+	>
+		<img
+			class="max-h-[285px] rounded-2xl lg:max-h-[581px] md:max-h-96"
+			src="/media/oneclient/ui.png"
+		/>
+		<div
+			class="flex flex-col items-center justify-center gap-y-4"
+			data-scroll
+			data-scroll-speed="2"
+		>
+			<Header
+				align="center"
+				class="max-w-150 w-full text-white"
+				size="xl"
+			>Sleek, Customizable UI</Header
+			>
+			<Paragraph class="max-w-150 w-full text-center text-white-light">
+				OneClient's UI is designed to be sleek, modern, and
+				customizable. There are clean animations, 4 different themes to
+				select from, and you can even customize the colors of the UI to
+				your liking.
+			</Paragraph>
+		</div>
+	</Section>
+
+	<Section class="mb-40 flex-col items-center justify-center" id="cta">
+		<div
+			class="relative w-full flex flex-col items-center border border-primary-100 rounded-2xl py-20 px-4"
+		>
+			<aside class="absolute inset-0 overflow-hidden rounded-2xl -z-10">
+				<img
+					class="h-full w-full object-cover"
+					src="/media/oneclient/background.png"
+				/>
+				<div
+					class="absolute inset-0 rounded-2xl bg-primary-100/75 backdrop-blur-md"
+				>
+				</div>
+			</aside>
+			<Header
+				align="center"
+				class="max-w-[700px] text-white"
+				size="xl"
+			>
+				Interested In the Future of Minecraft Clients?
+			</Header>
+			<Paragraph
+				class="max-w-[600px] text-center text-white-light"
+				size="xl"
+			>
+				Download OneClient Today!
+			</Paragraph>
+			<div
+				class="mt-2 flex flex-row flex-wrap items-center justify-center gap-2"
+			>
+				<OneClientDownloadDropdown />
+			</div>
+		</div>
+	</Section>
 </Layout>
+
+<style>
+	:global(.astro-code) {
+		@apply w-full;
+	}
+</style>

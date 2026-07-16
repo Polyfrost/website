@@ -219,8 +219,8 @@ const dropdownVersions: DropdownVersion[] = [
 ---
 
 <Dropdown
-	href={defaultDownloadDisabled ? undefined : defaultDownloadHref}
 	disabled={defaultDownloadDisabled}
+	href={defaultDownloadDisabled ? undefined : defaultDownloadHref}
 	iconLeft="download"
 	text={defaultDownloadText}
 >
@@ -230,7 +230,7 @@ const dropdownVersions: DropdownVersion[] = [
 		{
 			dropdownVersions.map(version => (
 				<a
-					class="min-w-[200px] flex items-center gap-1 border-1 border-gray-700 rounded-lg p-2 hover:bg-blue-600/5"
+					class="max-w-[200px] w-full flex items-center gap-1 border-1 border-gray-700 rounded-lg p-2 hover:bg-blue-600/5"
 					href={version.url}
 				>
 					<Icon
