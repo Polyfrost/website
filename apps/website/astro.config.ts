@@ -28,7 +28,16 @@ export default defineConfig({
 		}),
 	],
 	vite: {
-		ssr: { noExternal: ['smartypants', 'ua-parser-js', '@octokit/core', '@octokit/plugin-throttling'] },
+		ssr: {
+			noExternal: [
+				'smartypants',
+				'ua-parser-js',
+				'@octokit/core',
+				'@octokit/plugin-throttling',
+				'@astrojs/markdown-remark',
+				'rehype-sanitize'
+			]
+		},
 	},
 	experimental: {
 		contentIntellisense: true,
