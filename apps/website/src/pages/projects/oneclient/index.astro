@@ -88,15 +88,35 @@ export const prerender = false;
 				inside of their clients. OneClient will never include ads.</Paragraph
 			>
 		</div>
-		<div class="max-w-80 w-3/4 md:max-w-none md:w-auto" slot="right">
-			<div class="absolute inset-0 flex items-center justify-center">
-				<Icon height={220} name="denied" width={220} />
+		<div
+			class="relative max-w-80 w-3/4 md:max-w-none md:w-auto"
+			slot="right"
+		>
+			<div
+				aria-hidden="true"
+				class="w-full select-none rounded-md bg-gray-800 p-4 opacity-60 md:w-[20rem]"
+			>
+				<div class="flex flex-row items-center justify-between">
+					<span
+						class="rounded-sm bg-white/25 px-1.5 py-0.5 text-xxs text-white-light font-mono"
+					>AD</span>
+					<span class="text-xxs text-gray-400 font-mono">✕</span>
+				</div>
+				<div class="mt-4 flex flex-row items-center gap-3">
+					<div class="h-14 w-14 shrink-0 rounded-md bg-gray-700"></div>
+					<div class="w-full flex flex-col gap-2">
+						<div class="h-2.5 w-full rounded-full bg-gray-700"></div>
+						<div class="h-2.5 w-4/5 rounded-full bg-gray-700"></div>
+						<div class="h-2.5 w-2/5 rounded-full bg-gray-700"></div>
+					</div>
+				</div>
+				<div class="mt-4 h-7 w-full rounded-md bg-gray-700"></div>
 			</div>
-			<img
-				alt="stuff"
-				class="w-full rounded-md md:w-[20rem]"
-				src="/media/oneclient/ad.jpg"
-			/>
+			<div
+				class="pointer-events-none absolute inset-0 flex items-center justify-center"
+			>
+				<Icon height={120} name="denied" width={120} />
+			</div>
 		</div>
 	</Section>
 
