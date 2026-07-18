@@ -194,9 +194,7 @@ const version
 
 const defaultDownloadHref = platform?.os === 'Linux' ? LINUX_GUIDE_PAGE : version?.url ?? RELEASES_PAGE;
 const defaultDownloadText
-	= platform?.os === 'macOS'
-		? 'OneClient is not available on macOS'
-		: platform?.os === 'Linux'
+	= platform?.os === 'Linux'
 		? 'Install on Linux'
 		: version
 			? version.name
@@ -204,10 +202,8 @@ const defaultDownloadText
 				: `Download for ${version.os} ${version.architecture}`
 			: 'Download';
 
-const defaultDownloadDisabled = platform?.os === 'macOS';
-
 const dropdownVersions: DropdownVersion[] = [
-	...versions.filter(entry => entry.os === 'Windows' || entry.os === 'Linux'),
+	...versions.filter(entry => entry.os !== 'Linux'),
 	{
 		os: 'Linux',
 		architecture: 'Universal',
@@ -219,8 +215,7 @@ const dropdownVersions: DropdownVersion[] = [
 ---
 
 <Dropdown
-	disabled={defaultDownloadDisabled}
-	href={defaultDownloadDisabled ? undefined : defaultDownloadHref}
+	href={defaultDownloadHref}
 	iconLeft="download"
 	text={defaultDownloadText}
 >
