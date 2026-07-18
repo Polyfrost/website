@@ -21,6 +21,7 @@ interface Version {
 	os: OS;
 	architecture: Architecture | 'Universal';
 	name?: string;
+	buttonName?: string;
 	url: string;
 }
 
@@ -93,12 +94,12 @@ async function fetchVersions(): Promise<Version[]> {
 	// macOS Apple Silicon (aarch64) -- .dmg
 	const macArm = find(name => name.includes('aarch64') && name.endsWith('.dmg'));
 	if (macArm)
-		versions.push({ os: 'macOS', architecture: 'ARM', url: macArm.browser_download_url });
+		versions.push({ os: 'macOS', architecture: 'ARM', name: 'macOS ARM (M1+)', buttonName: 'macOS (M1+)', url: macArm.browser_download_url });
 
 	// macOS Intel (x64) -- .dmg
 	const macX64 = find(name => name.includes('x64') && name.endsWith('.dmg'));
 	if (macX64)
-		versions.push({ os: 'macOS', architecture: 'x64', url: macX64.browser_download_url });
+		versions.push({ os: 'macOS', architecture: 'x64', name: 'macOS x86 (Intel)', buttonName: 'macOS (Intel)', url: macX64.browser_download_url });
 
 	// Linux x64 -- include AppImage, .deb, and .rpm (in default preference order)
 	const linuxX64AppImage = find(name => isLinuxX64(name) && name.endsWith('.appimage'));
@@ -197,8 +198,8 @@ const defaultDownloadText
 	= platform?.os === 'Linux'
 		? 'Install on Linux'
 		: version
-			? version.name
-				? `Download ${version.name}`
+			? version.buttonName ?? version.name
+				? `Download ${version.buttonName ?? version.name}`
 				: `Download for ${version.os} ${version.architecture}`
 			: 'Download';
 
