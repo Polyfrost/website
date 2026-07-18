@@ -225,14 +225,15 @@ const dropdownVersions: DropdownVersion[] = [
 		{
 			dropdownVersions.map(version => (
 				<a
-					class="max-w-[200px] w-full flex items-center gap-1 border-1 border-gray-700 rounded-lg p-2 hover:bg-blue-600/5"
+					class="max-w-[260px] w-full flex items-center gap-2 border-1 border-gray-700 rounded-lg p-2 hover:bg-blue-600/5"
 					href={version.url}
 				>
 					<Icon
+						class="shrink-0"
 						name={version.icon ?? icons[version.os] ?? 'download'}
 						size={18}
 					/>
-					<h3>
+					<h3 class="whitespace-nowrap">
 						{version.name
 							?? `${version.os} ${version.architecture}`}
 					</h3>
