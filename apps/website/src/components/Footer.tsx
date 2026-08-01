@@ -1,44 +1,68 @@
-export default function Footer() {
-  const year = new Date().getFullYear()
+import Logo from './Logo';
+import PolyLogo from './PolyLogo';
 
-  return (
-    <footer className="mt-20 border-t border-[var(--line)] px-4 pb-14 pt-10 text-[var(--sea-ink-soft)]">
-      <div className="page-wrap flex flex-col items-center justify-between gap-4 text-center sm:flex-row sm:text-left">
-        <p className="m-0 text-sm">
-          &copy; {year} Your name here. All rights reserved.
-        </p>
-        <p className="island-kicker m-0">Built with TanStack Start</p>
-      </div>
-      <div className="mt-4 flex justify-center gap-4">
-        <a
-          href="https://x.com/tan_stack"
-          target="_blank"
-          rel="noreferrer"
-          className="rounded-xl p-2 text-[var(--sea-ink-soft)] transition hover:bg-[var(--link-bg-hover)] hover:text-[var(--sea-ink)]"
-        >
-          <span className="sr-only">Follow TanStack on X</span>
-          <svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32">
-            <path
-              fill="currentColor"
-              d="M12.6 1h2.2L10 6.48 15.64 15h-4.41L7.78 9.82 3.23 15H1l5.14-5.84L.72 1h4.52l3.12 4.73L12.6 1zm-.77 12.67h1.22L4.57 2.26H3.26l8.57 11.41z"
-            />
-          </svg>
-        </a>
-        <a
-          href="https://github.com/TanStack"
-          target="_blank"
-          rel="noreferrer"
-          className="rounded-xl p-2 text-[var(--sea-ink-soft)] transition hover:bg-[var(--link-bg-hover)] hover:text-[var(--sea-ink)]"
-        >
-          <span className="sr-only">Go to TanStack GitHub</span>
-          <svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32">
-            <path
-              fill="currentColor"
-              d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"
-            />
-          </svg>
-        </a>
-      </div>
-    </footer>
-  )
+export default function Footer() {
+    return (
+        <footer className={`bottom-0 w-full bg-primary/45 light:bg-primary-light/45 border-t border-t-white/10 light:border-t-white/15 py-6 backdrop-blur-lg`}>
+            <div className="flex max-w-273 mx-auto w-full flex-col min-[1130px]:px-0 px-4">
+                <div className="flex min-[800px]:flex-row flex-col items-start justify-between gap-4 min-[800px]:pb-20 pb-6">
+                    <div className="flex flex-col gap-1">
+                        <Logo className="h-8 w-auto" />
+                        <div className="flex flex-row items-center gap-2 pl-1">
+                            <p className="text-[#2567D8]/75 text-[13px]">by</p>
+                            <PolyLogo className="h-5 w-auto" />
+                        </div>
+                    </div>
+                    <div className="flex min-[800px]:flex-row flex-col items-start gap-x-14 gap-y-6">
+                        <div className="flex flex-col gap-2">
+                            <h1 className="font-medium pb-1">Polyfrost</h1>
+                            <a className="text-white/75 light:text-black/75 text-sm hover:text-white/90 light:hover:text-black/90 duration-300" href="https://polyfrost.org" target="_blank" rel="noreferrer">
+                                Main Website
+                            </a>
+                            <a className="text-white/75 light:text-black/75 text-sm hover:text-white/90 light:hover:text-black/90 duration-300" href="https://polyfrost.org/about" target="_blank" rel="noreferrer">
+                                About Us
+                            </a>
+                            <a className="text-white/75 light:text-black/75 text-sm hover:text-white/90 light:hover:text-black/90 duration-300" href="https://polyfrost.org/branding" target="_blank" rel="noreferrer">
+                                Branding
+                            </a>
+                            <a className="text-white/75 light:text-black/75 text-sm hover:text-white/90 light:hover:text-black/90 duration-300" href="https://docs.polyfrost.org" target="_blank" rel="noreferrer">
+                                Documentation
+                            </a>
+                            <a className="text-white/75 light:text-black/75 text-sm hover:text-white/90 light:hover:text-black/90 duration-300" href="https://polyfrost.org/oss" target="_blank" rel="noreferrer">
+                                Open Source
+                            </a>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <h1 className="font-medium pb-1">Legal</h1>
+                            <a className="text-white/75 light:text-black/75 text-sm hover:text-white/90 light:hover:text-black/90 duration-300" href="https://polyfrost.org/legal/terms" target="_blank" rel="noreferrer">
+                                Terms of Service
+                            </a>
+                            <a className="text-white/75 light:text-black/75 text-sm hover:text-white/90 light:hover:text-black/90 duration-300" href="https://polyfrost.org/legal/privacy" target="_blank" rel="noreferrer">
+                                Privacy Policy
+                            </a>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <h1 className="font-medium pb-1">Social</h1>
+                            <a className="text-white/75 light:text-black/75 text-sm hover:text-white/90 light:hover:text-black/90 duration-300" href="https://polyfrost.org/discord" target="_blank" rel="noreferrer">
+                                Discord
+                            </a>
+                            <a className="text-white/75 light:text-black/75 text-sm hover:text-white/90 light:hover:text-black/90 duration-300" href="https://youtube.com/@Polyfrost" target="_blank" rel="noreferrer">
+                                Youtube
+                            </a>
+                            <a className="text-white/75 light:text-black/75 text-sm hover:text-white/90 light:hover:text-black/90 duration-300" href="https://github.com/Polyfrost" target="_blank" rel="noreferrer">
+                                GitHub
+                            </a>
+                            <a className="text-white/75 light:text-black/75 text-sm hover:text-white/90 light:hover:text-black/90 duration-300" href="https://polyfrost.org/contact" target="_blank" rel="noreferrer">
+                                Contact Us
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div className="flex min-[600px]:flex-row flex-col items-center justify-between gap-x-4">
+                    <p className="text-white/75 light:text-black/75 text-sm leading-4.5">© 2026 Polyfrost. All rights reserved.</p>
+                    <p className="text-white/75 light:text-black/75 text-sm leading-4.5">Not affiliated with Mojang or Microsoft</p>
+                </div>
+            </div>
+        </footer>
+    );
 }
