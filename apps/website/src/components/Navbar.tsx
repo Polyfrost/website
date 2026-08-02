@@ -49,21 +49,21 @@ export default function Navbar({ atTop, featured }: { atTop: boolean; featured?:
                                 <SparkleIcon className="w-4 h-4 text-white/75 light:text-black/75 group-hover:text-white group-hover:light:text-black duration-300" />
                                 <span className="text-white/75 light:text-black/75 group-hover:text-white group-hover:light:text-black duration-300 text-sm font-medium">Features</span>
                             </button>
-                            <button onClick={() => handleClickScroll('mods', 0)} className="group flex flex-row gap-2 items-center">
+                            <button onClick={() => handleClickScroll('mods', -25)} className="group flex flex-row gap-2 items-center">
                                 <GridIcon className="w-4 h-4 text-white/75 light:text-black/75 group-hover:text-white group-hover:light:text-black duration-300" />
                                 <span className="text-white/75 light:text-black/75 group-hover:text-white group-hover:light:text-black duration-300 text-sm font-medium">Mods</span>
                             </button>
-                            <button onClick={() => handleClickScroll('performance', 0)} className="group flex flex-row gap-2 items-center">
+                            <button onClick={() => handleClickScroll('performance', -25)} className="group flex flex-row gap-2 items-center">
                                 <PerformanceIcon className="w-4 h-4 text-white/75 light:text-black/75 group-hover:text-white group-hover:light:text-black duration-300" />
                                 <span className="text-white/75 light:text-black/75 group-hover:text-white group-hover:light:text-black duration-300 text-sm font-medium">Performance</span>
                             </button>
-                            <button onClick={() => handleClickScroll('cosmetics', 0)} className="group flex flex-row gap-2 items-center">
-                                <DiamondIcon className="w-4 h-4 text-white/75 light:text-black/75 group-hover:text-white group-hover:light:text-black duration-300" />
-                                <span className="text-white/75 light:text-black/75 group-hover:text-white group-hover:light:text-black duration-300 text-sm font-medium">Cosmetics</span>
-                            </button>
-                            <button onClick={() => handleClickScroll('launcher', 0)} className="group flex flex-row gap-2 items-center">
+                            <button onClick={() => handleClickScroll('launcher', -25)} className="group flex flex-row gap-2 items-center">
                                 <LaunchIcon className="w-4 h-4 text-white/75 light:text-black/75 group-hover:text-white group-hover:light:text-black duration-300" />
                                 <span className="text-white/75 light:text-black/75 group-hover:text-white group-hover:light:text-black duration-300 text-sm font-medium">Launcher</span>
+                            </button>
+                            <button onClick={() => handleClickScroll('cosmetics', -25)} className="group flex flex-row gap-2 items-center">
+                                <DiamondIcon className="w-4 h-4 text-white/75 light:text-black/75 group-hover:text-white group-hover:light:text-black duration-300" />
+                                <span className="text-white/75 light:text-black/75 group-hover:text-white group-hover:light:text-black duration-300 text-sm font-medium">Cosmetics</span>
                             </button>
                         </div>
                         <div className="flex-row gap-3 min-[1350px]:flex hidden z-10">

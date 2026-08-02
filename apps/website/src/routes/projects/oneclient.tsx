@@ -6,30 +6,16 @@ import { useLayoutEffect, useRef, useState } from 'react';
 import DownloadDropdown, { getDownloads } from '#/components/DownloadDropdown';
 import InfoCard from '#/components/InfoCard';
 import BagIcon from '#/components/icons/Bag';
-import ChattingIcon from '#/components/icons/Chatting';
-import ChattingDarkIcon from '#/components/icons/ChattingDark';
 import ChecklistIcon from '#/components/icons/Checklist';
 import ClickIcon from '#/components/icons/Click';
 import ColorIcon from '#/components/icons/Color';
-import CrashPatchIcon from '#/components/icons/CrashPatch';
-import CrashPatchDarkIcon from '#/components/icons/CrashPatchDark';
 import CubeIcon from '#/components/icons/Cube';
-import DamageTintIcon from '#/components/icons/DamageTint';
-import DamageTintDarkIcon from '#/components/icons/DamageTintDark';
 import DollarIcon from '#/components/icons/Dollar';
 import FastIcon from '#/components/icons/Fast';
 import GitHubIcon from '#/components/icons/GitHub';
 import HUDIcon from '#/components/icons/HUD';
 import LightningIcon from '#/components/icons/Lightning';
 import LineGraphIcon from '#/components/icons/LineGraph';
-import OverflowAnimationsIcon from '#/components/icons/OverflowAnimations';
-import OverflowAnimationsDarkIcon from '#/components/icons/OverflowAnimationsDark';
-import PolyBlurIcon from '#/components/icons/PolyBlur';
-import PolyBlurDarkIcon from '#/components/icons/PolyBlurDark';
-import PolyTimeIcon from '#/components/icons/PolyTime';
-import PolyTimeDarkIcon from '#/components/icons/PolyTimeDark';
-import PolyWeatherIcon from '#/components/icons/PolyWeather';
-import PolyWeatherDarkIcon from '#/components/icons/PolyWeatherDark';
 import SettingsIcon from '#/components/icons/Settings';
 import SmileIcon from '#/components/icons/Smile';
 import StarIcon from '#/components/icons/Star';
@@ -42,10 +28,32 @@ import RollingText from '#/components/RollingText';
 import ShowcaseButton from '#/components/ShowcaseButton';
 import StatCard from '#/components/StatCard';
 import LinkButton from '#/components/LinkButton';
+import { createServerFn } from '@tanstack/react-start';
+
+const getMods = createServerFn({ method: 'GET' }).handler(async () => {
+    const response = await fetch('https://data-v2.polyfrost.org/oneclient/mods.json');
+    const mods = await response.json();
+
+    const filteredMods = mods.mods.filter((mod: any) => mod.priority > 0).map((mod: any) => ({ ...mod, on: Math.random() < 0.5 }));
+
+    const remaining = 50 - filteredMods.length;
+    if (remaining > 0) {
+        const additionalMods = mods.mods.filter((mod: any) => mod.priority === 0).map((mod: any) => ({ ...mod, on: Math.random() < 0.5 }));
+
+        for (let i = additionalMods.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [additionalMods[i], additionalMods[j]] = [additionalMods[j], additionalMods[i]];
+        }
+
+        filteredMods.push(...additionalMods.slice(0, remaining));
+    }
+
+    return { arr1: filteredMods.slice(0, 25), arr2: filteredMods.slice(25, 50) };
+});
 
 export const Route = createFileRoute('/projects/oneclient')({
     component: Oneclient,
-    loader: () => getDownloads(),
+    loader: () => Promise.all([getDownloads(), getMods()]).then(([downloads, mods]) => ({ downloads, mods })),
 });
 
 function Oneclient() {
@@ -123,7 +131,7 @@ function Oneclient() {
                         OneClient ships the most bleeding-edge mods, while being 100% open source and community-driven.
                     </motion.p>
                     <div className="flex sm:flex-row flex-col gap-4 items-center sm:w-fit w-full">
-                        <DownloadDropdown {...Route.useLoaderData()} className="sm:py-1.5 py-1 px-2 sm:w-fit w-full" labelClassName="sm:text-lg! text-base!" color="blue" delay={0.3} />
+                        <DownloadDropdown {...Route.useLoaderData().downloads} className="sm:py-1.5 py-1 px-2 sm:w-fit w-full" labelClassName="sm:text-lg! text-base!" color="blue" delay={0.3} />
                         <LinkButton
                             icon={<GitHubIcon className="sm:w-6 sm:h-6 w-5 h-5" />}
                             label="View on GitHub"
@@ -238,7 +246,7 @@ function Oneclient() {
             <section id="mods" className="relative">
                 <div className="justify-center items-center flex flex-col sm:gap-10 gap-6">
                     <div className="flex flex-col gap-10 px-4">
-                        <h1 className="sm:text-5xl text-4xl font-light max-w-3xl text-center pt-30">
+                        <h1 className="sm:text-5xl text-4xl font-light max-w-3xl text-center pt-36">
                             The Latest & Greatest <span className="font-medium">Mods</span>
                         </h1>
                         <p className="sm:text-lg text-base font-light max-w-3xl text-center">
@@ -248,146 +256,26 @@ function Oneclient() {
                     <div className="w-full flex flex-col mt-10">
                         <Marquee speed={70}>
                             <div className="flex flex-row gap-5 ml-5 mb-8">
-                                <ModCard
-                                    on
-                                    icon={
-                                        <>
-                                            <ChattingIcon className="h-12 w-full block light:hidden" />
-                                            <ChattingDarkIcon className="h-12 w-full hidden light:block" />
-                                        </>
-                                    }
-                                    label="Chatting"
-                                />
-                                <ModCard
-                                    icon={
-                                        <>
-                                            <CrashPatchIcon className="h-12 w-full block light:hidden" />
-                                            <CrashPatchDarkIcon className="h-12 w-full hidden light:block" />
-                                        </>
-                                    }
-                                    label="CrashPatch"
-                                />
-                                <ModCard
-                                    on
-                                    icon={
-                                        <>
-                                            <OverflowAnimationsIcon className="h-12 w-full block light:hidden" />
-                                            <OverflowAnimationsDarkIcon className="h-12 w-full hidden light:block" />
-                                        </>
-                                    }
-                                    label="OverflowAnimations"
-                                />
-                                <ModCard
-                                    on
-                                    icon={
-                                        <>
-                                            <DamageTintIcon className="h-12 w-full block light:hidden" />
-                                            <DamageTintDarkIcon className="h-12 w-full hidden light:block" />
-                                        </>
-                                    }
-                                    label="DamageTint"
-                                />
-                                <ModCard
-                                    icon={
-                                        <>
-                                            <PolyBlurIcon className="h-12 w-full block light:hidden" />
-                                            <PolyBlurDarkIcon className="h-12 w-full hidden light:block" />
-                                        </>
-                                    }
-                                    label="PolyBlur"
-                                />
-                                <ModCard
-                                    on
-                                    icon={
-                                        <>
-                                            <PolyTimeIcon className="h-12 w-full block light:hidden" />
-                                            <PolyTimeDarkIcon className="h-12 w-full hidden light:block" />
-                                        </>
-                                    }
-                                    label="PolyTime"
-                                />
-                                <ModCard
-                                    on
-                                    icon={
-                                        <>
-                                            <PolyWeatherIcon className="h-12 w-full block light:hidden" />
-                                            <PolyWeatherDarkIcon className="h-12 w-full hidden light:block" />
-                                        </>
-                                    }
-                                    label="PolyWeather"
-                                />
+                                {Route.useLoaderData().mods.arr1.map((mod: any, index: number) => (
+                                    <ModCard
+                                        key={index}
+                                        on={mod.on}
+                                        icon={<img src={mod.icon} alt={mod.name} className="w-12.5 h-12.5 rounded-[7px]" />}
+                                        label={mod.name}
+                                    />
+                                ))}
                             </div>
                         </Marquee>
                         <Marquee dir="right" speed={70}>
                             <div className="flex flex-row gap-5 ml-5 mb-8">
-                                <ModCard
-                                    on
-                                    icon={
-                                        <>
-                                            <ChattingIcon className="h-12 w-full block light:hidden" />
-                                            <ChattingDarkIcon className="h-12 w-full hidden light:block" />
-                                        </>
-                                    }
-                                    label="Chatting"
-                                />
-                                <ModCard
-                                    icon={
-                                        <>
-                                            <CrashPatchIcon className="h-12 w-full block light:hidden" />
-                                            <CrashPatchDarkIcon className="h-12 w-full hidden light:block" />
-                                        </>
-                                    }
-                                    label="CrashPatch"
-                                />
-                                <ModCard
-                                    on
-                                    icon={
-                                        <>
-                                            <OverflowAnimationsIcon className="h-12 w-full block light:hidden" />
-                                            <OverflowAnimationsDarkIcon className="h-12 w-full hidden light:block" />
-                                        </>
-                                    }
-                                    label="OverflowAnimations"
-                                />
-                                <ModCard
-                                    on
-                                    icon={
-                                        <>
-                                            <DamageTintIcon className="h-12 w-full block light:hidden" />
-                                            <DamageTintDarkIcon className="h-12 w-full hidden light:block" />
-                                        </>
-                                    }
-                                    label="DamageTint"
-                                />
-                                <ModCard
-                                    icon={
-                                        <>
-                                            <PolyBlurIcon className="h-12 w-full block light:hidden" />
-                                            <PolyBlurDarkIcon className="h-12 w-full hidden light:block" />
-                                        </>
-                                    }
-                                    label="PolyBlur"
-                                />
-                                <ModCard
-                                    on
-                                    icon={
-                                        <>
-                                            <PolyTimeIcon className="h-12 w-full block light:hidden" />
-                                            <PolyTimeDarkIcon className="h-12 w-full hidden light:block" />
-                                        </>
-                                    }
-                                    label="PolyTime"
-                                />
-                                <ModCard
-                                    on
-                                    icon={
-                                        <>
-                                            <PolyWeatherIcon className="h-12 w-full block light:hidden" />
-                                            <PolyWeatherDarkIcon className="h-12 w-full hidden light:block" />
-                                        </>
-                                    }
-                                    label="PolyWeather"
-                                />
+                                {Route.useLoaderData().mods.arr2.map((mod: any, index: number) => (
+                                    <ModCard
+                                        key={index}
+                                        on={mod.on}
+                                        icon={<img src={mod.icon} alt={mod.name} className="w-12.5 h-12.5 rounded-[7px]" />}
+                                        label={mod.name}
+                                    />
+                                ))}
                             </div>
                         </Marquee>
                     </div>
@@ -415,7 +303,7 @@ function Oneclient() {
             </section>
             <section id="performance" className="relative">
                 <div className="justify-center items-center flex flex-col px-4 sm:gap-10 gap-6">
-                    <h1 className="sm:text-5xl text-4xl font-light max-w-3xl text-center pt-30">
+                    <h1 className="sm:text-5xl text-4xl font-light max-w-3xl text-center pt-36">
                         Simply Insane <span className="font-medium">Performance</span>
                     </h1>
                     <p className="sm:text-lg text-base font-light max-w-3xl text-center">
@@ -451,49 +339,9 @@ function Oneclient() {
                     </div>
                 </div>
             </section>
-            <section id="cosmetics" className="relative">
-                <div className="justify-center items-center flex flex-col px-4 sm:gap-10 gap-6">
-                    <h1 className="sm:text-5xl text-4xl font-light max-w-3xl text-center pt-30">
-                        Flashy <span className="font-medium">Cosmetics</span>
-                    </h1>
-                    <p className="sm:text-lg text-base font-light max-w-3xl text-center">
-                        Show your drip 🔥 with our sick cosmetics. We work with 3D designers and Minecraft cosmetic creators to deliver the coolest stuff. Your cosmetics will be visible to all other OneClient users, and it's a great way to support
-                        us!
-                    </p>
-                    <LinkButton
-                        icon={<BagIcon className="sm:w-6 sm:h-6 w-5 h-5 text-white" />}
-                        label="Check Out the Store!"
-                        color="blue"
-                        className="sm:py-1.5 py-1 px-2 sm:w-fit w-full"
-                        labelClassName="sm:text-lg! text-base!"
-                        href="https://store.polyfrost.org"
-                    />
-                    <img src="/cosmeticman.png" alt="Cosmetics man" className="max-w-5xl w-full" />
-                    <div className="flex lg:flex-row flex-col lg:gap-12 gap-4 mt-8 max-w-6xl w-full">
-                        <InfoCard
-                            icon={<StarIcon className="h-6 w-6" />}
-                            delay={0.1}
-                            label="Great Designs"
-                            description="We work with talented 3D designers to bring you the most visually appealing cosmetics. We aim to compete with the competition and provide the best designs."
-                        />
-                        <InfoCard
-                            icon={<ColorIcon className="h-6 w-6" />}
-                            delay={0.2}
-                            label="Thematic Collections"
-                            description="Our cosmetics are organized into thematic collections, making it easy to find items that match your style. Create a special look for any time of the year!"
-                        />
-                        <InfoCard
-                            icon={<DollarIcon className="h-6 w-6" />}
-                            delay={0.3}
-                            label="Competitive Pricing"
-                            description="Cosmetics are priced competitively so you get the best value for your money. Competitor prices are always considered when setting the prices of our items."
-                        />
-                    </div>
-                </div>
-            </section>
             <section id="launcher" className="relative">
                 <div className="justify-center items-center flex flex-col px-4 sm:gap-10 gap-6">
-                    <h1 className="sm:text-5xl text-4xl font-light max-w-3xl text-center pt-30">
+                    <h1 className="sm:text-5xl text-4xl font-light max-w-3xl text-center pt-36">
                         The Perfect <span className="font-medium">Launcher</span>
                     </h1>
                     <p className="sm:text-lg text-base font-light max-w-3xl text-center">
@@ -532,6 +380,46 @@ function Oneclient() {
                     </div>
                 </div>
             </section>
+            <section id="cosmetics" className="relative">
+                <div className="justify-center items-center flex flex-col px-4 sm:gap-10 gap-6">
+                    <h1 className="sm:text-5xl text-4xl font-light max-w-3xl text-center pt-36">
+                        Flashy <span className="font-medium">Cosmetics</span>
+                    </h1>
+                    <p className="sm:text-lg text-base font-light max-w-3xl text-center">
+                        Show your drip 🔥 with our sick cosmetics. We work with 3D designers and Minecraft cosmetic creators to deliver the coolest stuff. Your cosmetics will be visible to all other OneClient users, and it's a great way to support
+                        us!
+                    </p>
+                    <LinkButton
+                        icon={<BagIcon className="sm:w-6 sm:h-6 w-5 h-5 text-white" />}
+                        label="Check Out the Store!"
+                        color="blue"
+                        className="sm:py-1.5 py-1 px-2 sm:w-fit w-full"
+                        labelClassName="sm:text-lg! text-base!"
+                        href="https://store.polyfrost.org"
+                    />
+                    <img src="/cosmeticman.png" alt="Cosmetics man" className="max-w-240 w-full" />
+                    <div className="flex lg:flex-row flex-col lg:gap-12 gap-4 mt-8 max-w-6xl w-full">
+                        <InfoCard
+                            icon={<StarIcon className="h-6 w-6" />}
+                            delay={0.1}
+                            label="Great Designs"
+                            description="We work with talented 3D designers to bring you the most visually appealing cosmetics. We aim to compete with the competition and provide the best designs."
+                        />
+                        <InfoCard
+                            icon={<ColorIcon className="h-6 w-6" />}
+                            delay={0.2}
+                            label="Thematic Collections"
+                            description="Our cosmetics are organized into thematic collections, making it easy to find items that match your style. Create a special look for any time of the year!"
+                        />
+                        <InfoCard
+                            icon={<DollarIcon className="h-6 w-6" />}
+                            delay={0.3}
+                            label="Competitive Pricing"
+                            description="Cosmetics are priced competitively so you get the best value for your money. Competitor prices are always considered when setting the prices of our items."
+                        />
+                    </div>
+                </div>
+            </section>
             <section className="relative z-10">
                 <div className="px-4">
                     <div className="bg-primary/50 light:bg-primary-light/50 relative flex my-30 max-w-6xl w-full mx-auto rounded-xl border border-white/10 light:border-white/15 backdrop-blur-[32px] shadow-[0px_6px_15px_0px_rgba(0,0,0,0.15)] light:shadow-[0px_6px_15px_0px_rgba(0,0,0,0.10)]">
@@ -546,7 +434,7 @@ function Oneclient() {
                                 OneClient is fully open source. Every optimization, every line of the launcher, out in the open. Our competitors can't say that.
                             </p>
                             <div className="flex sm:flex-row flex-col sm:gap-4 gap-2 items-center sm:w-fit w-full">
-                                <DownloadDropdown {...Route.useLoaderData()} className="sm:py-1.5 py-1 px-2 sm:w-fit w-full" labelClassName="sm:text-lg! text-base!" color="blue" />
+                                <DownloadDropdown {...Route.useLoaderData().downloads} className="sm:py-1.5 py-1 px-2 sm:w-fit w-full" labelClassName="sm:text-lg! text-base!" color="blue" />
                                 <LinkButton
                                     icon={<GitHubIcon className="sm:w-6 sm:h-6 w-5 h-5" />}
                                     label="View on GitHub"
