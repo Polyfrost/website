@@ -43,6 +43,8 @@ mkPnpmPackage {
         pnpm website build
     '';
 
+    distDir = "apps/website/dist";
+
     buildEnv = {
         ASTRO_TELEMETRY_DISABLED = "1";
     };
@@ -51,22 +53,13 @@ mkPnpmPackage {
         makeBinaryWrapper
     ];
 
-    installPhase = ''
-        runHook preInstall
-
-        mkdir -p "$out"/{bin,share}
-
-        # Copy all the astro files to the output
-        cp -r ./apps/website/dist/* "$out"/share/
+    postInstall = ''
+        mkdir -p "$out/bin"
 
         # Make a wrapper command to start the server
-        makeWrapper ${lib.getExe nodejs-slim} "$out"/bin/start-server \
+        makeWrapper ${lib.getExe nodejs-slim} "$out/bin/start-server" \
              --inherit-argv0 \
-             --add-flags $out/share/server/entry.mjs
-
-        # chmod +x "$out"/bin/start-server
-
-        runHook postInstall
+             --add-flags "$out/server/entry.mjs"
     '';
 
     meta = {
