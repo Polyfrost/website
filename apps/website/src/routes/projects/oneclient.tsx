@@ -46,11 +46,11 @@ const getMods = createServerFn({ method: 'GET' }).handler(async () => {
     const mods = await loadMods();
     if (!mods) return noMods;
 
-    const filteredMods = mods.filter((mod: any) => mod.priority > 0).map((mod: any) => ({ ...mod, on: Math.random() < 0.5 }));
+    const filteredMods = mods.filter((mod: any) => mod.priority > 0).map((mod: any) => ({ ...mod, on: mod.enabledByDefault }));
 
     const remaining = 50 - filteredMods.length;
     if (remaining > 0) {
-        const additionalMods = mods.filter((mod: any) => mod.priority === 0).map((mod: any) => ({ ...mod, on: Math.random() < 0.5 }));
+        const additionalMods = mods.filter((mod: any) => mod.priority === 0).map((mod: any) => ({ ...mod, on: mod.enabledByDefault }));
 
         for (let i = additionalMods.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
