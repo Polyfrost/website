@@ -27,7 +27,7 @@ mkPnpmPackage {
                 let
                     baseName = baseNameOf (toString name);
                 in
-                !(builtins.elem baseName [ "dist" "node_modules" ".astro" ]);
+                !(builtins.elem baseName [ "dist" "node_modules" ".astro" ".output" ]);
         };
         filter = lib.sources.cleanSourceFilter;
     };
@@ -43,7 +43,8 @@ mkPnpmPackage {
         pnpm website build
     '';
 
-    distDir = ".output";
+    # Point directly to the Nitro output directory relative to the workspace root
+    distDir = "apps/website/.output";
 
     buildEnv = {
         ASTRO_TELEMETRY_DISABLED = "1";
@@ -53,6 +54,7 @@ mkPnpmPackage {
         makeBinaryWrapper
     ];
 
+    # Wrap the Nitro server entrypoint after pnpm2nix moves distDir into $out
     postInstall = ''
         mkdir -p "$out/bin"
 
