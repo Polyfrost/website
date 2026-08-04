@@ -149,8 +149,8 @@ function Oneclient() {
                     </div>
                     <div className="perspective-normal transform-3d animate-hover max-w-5xl">
                         <div ref={hero} className="animate-fade" style={{ animationDelay: '0.5s' }}>
-                            <img src="/heroimagelight.png" alt="Hero light" className="light:block hidden" />
-                            <img src="/heroimage.png" alt="Hero dark" className="light:hidden" />
+                            <img src="/heroimagelight.webp" alt="Hero light" className="light:block hidden" />
+                            <img src="/heroimage.webp" alt="Hero dark" className="light:hidden" />
                         </div>
                     </div>
                 </div>
@@ -201,11 +201,11 @@ function Oneclient() {
                             aspect="video"
                             spacing={71}
                             images={[
-                                { light: '/modslight.png', dark: '/mods.png' },
-                                { light: '/themeslight.png', dark: '/themes.png' },
-                                { light: '/hudlight.png', dark: '/hud.png' },
-                                { light: '/settingslight.png', dark: '/settings.png' },
-                                { light: '/hostinglight.png', dark: '/hosting.png' },
+                                { light: '/modslight.webp', dark: '/mods.webp' },
+                                { light: '/themeslight.webp', dark: '/themes.webp' },
+                                { light: '/hudlight.webp', dark: '/hud.webp' },
+                                { light: '/settingslight.webp', dark: '/settings.webp' },
+                                { light: '/hostinglight.webp', dark: '/hosting.webp' },
                             ]}
                         />
                         <div className="relative h-27 md:flex hidden flex-row justify-between max-w-5xl w-full mx-auto gap-4 px-8">
@@ -329,10 +329,10 @@ function Oneclient() {
                         aspect="3:2"
                         spacing={76}
                         images={[
-                            { light: '/launcher1.png', dark: '/launcher1.png' },
-                            { light: '/launcher2.png', dark: '/launcher2.png' },
-                            { light: '/launcher3.png', dark: '/launcher3.png' },
-                            { light: '/launcher4.png', dark: '/launcher4.png' },
+                            { light: '/launcher1.webp', dark: '/launcher1.webp' },
+                            { light: '/launcher2.webp', dark: '/launcher2.webp' },
+                            { light: '/launcher3.webp', dark: '/launcher3.webp' },
+                            { light: '/launcher4.webp', dark: '/launcher4.webp' },
                         ]}
                     />
                     <div className="flex lg:flex-row flex-col lg:gap-12 gap-4 mt-8 max-w-6xl w-full">
@@ -374,7 +374,7 @@ function Oneclient() {
                         labelClassName="sm:text-lg! text-base!"
                         href="https://store.polyfrost.org"
                     />
-                    <img src="/cosmeticman.png" alt="Cosmetics man" className="max-w-240 w-full" />
+                    <img src="/cosmeticman.webp" alt="Cosmetics man" className="max-w-240 w-full" />
                     <div className="flex lg:flex-row flex-col lg:gap-12 gap-4 mt-8 max-w-6xl w-full">
                         <InfoCard
                             icon={<StarIcon className="h-6 w-6" />}
@@ -420,7 +420,7 @@ function Oneclient() {
                         <div className="absolute inset-0 overflow-hidden rounded-xl pointer-events-none">
                             <div className="absolute top-0 right-0 flex">
                                 <div className="absolute bg-linear-to-r from-[#1a2937] light:from-[#ccdaf8] to-transparent w-120 h-120 z-10" />
-                                <img className="max-w-120 sm:brightness-100 brightness-50" src="/code.png" alt="Code screenshot" />
+                                <img className="max-w-120 sm:brightness-100 brightness-50" src="/code.webp" alt="Code screenshot" />
                             </div>
                         </div>
                     </div>
