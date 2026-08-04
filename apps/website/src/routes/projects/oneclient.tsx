@@ -1,22 +1,19 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { motion } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useLayoutEffect, useRef, useState } from 'react';
-import DownloadDropdown, { getDownloads } from '#/components/DownloadDropdown';
+import DownloadDropdown, { fallbackRelease, getDownloads } from '#/components/DownloadDropdown';
 import InfoCard from '#/components/InfoCard';
 import BagIcon from '#/components/icons/Bag';
 import ChecklistIcon from '#/components/icons/Checklist';
 import ClickIcon from '#/components/icons/Click';
 import ColorIcon from '#/components/icons/Color';
 import CubeIcon from '#/components/icons/Cube';
-import DollarIcon from '#/components/icons/Dollar';
 import FastIcon from '#/components/icons/Fast';
 import DiscordIcon from '#/components/icons/Discord';
 import GitHubIcon from '#/components/icons/GitHub';
 import HUDIcon from '#/components/icons/HUD';
 import LightningIcon from '#/components/icons/Lightning';
-import LineGraphIcon from '#/components/icons/LineGraph';
 import SettingsIcon from '#/components/icons/Settings';
 import SmileIcon from '#/components/icons/Smile';
 import StarIcon from '#/components/icons/Star';
@@ -30,16 +27,30 @@ import ShowcaseButton from '#/components/ShowcaseButton';
 import StatCard from '#/components/StatCard';
 import LinkButton from '#/components/LinkButton';
 import { createServerFn } from '@tanstack/react-start';
+import { createCache } from '#/lib/cache';
+
+const noMods = { arr1: [], arr2: [] };
+
+const loadMods = createCache(async (): Promise<any[]> => {
+    const response = await fetch('https://data-v2.polyfrost.org/oneclient/mods.json');
+
+    if (!response.ok) throw new Error(`Polyfrost data responded ${response.status}`);
+
+    const mods = await response.json();
+    if (!Array.isArray(mods?.mods)) throw new Error('Malformed mods.json');
+
+    return mods.mods;
+});
 
 const getMods = createServerFn({ method: 'GET' }).handler(async () => {
-    const response = await fetch('https://data-v2.polyfrost.org/oneclient/mods.json');
-    const mods = await response.json();
+    const mods = await loadMods();
+    if (!mods) return noMods;
 
-    const filteredMods = mods.mods.filter((mod: any) => mod.priority > 0).map((mod: any) => ({ ...mod, on: Math.random() < 0.5 }));
+    const filteredMods = mods.filter((mod: any) => mod.priority > 0).map((mod: any) => ({ ...mod, on: Math.random() < 0.5 }));
 
     const remaining = 50 - filteredMods.length;
     if (remaining > 0) {
-        const additionalMods = mods.mods.filter((mod: any) => mod.priority === 0).map((mod: any) => ({ ...mod, on: Math.random() < 0.5 }));
+        const additionalMods = mods.filter((mod: any) => mod.priority === 0).map((mod: any) => ({ ...mod, on: Math.random() < 0.5 }));
 
         for (let i = additionalMods.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -54,7 +65,13 @@ const getMods = createServerFn({ method: 'GET' }).handler(async () => {
 
 export const Route = createFileRoute('/projects/oneclient')({
     component: Oneclient,
-    loader: () => Promise.all([getDownloads(), getMods()]).then(([downloads, mods]) => ({ downloads, mods })),
+    // Neither server fn rejects on an upstream failure, but the call itself can still
+    // fail in transit on a client-side navigation — the page renders without either.
+    loader: () =>
+        Promise.all([getDownloads().catch(() => fallbackRelease), getMods().catch(() => noMods)]).then(([downloads, mods]) => ({
+            downloads,
+            mods,
+        })),
 });
 
 function Oneclient() {
@@ -103,34 +120,12 @@ function Oneclient() {
                     <div className="absolute h-482 w-482 -translate-x-275 translate-y-1300 -z-10 glow" />
                     <div className="absolute h-482 w-482 translate-x-310 translate-y-1500 -z-10 glow" />
                     <div className="absolute h-482 w-482 translate-y-1750 -z-10 glow" />
-                    <motion.h1
-                        className="sm:text-5xl text-4xl font-light max-w-3xl text-center pt-36"
-                        initial={{ opacity: 0, y: 50, filter: 'blur(10px)' }}
-                        animate={{
-                            opacity: 1,
-                            y: 0,
-                            filter: 'blur(0px)',
-                            transition: { duration: 0.5, ease: [0.39, 0.21, 0.12, 0.96] },
-                        }}
-                    >
+                    <h1 className="sm:text-5xl text-4xl font-light max-w-3xl text-center pt-36 animate-enter">
                         The one client <span className="font-medium">you&apos;ll ever need.</span>
-                    </motion.h1>
-                    <motion.p
-                        className="sm:text-lg text-base font-light max-w-3xl text-center"
-                        initial={{ opacity: 0, y: 50, filter: 'blur(10px)' }}
-                        animate={{
-                            opacity: 1,
-                            y: 0,
-                            filter: 'blur(0px)',
-                            transition: {
-                                delay: 0.2,
-                                duration: 0.5,
-                                ease: [0.39, 0.21, 0.12, 0.96],
-                            },
-                        }}
-                    >
+                    </h1>
+                    <p className="sm:text-lg text-base font-light max-w-3xl text-center animate-enter" style={{ animationDelay: '0.2s' }}>
                         OneClient ships the most bleeding-edge mods, while being 100% open source and community-driven.
-                    </motion.p>
+                    </p>
                     <div className="flex sm:flex-row flex-col gap-4 items-center sm:w-fit w-full">
                         <DownloadDropdown {...Route.useLoaderData().downloads} className="sm:py-1.5 py-1 px-2 sm:w-fit w-full" labelClassName="sm:text-lg! text-base!" color="blue" delay={0.3} />
                         <LinkButton
@@ -152,24 +147,12 @@ function Oneclient() {
                             delay={0.5}
                         />
                     </div>
-                    <motion.div
-                        className="perspective-normal transform-3d animate-hover max-w-5xl"
-                        initial={{ opacity: 0, filter: 'blur(10px)' }}
-                        animate={{
-                            opacity: 1,
-                            filter: 'blur(0px)',
-                            transition: {
-                                delay: 0.5,
-                                duration: 0.5,
-                                ease: [0.39, 0.21, 0.12, 0.96],
-                            },
-                        }}
-                    >
-                        <div ref={hero}>
+                    <div className="perspective-normal transform-3d animate-hover max-w-5xl">
+                        <div ref={hero} className="animate-fade" style={{ animationDelay: '0.5s' }}>
                             <img src="/heroimagelight.png" alt="Hero light" className="light:block hidden" />
                             <img src="/heroimage.png" alt="Hero dark" className="light:hidden" />
                         </div>
-                    </motion.div>
+                    </div>
                 </div>
             </section>
             <section id="features" className="relative">
@@ -267,24 +250,14 @@ function Oneclient() {
                         <Marquee speed={70}>
                             <div className="flex flex-row gap-5 ml-5 mb-8">
                                 {Route.useLoaderData().mods.arr1.map((mod: any, index: number) => (
-                                    <ModCard
-                                        key={index}
-                                        on={mod.on}
-                                        icon={<img src={mod.icon} alt={mod.name} className="w-12.5 h-12.5 rounded-[7px]" />}
-                                        label={mod.name}
-                                    />
+                                    <ModCard key={index} on={mod.on} icon={<img src={mod.icon} alt={mod.name} className="w-12.5 h-12.5 rounded-[7px]" />} label={mod.name} />
                                 ))}
                             </div>
                         </Marquee>
                         <Marquee dir="right" speed={70}>
                             <div className="flex flex-row gap-5 ml-5 mb-8">
                                 {Route.useLoaderData().mods.arr2.map((mod: any, index: number) => (
-                                    <ModCard
-                                        key={index}
-                                        on={mod.on}
-                                        icon={<img src={mod.icon} alt={mod.name} className="w-12.5 h-12.5 rounded-[7px]" />}
-                                        label={mod.name}
-                                    />
+                                    <ModCard key={index} on={mod.on} icon={<img src={mod.icon} alt={mod.name} className="w-12.5 h-12.5 rounded-[7px]" />} label={mod.name} />
                                 ))}
                             </div>
                         </Marquee>

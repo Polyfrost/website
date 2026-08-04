@@ -1,6 +1,6 @@
 import { createServerFn } from '@tanstack/react-start';
 import { getRequestHeader } from '@tanstack/react-start/server';
-import { motion } from 'framer-motion';
+import { createCache } from '#/lib/cache';
 import DownloadIcon from './icons/Download';
 import DownChevronIcon from './icons/DownChevron';
 
@@ -146,20 +146,13 @@ const defaultArch: Record<OS, Arch> = {
     linux: 'x64',
 };
 
-const cacheTtl = 10 * 60 * 1000;
-const retryTtl = 60 * 1000;
-
-const fallbackRelease: Release = {
+// Served when the GitHub API is unreachable — the AUR packages don't depend on a release asset.
+export const fallbackRelease: Release & { featured?: Download } = {
     version: '',
     url: latestReleaseUrl,
     publishedAt: '',
     downloads: aurPackages,
 };
-
-let cached: Release | undefined;
-let fetchedAt = 0;
-let failedAt = 0;
-let inFlight: Promise<Release> | undefined;
 
 function listDownloads(assets: RawRelease['assets']): Download[] {
     const signed = new Set(assets.filter((a) => a.name.endsWith('.sig')).map((a) => a.name.slice(0, -4)));
@@ -204,7 +197,7 @@ function listDownloads(assets: RawRelease['assets']): Download[] {
     return [...parsed.map((download) => ({ ...download, title: title(download) })), ...aurPackages];
 }
 
-async function fetchRelease(): Promise<Release> {
+const loadRelease = createCache(async (): Promise<Release> => {
     const response = await fetch(`https://api.github.com/repos/${repo}/releases?per_page=10`, {
         headers: {
             'accept': 'application/vnd.github+json',
@@ -225,32 +218,7 @@ async function fetchRelease(): Promise<Release> {
         publishedAt: latest.published_at,
         downloads: listDownloads(latest.assets),
     };
-}
-
-function loadRelease(): Promise<Release> {
-    const now = Date.now();
-
-    if (cached && now - fetchedAt < cacheTtl) return Promise.resolve(cached);
-    if (now - failedAt < retryTtl) return Promise.resolve(cached ?? fallbackRelease);
-
-    inFlight ??= fetchRelease()
-        .then((release) => {
-            cached = release;
-            fetchedAt = Date.now();
-            failedAt = 0;
-            return release;
-        })
-        .catch((error) => {
-            failedAt = Date.now();
-            console.error('Failed to load the latest OneLauncher release:', error);
-            return cached ?? fallbackRelease;
-        })
-        .finally(() => {
-            inFlight = undefined;
-        });
-
-    return inFlight;
-}
+});
 
 function detectPlatform() {
     const agent = getRequestHeader('user-agent')?.toLowerCase();
@@ -276,6 +244,8 @@ function pickDownload(release: Release) {
 
 export const getDownloads = createServerFn({ method: 'GET' }).handler(async () => {
     const release = await loadRelease();
+    if (!release) return fallbackRelease;
+
     return { ...release, featured: pickDownload(release) };
 });
 
@@ -308,62 +278,31 @@ export default function DownloadDropdown({
     };
 
     return (
-        <>
-            {delay ? (
-                <motion.div
-                    initial={{ opacity: 0, y: 50, filter: 'blur(10px)' }}
-                    animate={{ opacity: 1, y: 0, filter: 'blur(0px)', transition: { delay: delay, duration: 0.5, ease: [0.39, 0.21, 0.12, 0.96] } }}
-                    className={`group relative z-50 flex w-full`}
-                >
-                    <a
-                        href={featured?.url ?? latestReleaseUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className={`${buttonColor()} ${className ?? ''} disabled:opacity-50 disabled:cursor-not-allowed border relative rounded-lg shadow-[0px_6px_15px_0px_rgba(0,0,0,0.15)] light:shadow-[0px_6px_15px_0px_rgba(0,0,0,0.10)] select-none`}
-                        style={{ paddingRight: addedWidth, paddingLeft: addedWidth }}
-                    >
-                        <div className="flex flex-row items-center justify-center gap-2 px-3 py-1">
-                            <DownloadIcon className="sm:w-6 sm:h-6 w-5 h-5 text-white" />
-                            <p className={`${color === 'primary' ? 'text-white light:text-black' : 'text-white'} text-sm leading-6 whitespace-nowrap ${labelClassName ?? ''}`}>{buttonLabel(featured, downloads)}</p>
-                            <DownChevronIcon className="sm:w-6 sm:h-6 w-5 h-5 text-white" />
-                        </div>
-                    </a>
-                    <div className="absolute top-full left-0 w-full pt-2 group-hover:block hidden">
-                        <div className="flex flex-col bg-primary light:bg-primary-light rounded-xl border border-white/10 light:border-white/15 overflow-hidden">
-                            {downloads.map((download, index) => (
-                                <a key={index} href={download.url} target="_blank" rel="noreferrer" className="text-center py-1.5 px-2 hover:brightness-110 bg-primary/50 light:bg-primary-light/50 duration-300">
-                                    {download.title}
-                                </a>
-                            ))}
-                        </div>
-                    </div>
-                </motion.div>
-            ) : (
-                <div className={`group relative z-50 flex w-full`}>
-                    <a
-                        href={featured?.url ?? latestReleaseUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className={`${buttonColor()} ${className ?? ''} disabled:opacity-50 disabled:cursor-not-allowed border relative rounded-lg shadow-[0px_6px_15px_0px_rgba(0,0,0,0.15)] light:shadow-[0px_6px_15px_0px_rgba(0,0,0,0.10)] select-none`}
-                        style={{ paddingRight: addedWidth, paddingLeft: addedWidth }}
-                    >
-                        <div className="flex flex-row items-center justify-center gap-2 px-3 py-1">
-                            <DownloadIcon className="sm:w-6 sm:h-6 w-5 h-5 text-white" />
-                            <p className={`${color === 'primary' ? 'text-white light:text-black' : 'text-white'} text-sm leading-6 whitespace-nowrap ${labelClassName ?? ''}`}>{buttonLabel(featured, downloads)}</p>
-                            <DownChevronIcon className="sm:w-6 sm:h-6 w-5 h-5 text-white" />
-                        </div>
-                    </a>
-                    <div className="absolute top-full left-0 w-full pt-2 group-hover:block hidden">
-                        <div className="flex flex-col bg-primary light:bg-primary-light rounded-xl border border-white/10 light:border-white/15 overflow-hidden">
-                            {downloads.map((download, index) => (
-                                <a key={index} href={download.url} target="_blank" rel="noreferrer" className="text-center py-1.5 px-2 hover:brightness-110 bg-primary/50 light:bg-primary-light/50 duration-300">
-                                    {download.title}
-                                </a>
-                            ))}
-                        </div>
+        <div className={`group relative z-50 flex w-full ${delay ? 'animate-enter' : ''}`} style={delay ? { animationDelay: `${delay}s` } : undefined}>
+            <a
+                href={featured?.url ?? latestReleaseUrl}
+                target="_blank"
+                rel="noreferrer"
+                className={`${buttonColor()} ${className ?? ''} disabled:opacity-50 disabled:cursor-not-allowed border relative rounded-lg shadow-[0px_6px_15px_0px_rgba(0,0,0,0.15)] light:shadow-[0px_6px_15px_0px_rgba(0,0,0,0.10)] select-none`}
+                style={{ paddingRight: addedWidth, paddingLeft: addedWidth }}
+            >
+                <div className="flex flex-row items-center justify-center gap-2 px-3 py-1">
+                    <DownloadIcon className="sm:w-6 sm:h-6 w-5 h-5 text-white" />
+                    <p className={`${color === 'primary' ? 'text-white light:text-black' : 'text-white'} text-sm leading-6 whitespace-nowrap ${labelClassName ?? ''}`}>{buttonLabel(featured, downloads)}</p>
+                    <DownChevronIcon className="sm:w-6 sm:h-6 w-5 h-5 text-white" />
+                </div>
+            </a>
+            {downloads.length > 0 && (
+                <div className="absolute top-full left-0 w-full pt-2 group-hover:block hidden">
+                    <div className="flex flex-col bg-primary light:bg-primary-light rounded-xl border border-white/10 light:border-white/15 overflow-hidden">
+                        {downloads.map((download, index) => (
+                            <a key={index} href={download.url} target="_blank" rel="noreferrer" className="text-center py-1.5 px-2 hover:brightness-110 bg-primary/50 light:bg-primary-light/50 duration-300">
+                                {download.title}
+                            </a>
+                        ))}
                     </div>
                 </div>
             )}
-        </>
+        </div>
     );
 }
