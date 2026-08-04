@@ -1,6 +1,6 @@
 import { createServerFn } from '@tanstack/react-start';
 import { getRequestHeader } from '@tanstack/react-start/server';
-import { motion } from 'framer-motion';
+import { createCache } from '#/lib/cache';
 import DownloadIcon from './icons/Download';
 import DownChevronIcon from './icons/DownChevron';
 
@@ -122,10 +122,12 @@ const defaultArch: Record<OS, Arch> = {
     linux: 'x64',
 };
 
-const cacheTtl = 10 * 60 * 1000;
-
-let cached: Release | undefined;
-let fetchedAt = 0;
+export const noDownloads: Release & { featured?: Download } = {
+    version: '',
+    url: latestReleaseUrl,
+    publishedAt: '',
+    downloads: [],
+};
 
 function listDownloads(assets: RawRelease['assets']): Download[] {
     const signed = new Set(assets.filter((a) => a.name.endsWith('.sig')).map((a) => a.name.slice(0, -4)));
@@ -170,9 +172,7 @@ function listDownloads(assets: RawRelease['assets']): Download[] {
     return [...parsed.map((download) => ({ ...download, title: title(download) })), ...aurPackages];
 }
 
-async function loadRelease(): Promise<Release> {
-    if (cached && Date.now() - fetchedAt < cacheTtl) return cached;
-
+const loadRelease = createCache(async (): Promise<Release> => {
     const response = await fetch(`https://api.github.com/repos/${repo}/releases?per_page=10`);
 
     if (!response.ok) throw new Error(`GitHub responded ${response.status}`);
@@ -181,16 +181,13 @@ async function loadRelease(): Promise<Release> {
     const latest = releases.find((release) => !release.draft && !release.prerelease);
     if (!latest) throw new Error('No published release found');
 
-    cached = {
+    return {
         version: latest.tag_name.replace(/^oneclient-|^v/, ''),
         url: latest.html_url,
         publishedAt: latest.published_at,
         downloads: listDownloads(latest.assets),
     };
-    fetchedAt = Date.now();
-
-    return cached;
-}
+});
 
 function detectPlatform() {
     const agent = getRequestHeader('user-agent')?.toLowerCase();
@@ -204,11 +201,11 @@ function detectPlatform() {
     return { os, arch };
 }
 
-function pickDownload() {
+function pickDownload(release: Release) {
     const platform = detectPlatform();
-    if (!platform || !cached) return undefined;
+    if (!platform) return undefined;
 
-    const sameOS = cached.downloads.filter((download) => download.os === platform.os && download.format !== 'aur');
+    const sameOS = release.downloads.filter((download) => download.os === platform.os && download.format !== 'aur');
     const arch = platform.arch ?? defaultArch[platform.os];
 
     return sameOS.find((download) => download.arch === arch) ?? sameOS.find((download) => download.arch === 'universal') ?? (platform.arch ? undefined : sameOS[0]);
@@ -216,7 +213,9 @@ function pickDownload() {
 
 export const getDownloads = createServerFn({ method: 'GET' }).handler(async () => {
     const release = await loadRelease();
-    return { ...release, featured: pickDownload() };
+    if (!release) return noDownloads;
+
+    return { ...release, featured: pickDownload(release) };
 });
 
 export default function DownloadDropdown({
@@ -248,62 +247,31 @@ export default function DownloadDropdown({
     };
 
     return (
-        <>
-            {delay ? (
-                <motion.div
-                    initial={{ opacity: 0, y: 50, filter: 'blur(10px)' }}
-                    animate={{ opacity: 1, y: 0, filter: 'blur(0px)', transition: { delay: delay, duration: 0.5, ease: [0.39, 0.21, 0.12, 0.96] } }}
-                    className={`group relative z-50 flex w-full`}
-                >
-                    <a
-                        href={featured?.url ?? latestReleaseUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className={`${buttonColor()} ${className ?? ''} disabled:opacity-50 disabled:cursor-not-allowed border relative rounded-lg shadow-[0px_6px_15px_0px_rgba(0,0,0,0.15)] light:shadow-[0px_6px_15px_0px_rgba(0,0,0,0.10)] select-none`}
-                        style={{ paddingRight: addedWidth, paddingLeft: addedWidth }}
-                    >
-                        <div className="flex flex-row items-center justify-center gap-2 px-3 py-1">
-                            <DownloadIcon className="sm:w-6 sm:h-6 w-5 h-5 text-white" />
-                            <p className={`${color === 'primary' ? 'text-white light:text-black' : 'text-white'} text-sm leading-6 whitespace-nowrap ${labelClassName ?? ''}`}>{featured?.os ? `Download for ${featured.os}` : 'Download OneLauncher'}</p>
-                            <DownChevronIcon className="sm:w-6 sm:h-6 w-5 h-5 text-white" />
-                        </div>
-                    </a>
-                    <div className="absolute top-full left-0 w-full pt-2 group-hover:block hidden">
-                        <div className="flex flex-col bg-primary light:bg-primary-light rounded-xl border border-white/10 light:border-white/15 overflow-hidden">
-                            {downloads.map((download, index) => (
-                                <a key={index} href={download.url} target="_blank" rel="noreferrer" className="text-center py-1.5 px-2 hover:brightness-110 bg-primary/50 light:bg-primary-light/50 duration-300">
-                                    {download.title}
-                                </a>
-                            ))}
-                        </div>
-                    </div>
-                </motion.div>
-            ) : (
-                <div className={`group relative z-50 flex w-full`}>
-                    <a
-                        href={featured?.url ?? latestReleaseUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className={`${buttonColor()} ${className ?? ''} disabled:opacity-50 disabled:cursor-not-allowed border relative rounded-lg shadow-[0px_6px_15px_0px_rgba(0,0,0,0.15)] light:shadow-[0px_6px_15px_0px_rgba(0,0,0,0.10)] select-none`}
-                        style={{ paddingRight: addedWidth, paddingLeft: addedWidth }}
-                    >
-                        <div className="flex flex-row items-center justify-center gap-2 px-3 py-1">
-                            <DownloadIcon className="sm:w-6 sm:h-6 w-5 h-5 text-white" />
-                            <p className={`${color === 'primary' ? 'text-white light:text-black' : 'text-white'} text-sm leading-6 whitespace-nowrap ${labelClassName ?? ''}`}>{featured?.os ? `Download for ${featured.os}` : 'Download OneLauncher'}</p>
-                            <DownChevronIcon className="sm:w-6 sm:h-6 w-5 h-5 text-white" />
-                        </div>
-                    </a>
-                    <div className="absolute top-full left-0 w-full pt-2 group-hover:block hidden">
-                        <div className="flex flex-col bg-primary light:bg-primary-light rounded-xl border border-white/10 light:border-white/15 overflow-hidden">
-                            {downloads.map((download, index) => (
-                                <a key={index} href={download.url} target="_blank" rel="noreferrer" className="text-center py-1.5 px-2 hover:brightness-110 bg-primary/50 light:bg-primary-light/50 duration-300">
-                                    {download.title}
-                                </a>
-                            ))}
-                        </div>
+        <div className={`group relative z-50 flex w-full ${delay ? 'animate-enter' : ''}`} style={delay ? { animationDelay: `${delay}s` } : undefined}>
+            <a
+                href={featured?.url ?? latestReleaseUrl}
+                target="_blank"
+                rel="noreferrer"
+                className={`${buttonColor()} ${className ?? ''} disabled:opacity-50 disabled:cursor-not-allowed border relative rounded-lg shadow-[0px_6px_15px_0px_rgba(0,0,0,0.15)] light:shadow-[0px_6px_15px_0px_rgba(0,0,0,0.10)] select-none`}
+                style={{ paddingRight: addedWidth, paddingLeft: addedWidth }}
+            >
+                <div className="flex flex-row items-center justify-center gap-2 px-3 py-1">
+                    <DownloadIcon className="sm:w-6 sm:h-6 w-5 h-5 text-white" />
+                    <p className={`${color === 'primary' ? 'text-white light:text-black' : 'text-white'} text-sm leading-6 whitespace-nowrap ${labelClassName ?? ''}`}>{featured?.os ? `Download for ${featured.os}` : 'Download OneLauncher'}</p>
+                    <DownChevronIcon className="sm:w-6 sm:h-6 w-5 h-5 text-white" />
+                </div>
+            </a>
+            {downloads.length > 0 && (
+                <div className="absolute top-full left-0 w-full pt-2 group-hover:block hidden">
+                    <div className="flex flex-col bg-primary light:bg-primary-light rounded-xl border border-white/10 light:border-white/15 overflow-hidden">
+                        {downloads.map((download, index) => (
+                            <a key={index} href={download.url} target="_blank" rel="noreferrer" className="text-center py-1.5 px-2 hover:brightness-110 bg-primary/50 light:bg-primary-light/50 duration-300">
+                                {download.title}
+                            </a>
+                        ))}
                     </div>
                 </div>
             )}
-        </>
+        </div>
     );
 }

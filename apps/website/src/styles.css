@@ -15,6 +15,8 @@
     --text-4\.5xl--line-height: calc(2.75 / 2.5);
 
     --animate-hover: hover 3s ease-in-out infinite;
+    --animate-enter: enter 0.5s cubic-bezier(0.39, 0.21, 0.12, 0.96) both;
+    --animate-fade: fade 0.5s cubic-bezier(0.39, 0.21, 0.12, 0.96) both;
 
     @keyframes hover {
         0% {
@@ -25,6 +27,21 @@
         }
         100% {
             transform: translateY(0px);
+        }
+    }
+
+    @keyframes enter {
+        from {
+            opacity: 0;
+            translate: 0 50px;
+            filter: blur(10px);
+        }
+    }
+
+    @keyframes fade {
+        from {
+            opacity: 0;
+            filter: blur(10px);
         }
     }
 }
@@ -49,4 +66,11 @@ html.light body {
 
 button {
     cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .animate-enter,
+    .animate-fade {
+        animation: none;
+    }
 }

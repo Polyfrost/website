@@ -1,5 +1,3 @@
-import { motion } from 'framer-motion';
-
 export default function Button({
     icon,
     label,
@@ -32,43 +30,29 @@ export default function Button({
         }
     };
 
-    return (
-        <>
-            {delay ? (
-                <motion.div initial={{ opacity: 0, y: 50, filter: 'blur(10px)' }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)', transition: { delay: delay, duration: 0.5, ease: [0.39, 0.21, 0.12, 0.96] } }} className={`flex w-full`}>
-                    <button
-                        onClick={onClick}
-                        disabled={disabled}
-                        className={`${buttonColor()} ${className ?? ''} disabled:opacity-50 disabled:cursor-not-allowed border relative rounded-lg shadow-[0px_6px_15px_0px_rgba(0,0,0,0.15)] light:shadow-[0px_6px_15px_0px_rgba(0,0,0,0.10)] select-none`}
-                        style={{ paddingRight: addedWidth, paddingLeft: addedWidth }}
-                    >
-                        {label ? (
-                            <div className="flex flex-row items-center justify-center gap-2 px-3 py-1">
-                                {icon && icon}
-                                {label && <p className={`${color === 'primary' ? 'text-white light:text-black' : 'text-white'} text-sm leading-6 whitespace-nowrap ${labelClassName ?? ''}`}>{label}</p>}
-                            </div>
-                        ) : (
-                            <div className="flex p-1.5">{icon && icon}</div>
-                        )}
-                    </button>
-                </motion.div>
+    const button = (
+        <button
+            onClick={onClick}
+            disabled={disabled}
+            className={`${buttonColor()} ${className} disabled:opacity-50 disabled:cursor-not-allowed border relative rounded-lg shadow-[0px_6px_15px_0px_rgba(0,0,0,0.15)] light:shadow-[0px_6px_15px_0px_rgba(0,0,0,0.10)] select-none`}
+            style={{ paddingRight: addedWidth, paddingLeft: addedWidth }}
+        >
+            {label ? (
+                <div className="flex flex-row items-center justify-center gap-2 px-3 py-1">
+                    {icon && icon}
+                    {label && <p className={`${color === 'primary' ? 'text-white light:text-black' : 'text-white'} text-sm leading-6 whitespace-nowrap ${labelClassName ?? ''}`}>{label}</p>}
+                </div>
             ) : (
-                <button
-                    onClick={onClick}
-                    disabled={disabled}
-                    className={`${buttonColor()} ${className} disabled:opacity-50 disabled:cursor-not-allowed border relative rounded-lg shadow-[0px_6px_15px_0px_rgba(0,0,0,0.15)] light:shadow-[0px_6px_15px_0px_rgba(0,0,0,0.10)] select-none`}
-                    style={{ paddingRight: addedWidth, paddingLeft: addedWidth }}
-                >
-                    {label ? (
-                        <div className="flex flex-row items-center justify-center gap-2 px-3 py-1">
-                            {icon && icon}
-                            {label && <p className={`${color === 'primary' ? 'text-white light:text-black' : 'text-white'} text-sm leading-6 whitespace-nowrap ${labelClassName ?? ''}`}>{label}</p>}
-                        </div>
-                    ) : (
-                        <div className="flex p-1.5">{icon && icon}</div>
-                    )}
-                </button>
+                <div className="flex p-1.5">{icon && icon}</div>
             )}
-        </>
+        </button>
+    );
+
+    if (!delay) return button;
+
+    return (
+        <div className="flex w-full animate-enter" style={{ animationDelay: `${delay}s` }}>
+            {button}
+        </div>
     );
 }
