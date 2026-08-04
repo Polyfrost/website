@@ -71,6 +71,30 @@ const macArchLabels: Partial<Record<Arch, string>> = {
     x64: 'Intel',
 };
 
+const buttonArchLabels: Partial<Record<Arch, string>> = {
+    arm64: 'ARM64',
+    x64: 'x64',
+    x86: 'x86',
+};
+
+const macButtonArchLabels: Partial<Record<Arch, string>> = {
+    arm64: 'M1+',
+    x64: 'Intel',
+};
+
+function buttonLabel(download: Download | undefined, downloads: Download[]): string {
+    if (!download) return 'Download OneLauncher';
+
+    const label = `Download for ${osLabels[download.os]}`;
+
+    const archCount = new Set(downloads.filter((d) => d.os === download.os && d.format !== 'aur').map((d) => d.arch)).size;
+    if (archCount < 2) return label;
+
+    const arch = download.os === 'macos' ? macButtonArchLabels[download.arch] : buttonArchLabels[download.arch];
+
+    return arch ? `${label} (${arch})` : label;
+}
+
 const formatLabels: Record<Format, string> = {
     exe: '.exe',
     msi: '.msi',
@@ -123,9 +147,19 @@ const defaultArch: Record<OS, Arch> = {
 };
 
 const cacheTtl = 10 * 60 * 1000;
+const retryTtl = 60 * 1000;
+
+const fallbackRelease: Release = {
+    version: '',
+    url: latestReleaseUrl,
+    publishedAt: '',
+    downloads: aurPackages,
+};
 
 let cached: Release | undefined;
 let fetchedAt = 0;
+let failedAt = 0;
+let inFlight: Promise<Release> | undefined;
 
 function listDownloads(assets: RawRelease['assets']): Download[] {
     const signed = new Set(assets.filter((a) => a.name.endsWith('.sig')).map((a) => a.name.slice(0, -4)));
@@ -170,10 +204,14 @@ function listDownloads(assets: RawRelease['assets']): Download[] {
     return [...parsed.map((download) => ({ ...download, title: title(download) })), ...aurPackages];
 }
 
-async function loadRelease(): Promise<Release> {
-    if (cached && Date.now() - fetchedAt < cacheTtl) return cached;
-
-    const response = await fetch(`https://api.github.com/repos/${repo}/releases?per_page=10`);
+async function fetchRelease(): Promise<Release> {
+    const response = await fetch(`https://api.github.com/repos/${repo}/releases?per_page=10`, {
+        headers: {
+            'accept': 'application/vnd.github+json',
+            'user-agent': 'polyfrost-website',
+            ...(process.env.GITHUB_TOKEN ? { authorization: `Bearer ${process.env.GITHUB_TOKEN}` } : {}),
+        },
+    });
 
     if (!response.ok) throw new Error(`GitHub responded ${response.status}`);
 
@@ -181,15 +219,37 @@ async function loadRelease(): Promise<Release> {
     const latest = releases.find((release) => !release.draft && !release.prerelease);
     if (!latest) throw new Error('No published release found');
 
-    cached = {
+    return {
         version: latest.tag_name.replace(/^oneclient-|^v/, ''),
         url: latest.html_url,
         publishedAt: latest.published_at,
         downloads: listDownloads(latest.assets),
     };
-    fetchedAt = Date.now();
+}
 
-    return cached;
+function loadRelease(): Promise<Release> {
+    const now = Date.now();
+
+    if (cached && now - fetchedAt < cacheTtl) return Promise.resolve(cached);
+    if (now - failedAt < retryTtl) return Promise.resolve(cached ?? fallbackRelease);
+
+    inFlight ??= fetchRelease()
+        .then((release) => {
+            cached = release;
+            fetchedAt = Date.now();
+            failedAt = 0;
+            return release;
+        })
+        .catch((error) => {
+            failedAt = Date.now();
+            console.error('Failed to load the latest OneLauncher release:', error);
+            return cached ?? fallbackRelease;
+        })
+        .finally(() => {
+            inFlight = undefined;
+        });
+
+    return inFlight;
 }
 
 function detectPlatform() {
@@ -204,11 +264,11 @@ function detectPlatform() {
     return { os, arch };
 }
 
-function pickDownload() {
+function pickDownload(release: Release) {
     const platform = detectPlatform();
-    if (!platform || !cached) return undefined;
+    if (!platform) return undefined;
 
-    const sameOS = cached.downloads.filter((download) => download.os === platform.os && download.format !== 'aur');
+    const sameOS = release.downloads.filter((download) => download.os === platform.os && download.format !== 'aur');
     const arch = platform.arch ?? defaultArch[platform.os];
 
     return sameOS.find((download) => download.arch === arch) ?? sameOS.find((download) => download.arch === 'universal') ?? (platform.arch ? undefined : sameOS[0]);
@@ -216,7 +276,7 @@ function pickDownload() {
 
 export const getDownloads = createServerFn({ method: 'GET' }).handler(async () => {
     const release = await loadRelease();
-    return { ...release, featured: pickDownload() };
+    return { ...release, featured: pickDownload(release) };
 });
 
 export default function DownloadDropdown({
@@ -264,7 +324,7 @@ export default function DownloadDropdown({
                     >
                         <div className="flex flex-row items-center justify-center gap-2 px-3 py-1">
                             <DownloadIcon className="sm:w-6 sm:h-6 w-5 h-5 text-white" />
-                            <p className={`${color === 'primary' ? 'text-white light:text-black' : 'text-white'} text-sm leading-6 whitespace-nowrap ${labelClassName ?? ''}`}>{featured?.os ? `Download for ${featured.os}` : 'Download OneLauncher'}</p>
+                            <p className={`${color === 'primary' ? 'text-white light:text-black' : 'text-white'} text-sm leading-6 whitespace-nowrap ${labelClassName ?? ''}`}>{buttonLabel(featured, downloads)}</p>
                             <DownChevronIcon className="sm:w-6 sm:h-6 w-5 h-5 text-white" />
                         </div>
                     </a>
@@ -289,7 +349,7 @@ export default function DownloadDropdown({
                     >
                         <div className="flex flex-row items-center justify-center gap-2 px-3 py-1">
                             <DownloadIcon className="sm:w-6 sm:h-6 w-5 h-5 text-white" />
-                            <p className={`${color === 'primary' ? 'text-white light:text-black' : 'text-white'} text-sm leading-6 whitespace-nowrap ${labelClassName ?? ''}`}>{featured?.os ? `Download for ${featured.os}` : 'Download OneLauncher'}</p>
+                            <p className={`${color === 'primary' ? 'text-white light:text-black' : 'text-white'} text-sm leading-6 whitespace-nowrap ${labelClassName ?? ''}`}>{buttonLabel(featured, downloads)}</p>
                             <DownChevronIcon className="sm:w-6 sm:h-6 w-5 h-5 text-white" />
                         </div>
                     </a>

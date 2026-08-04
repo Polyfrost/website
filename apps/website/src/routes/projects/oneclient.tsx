@@ -12,6 +12,7 @@ import ColorIcon from '#/components/icons/Color';
 import CubeIcon from '#/components/icons/Cube';
 import DollarIcon from '#/components/icons/Dollar';
 import FastIcon from '#/components/icons/Fast';
+import DiscordIcon from '#/components/icons/Discord';
 import GitHubIcon from '#/components/icons/GitHub';
 import HUDIcon from '#/components/icons/HUD';
 import LightningIcon from '#/components/icons/Lightning';
@@ -133,13 +134,22 @@ function Oneclient() {
                     <div className="flex sm:flex-row flex-col gap-4 items-center sm:w-fit w-full">
                         <DownloadDropdown {...Route.useLoaderData().downloads} className="sm:py-1.5 py-1 px-2 sm:w-fit w-full" labelClassName="sm:text-lg! text-base!" color="blue" delay={0.3} />
                         <LinkButton
+                            icon={<DiscordIcon className="sm:w-6 sm:h-6 w-5 h-5" />}
+                            label="Support"
+                            color="primary"
+                            className="sm:py-1.5 py-1 px-2 sm:w-fit w-full"
+                            labelClassName="sm:text-lg! text-base!"
+                            href="/discord"
+                            delay={0.4}
+                        />
+                        <LinkButton
                             icon={<GitHubIcon className="sm:w-6 sm:h-6 w-5 h-5" />}
                             label="View on GitHub"
                             color="primary"
                             className="sm:py-1.5 py-1 px-2 sm:w-fit w-full"
                             labelClassName="sm:text-lg! text-base!"
-                            href="https://github.com/Polyfrost"
-                            delay={0.4}
+                            href="https://github.com/Polyfrost/OneLauncher"
+                            delay={0.5}
                         />
                     </div>
                     <motion.div
@@ -228,7 +238,7 @@ function Oneclient() {
                             </div>
                             <RollingText
                                 strings={[
-                                    'OneClient features a clean and sleek user interface, meticulously designed by actual designers. Optimized for looking good without sacrificing ease of use.',
+                                    'OneClient features a clean and sleek user interface, meticulously designed by our in-house design team. Optimized for looking good without sacrificing ease of use.',
                                     'OneClient features various themes and customization options, allowing you to personalize the UI to your liking. Change the colors and UI styles to match your preferences.',
                                     'OneClient features extensive HUD options, providing you with all the information you need at a glance. Customize the HUD to show the information you want, where you want it.',
                                     'OneClient features unified mod settings, allowing you to configure all your mods in one place. No more searching through multiple configuration menus.',
@@ -250,7 +260,7 @@ function Oneclient() {
                             The Latest & Greatest <span className="font-medium">Mods</span>
                         </h1>
                         <p className="sm:text-lg text-base font-light max-w-3xl text-center">
-                            We talk to leading modpack curators to stay ahead on the best performance mods. You can drop in your own mods and configure everything seamlessly right inside the in game UI thanks to OneConfig.
+                            We constantly research and look out for the best and newest performance mods. You can even drop in your own mods via Modrinth or CurseForge, and configure everything seamlessly right inside the in-game UI, thanks to OneConfig.
                         </p>
                     </div>
                     <div className="w-full flex flex-col mt-10">
@@ -284,7 +294,7 @@ function Oneclient() {
                             icon={<LightningIcon className="h-6 w-6" />}
                             delay={0.1}
                             label="Always Ahead"
-                            description="We talk to leading figures in the modding community and mod creators to ensure we have the best and most up-to-date mods, always ahead of the competition."
+                            description="We talk to leading figures in the modding community and mod creators to ensure we have the best and most up-to-date mods."
                         />
                         <InfoCard
                             icon={<SettingsIcon className="h-6 w-6" />}
@@ -296,7 +306,7 @@ function Oneclient() {
                             icon={<ChecklistIcon className="h-6 w-6" />}
                             delay={0.3}
                             label="Custom Selection"
-                            description="Select the mods you need and leave out the ones you don't. Drop in your own mods and configure everything so it matches your needs and preferences."
+                            description="Select the mods you need and leave out the ones you don't. Drop in your own mods from your favorite mod providers to match your needs and preferences."
                         />
                     </div>
                 </div>
@@ -307,7 +317,7 @@ function Oneclient() {
                         Simply Insane <span className="font-medium">Performance</span>
                     </h1>
                     <p className="sm:text-lg text-base font-light max-w-3xl text-center">
-                        Feel the difference in performance with our native launcher and extremely performant client architecture. Real benchmarks. Real testing. Real Performance. The results speak for themselves.
+                        Feel the difference in performance with our native, web-less, 100% Rust launcher and extremely performant client architecture.
                     </p>
                     <div className="flex flex-col sm:gap-10 gap-6 max-w-6xl w-full">
                         <StatCard label="Game Frames Per Second (FPS)" compValue="88 FPS" polyValue="97 FPS" compProgressBar={0.76} polyProgressBar={0.9} />
@@ -322,13 +332,7 @@ function Oneclient() {
                             icon={<FastIcon className="h-6 w-6" />}
                             delay={0.1}
                             label="Extreme Optimization"
-                            description="Our focus on extreme optimization ensures the best performance with minimal resource usage. We are constantly improving to bring you the best experience."
-                        />
-                        <InfoCard
-                            icon={<LineGraphIcon className="h-6 w-6" />}
-                            delay={0.2}
-                            label="Real Benchmarks"
-                            description="We provide real benchmarks to showcase the performance of our client compared to the competition. No fake numbers, just real testing on actual hardware."
+                            description="Our focus on extreme optimization ensures the best performance with minimal resource usage."
                         />
                         <InfoCard
                             icon={<UsersIcon className="h-6 w-6" />}
@@ -369,7 +373,7 @@ function Oneclient() {
                             icon={<UIIcon className="h-6 w-6" />}
                             delay={0.2}
                             label="Native App"
-                            description="The launcher is a native desktop app unlike the competition where their launchers are web-based. This brings forth major performance improvements."
+                            description="Unlike most launchers, which use slow web technology to render their launcher, our entire launcher is written in Rust, resulting in performance rivaling Prism Launcher whilst looking clean."
                         />
                         <InfoCard
                             icon={<SmileIcon className="h-6 w-6" />}
@@ -386,8 +390,8 @@ function Oneclient() {
                         Flashy <span className="font-medium">Cosmetics</span>
                     </h1>
                     <p className="sm:text-lg text-base font-light max-w-3xl text-center">
-                        Show your drip 🔥 with our sick cosmetics. We work with 3D designers and Minecraft cosmetic creators to deliver the coolest stuff. Your cosmetics will be visible to all other OneClient users, and it's a great way to support
-                        us!
+                        Show your drip with our custom-designed cosmetics. We work with 3D designers and Minecraft cosmetic creators to deliver the coolest designs. Your cosmetics will be visible to all other OneClient users, and it's a great way to support
+                        open-source modding!
                     </p>
                     <LinkButton
                         icon={<BagIcon className="sm:w-6 sm:h-6 w-5 h-5 text-white" />}
@@ -411,12 +415,6 @@ function Oneclient() {
                             label="Thematic Collections"
                             description="Our cosmetics are organized into thematic collections, making it easy to find items that match your style. Create a special look for any time of the year!"
                         />
-                        <InfoCard
-                            icon={<DollarIcon className="h-6 w-6" />}
-                            delay={0.3}
-                            label="Competitive Pricing"
-                            description="Cosmetics are priced competitively so you get the best value for your money. Competitor prices are always considered when setting the prices of our items."
-                        />
                     </div>
                 </div>
             </section>
@@ -430,8 +428,8 @@ function Oneclient() {
                                     Dont Trust Us? <span className="font-normal">Read The Code...</span>
                                 </h1>
                             </div>
-                            <p className="sm:text-xl text-base font-light text-white/75 light:text-black/75 max-w-2xl w-full">
-                                OneClient is fully open source. Every optimization, every line of the launcher, out in the open. Our competitors can't say that.
+							<p className="sm:text-xl text-base font-light text-white/75 light:text-black/75 max-w-2xl w-full">
+								Polyfrost has not had a single private repository since January 2026, and it never will. Can your favorite client say that?
                             </p>
                             <div className="flex sm:flex-row flex-col sm:gap-4 gap-2 items-center sm:w-fit w-full">
                                 <DownloadDropdown {...Route.useLoaderData().downloads} className="sm:py-1.5 py-1 px-2 sm:w-fit w-full" labelClassName="sm:text-lg! text-base!" color="blue" />
@@ -441,7 +439,7 @@ function Oneclient() {
                                     color="primary"
                                     className="sm:py-1.5 py-1 px-2 sm:w-fit w-full"
                                     labelClassName="sm:text-lg! text-base!"
-                                    href="https://github.com/Polyfrost"
+                                    href="https://github.com/Polyfrost/OneLauncher"
                                     delay={0.4}
                                 />
                             </div>
