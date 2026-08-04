@@ -43,7 +43,7 @@ mkPnpmPackage {
         pnpm website build
     '';
 
-    distDir = "apps/website/dist";
+    distDir = ".output";
 
     buildEnv = {
         ASTRO_TELEMETRY_DISABLED = "1";
@@ -56,10 +56,9 @@ mkPnpmPackage {
     postInstall = ''
         mkdir -p "$out/bin"
 
-        # Make a wrapper command to start the server
         makeWrapper ${lib.getExe nodejs-slim} "$out/bin/start-server" \
              --inherit-argv0 \
-             --add-flags "$out/server/entry.mjs"
+             --add-flags "$out/server/index.mjs"
     '';
 
     meta = {
