@@ -41,9 +41,9 @@ export default function Navbar({ atTop, featured }: { atTop: boolean; featured?:
             <div className="flex justify-center">
                 <div className={`max-w-7xl w-full flex flex-col transition-all duration-300 ease-out min-[1350px]:px-0 px-4 min-[1350px]:gap-0 gap-2`}>
                     <div className="relative flex flex-row items-center justify-between gap-8">
-                        <button onClick={() => router.navigate({ href: '/' })} className="flex z-10">
+                        <a href="/" className="flex z-10">
                             <Logo className="w-auto h-8 self-center" />
-                        </button>
+                        </a>
                         <div className="absolute w-full justify-center flex-row gap-8 min-[1350px]:flex hidden">
                             <button onClick={() => handleClickScroll('features', 100)} className="group flex flex-row gap-2 items-center">
                                 <SparkleIcon className="w-4 h-4 text-white/75 light:text-black/75 group-hover:text-white group-hover:light:text-black duration-300" />
