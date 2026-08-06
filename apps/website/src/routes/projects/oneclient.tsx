@@ -297,7 +297,7 @@ function Oneclient() {
                         <StatCard label="Game Startup Time" compValue="1m 02s" polyValue="32s" compProgressBar={0.92} polyProgressBar={0.47} />
                         <StatCard label="Launcher RAM Usage" compValue="727 MB" polyValue="125 MB" compProgressBar={0.88} polyProgressBar={0.2} />
                         <div className="bg-primary/50 light:bg-primary-light/50 w-full p-2 rounded-xl border border-white/10 light:border-white/15 backdrop-blur-[32px] shadow-[0px_6px_15px_0px_rgba(0,0,0,0.15)] light:shadow-[0px_6px_15px_0px_rgba(0,0,0,0.10)]">
-                            <p className="text-lg font-light text-white/75 light:text-black/75 text-center">*Testing done on a Lenovo Thinkpad T14S Gen 1 with Ryzen 5 Pro 5640U, Vega Graphics, 16GB RAM</p>
+                            <p className="text-lg font-light text-white/75 light:text-black/75 text-center">*Testing done on a Lenovo Thinkpad T14S Gen 1 with Ryzen 5 Pro 4650U, Vega Graphics, 16GB RAM</p>
                         </div>
                     </div>
                     <div className="flex lg:flex-row flex-col lg:gap-12 gap-4 max-w-6xl w-full">
