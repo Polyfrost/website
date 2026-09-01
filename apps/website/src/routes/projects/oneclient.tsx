@@ -374,7 +374,7 @@ function Oneclient() {
                         labelClassName="sm:text-lg! text-base!"
                         href="https://store.polyfrost.org"
                     />
-                    <img src="/cosmeticman.webp" alt="Cosmetics man" className="max-w-240 w-full" />
+                    <img src="/cosmeticman.webp" alt="Cosmetics man" className="max-h-168 max-w-full w-auto" />
                     <div className="flex lg:flex-row flex-col lg:gap-12 gap-4 mt-8 max-w-6xl w-full">
                         <InfoCard
                             icon={<StarIcon className="h-6 w-6" />}
