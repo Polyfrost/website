@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useLayoutEffect, useRef, useState } from 'react';
-import DownloadDropdown, { fallbackRelease, getDownloads } from '#/components/DownloadDropdown';
+import DownloadDropdown, { fallbackRelease, getDownloads, modpackUrl } from '#/components/DownloadDropdown';
 import InfoCard from '#/components/InfoCard';
 import BagIcon from '#/components/icons/Bag';
 import ChecklistIcon from '#/components/icons/Checklist';
@@ -126,26 +126,39 @@ function Oneclient() {
                     <p className="sm:text-lg text-base font-light max-w-3xl text-center animate-enter" style={{ animationDelay: '0.2s' }}>
                         OneClient ships the most bleeding-edge mods, while being 100% open source and community-driven.
                     </p>
-                    <div className="flex sm:flex-row flex-col gap-4 items-center sm:w-fit w-full">
-                        <DownloadDropdown {...Route.useLoaderData().downloads} className="sm:py-1.5 py-1 px-2 sm:w-fit w-full" labelClassName="sm:text-lg! text-base!" color="blue" delay={0.3} />
-                        <LinkButton
-                            icon={<DiscordIcon className="sm:w-6 sm:h-6 w-5 h-5" />}
-                            label="Support"
-                            color="primary"
-                            className="sm:py-1.5 py-1 px-2 sm:w-fit w-full"
-                            labelClassName="sm:text-lg! text-base!"
-                            href="/discord"
-                            delay={0.4}
-                        />
-                        <LinkButton
-                            icon={<GitHubIcon className="sm:w-6 sm:h-6 w-5 h-5" />}
-                            label="View on GitHub"
-                            color="primary"
-                            className="sm:py-1.5 py-1 px-2 sm:w-fit w-full"
-                            labelClassName="sm:text-lg! text-base!"
-                            href="https://github.com/Polyfrost/OneLauncher"
-                            delay={0.5}
-                        />
+                    <div className="flex flex-col items-center gap-4 sm:w-fit w-full">
+                        <div className="flex sm:flex-row flex-col gap-4 items-center sm:w-fit w-full">
+                            <DownloadDropdown {...Route.useLoaderData().downloads} className="sm:py-1.5 py-1 px-2 sm:w-fit w-full" labelClassName="sm:text-lg! text-base!" color="blue" delay={0.3} />
+                            <LinkButton
+                                icon={<DiscordIcon className="sm:w-6 sm:h-6 w-5 h-5" />}
+                                label="Support"
+                                color="primary"
+                                className="sm:py-1.5 py-1 px-2 sm:w-fit w-full"
+                                labelClassName="sm:text-lg! text-base!"
+                                href="/discord"
+                                delay={0.4}
+                            />
+                            <LinkButton
+                                icon={<GitHubIcon className="sm:w-6 sm:h-6 w-5 h-5" />}
+                                label="View on GitHub"
+                                color="primary"
+                                className="sm:py-1.5 py-1 px-2 sm:w-fit w-full"
+                                labelClassName="sm:text-lg! text-base!"
+                                href="https://github.com/Polyfrost/OneLauncher"
+                                delay={0.5}
+                            />
+                        </div>
+                        <p className="text-sm font-light text-white/60 light:text-black/60 text-center animate-enter" style={{ animationDelay: '0.6s' }}>
+                            Download standalone via our{' '}
+                            <a
+                                href={modpackUrl}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="text-white/90 light:text-black/90 underline decoration-white/30 light:decoration-black/30 hover:decoration-white light:hover:decoration-black underline-offset-4 duration-300"
+                            >
+                                Modrinth modpack
+                            </a>
+                        </p>
                     </div>
                     <div className="perspective-normal transform-3d animate-hover max-w-5xl">
                         <div ref={hero} className="animate-fade" style={{ animationDelay: '0.5s' }}>
@@ -262,6 +275,18 @@ function Oneclient() {
                             </div>
                         </Marquee>
                     </div>
+                    <p className="sm:text-lg text-base font-light text-white/75 light:text-black/75 max-w-3xl text-center px-4">
+                        Already on another launcher? We have a standalone{' '}
+                        <a
+                            href={modpackUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-white light:text-black underline decoration-white/30 light:decoration-black/30 hover:decoration-white light:hover:decoration-black underline-offset-4 duration-300"
+                        >
+                            Modrinth modpack
+                        </a>
+                        .
+                    </p>
                     <div className="flex lg:flex-row flex-col lg:gap-12 gap-4 px-4 mt-8 max-w-6xl w-full">
                         <InfoCard
                             icon={<LightningIcon className="h-6 w-6" />}

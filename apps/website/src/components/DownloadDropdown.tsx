@@ -6,16 +6,19 @@ import DownChevronIcon from './icons/DownChevron';
 
 type OS = 'windows' | 'macos' | 'linux';
 type Arch = 'x64' | 'x86' | 'arm64' | 'universal';
-type Format = 'exe' | 'msi' | 'dmg' | 'appimage' | 'deb' | 'rpm' | 'aur';
+type Format = 'exe' | 'msi' | 'dmg' | 'appimage' | 'deb' | 'rpm';
 
 export interface Download {
-    os: OS;
-    arch: Arch;
-    format: Format;
+    // Absent on entries that aren't a platform-specific installer (AUR, Modrinth modpack).
+    os?: OS;
+    arch?: Arch;
+    format?: Format;
     title: string;
     fileName: string;
     url: string;
 }
+
+type PlatformDownload = Required<Download>;
 
 interface Release {
     version: string;
@@ -37,6 +40,8 @@ const repo = 'Polyfrost/OneLauncher';
 
 export const latestReleaseUrl = `https://github.com/${repo}/releases/latest`;
 
+export const modpackUrl = 'https://modrinth.com/modpack/oneclient-modpack';
+
 const formats: Record<Format, OS> = {
     exe: 'windows',
     msi: 'windows',
@@ -44,7 +49,6 @@ const formats: Record<Format, OS> = {
     appimage: 'linux',
     deb: 'linux',
     rpm: 'linux',
-    aur: 'linux',
 };
 
 const archs: [Arch, RegExp][] = [
@@ -83,11 +87,11 @@ const macButtonArchLabels: Partial<Record<Arch, string>> = {
 };
 
 function buttonLabel(download: Download | undefined, downloads: Download[]): string {
-    if (!download) return 'Download OneLauncher';
+    if (!download?.os || !download.arch) return 'Download OneLauncher';
 
     const label = `Download for ${osLabels[download.os]}`;
 
-    const archCount = new Set(downloads.filter((d) => d.os === download.os && d.format !== 'aur').map((d) => d.arch)).size;
+    const archCount = new Set(downloads.filter((d) => d.os === download.os).map((d) => d.arch)).size;
     if (archCount < 2) return label;
 
     const arch = download.os === 'macos' ? macButtonArchLabels[download.arch] : buttonArchLabels[download.arch];
@@ -102,22 +106,21 @@ const formatLabels: Record<Format, string> = {
     appimage: 'AppImage',
     deb: '.deb',
     rpm: '.rpm',
-    aur: 'AUR',
 };
 
-const aurPackages: Download[] = [
+// Not tied to a release asset, so these are always listed and never auto-selected as the featured download.
+const extras: Download[] = [
     {
-        os: 'linux',
-        arch: 'universal',
-        format: 'aur',
+        title: 'Modrinth Modpack',
+        fileName: 'oneclient-modpack',
+        url: modpackUrl,
+    },
+    {
         title: 'AUR (oneclient-bin)',
         fileName: 'oneclient-bin',
         url: 'https://aur.archlinux.org/packages/oneclient-bin',
     },
     {
-        os: 'linux',
-        arch: 'universal',
-        format: 'aur',
         title: 'AUR (oneclient)',
         fileName: 'oneclient',
         url: 'https://aur.archlinux.org/packages/oneclient',
@@ -146,17 +149,17 @@ const defaultArch: Record<OS, Arch> = {
     linux: 'x64',
 };
 
-// Served when the GitHub API is unreachable — the AUR packages don't depend on a release asset.
+// Served when the GitHub API is unreachable — the extras don't depend on a release asset.
 export const fallbackRelease: Release & { featured?: Download } = {
     version: '',
     url: latestReleaseUrl,
     publishedAt: '',
-    downloads: aurPackages,
+    downloads: extras,
 };
 
 function listDownloads(assets: RawRelease['assets']): Download[] {
     const signed = new Set(assets.filter((a) => a.name.endsWith('.sig')).map((a) => a.name.slice(0, -4)));
-    const found = new Map<string, Download>();
+    const found = new Map<string, PlatformDownload>();
 
     for (const asset of assets) {
         const name = asset.name.toLowerCase();
@@ -181,7 +184,7 @@ function listDownloads(assets: RawRelease['assets']): Download[] {
 
     const parsed = [...found.values()].sort((a, b) => osOrder.indexOf(a.os) - osOrder.indexOf(b.os) || archOrder.indexOf(a.arch) - archOrder.indexOf(b.arch) || formatOrder.indexOf(a.format) - formatOrder.indexOf(b.format));
 
-    const title = (download: Download) => {
+    const title = (download: PlatformDownload) => {
         const sameOS = parsed.filter((d) => d.os === download.os);
         const archCount = new Set(sameOS.map((d) => d.arch)).size;
         const formatCount = new Set(sameOS.map((d) => d.format)).size;
@@ -194,7 +197,7 @@ function listDownloads(assets: RawRelease['assets']): Download[] {
         return parts.join(' ');
     };
 
-    return [...parsed.map((download) => ({ ...download, title: title(download) })), ...aurPackages];
+    return [...parsed.map((download) => ({ ...download, title: title(download) })), ...extras];
 }
 
 const loadRelease = createCache(async (): Promise<Release> => {
@@ -236,7 +239,7 @@ function pickDownload(release: Release) {
     const platform = detectPlatform();
     if (!platform) return undefined;
 
-    const sameOS = release.downloads.filter((download) => download.os === platform.os && download.format !== 'aur');
+    const sameOS = release.downloads.filter((download) => download.os === platform.os);
     const arch = platform.arch ?? defaultArch[platform.os];
 
     return sameOS.find((download) => download.arch === arch) ?? sameOS.find((download) => download.arch === 'universal') ?? (platform.arch ? undefined : sameOS[0]);
