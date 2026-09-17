@@ -1,46 +1,61 @@
 import { motion } from 'framer-motion';
-import Logo from './Logo';
-import PerformanceIcon from './icons/Performance';
+import Icon from './Icon';
+import CPU from './icons/CPU';
+import GPU from './icons/GPU';
+import Ram from './icons/Ram';
 
-export default function StatCard({ label, compValue, polyValue, compProgressBar, polyProgressBar }: { label: string; compValue: string; polyValue: string; compProgressBar: number; polyProgressBar: number }) {
+export default function StatCard({ reviewer, pfp, fps, oldFps, oldIcon, cpu, gpu, ram }: { reviewer: string; pfp: string; fps: number; oldFps: number; oldIcon: string; cpu: string; gpu?: string; ram: string }) {
+    const leadMin = 0.78;
+    const leadMax = 0.95;
+    const minFill = 0.08;
+
+    const top = Math.max(fps, oldFps, 1);
+    const closeness = Math.min(fps, oldFps) / top;
+    const max = top / (leadMax - (leadMax - leadMin) * closeness);
+    const fill = (value: number) => `${Math.min(1, Math.max(minFill, value / max)) * 100}%`;
+
     return (
-        <div className="bg-primary/50 light:bg-primary-light/50 w-full flex flex-col p-6 gap-6 rounded-xl border border-white/10 light:border-white/15 backdrop-blur-[32px] shadow-[0px_6px_15px_0px_rgba(0,0,0,0.15)] light:shadow-[0px_6px_15px_0px_rgba(0,0,0,0.10)]">
-            <div className="flex flex-row gap-5 items-center">
-                <PerformanceIcon className="sm:w-6 sm:h-6 w-5 h-5" />
-                <h2 className="text-2xl">{label}</h2>
+        <div className="bg-primary/50 light:bg-primary-light/50 w-full flex flex-col p-4 gap-3 rounded-xl border border-white/10 light:border-white/15 backdrop-blur-[32px] shadow-[0px_6px_15px_0px_rgba(0,0,0,0.15)] light:shadow-[0px_6px_15px_0px_rgba(0,0,0,0.10)]">
+            <div className="flex flex-row gap-2 items-center">
+                <img src={pfp} alt={`${reviewer} avatar`} className="rounded-full h-6 w-6 border border-white/10 light:border-white/15" />
+                <h1 className="brightness-90">{reviewer}</h1>
             </div>
-            <div className="flex flex-col gap-7 w-full">
-                <div className="flex sm:flex-row flex-col md:gap-5 gap-2 items-center">
-                    <div className="flex md:w-50 sm:w-30 w-50 shrink-0">
-                        <p className="md:text-xl sm:text-lg text-xl font-light text-white/75 light:text-black/75 sm:text-right text-center w-full whitespace-nowrap">Lunar Client</p>
+            <div className="flex flex-col items-center gap-2 justify-center">
+                <div className="flex flex-row gap-2 w-full items-center">
+                    <Icon className="h-7 min-w-7" />
+                    <div className="flex flex-col w-full bg-primary light:bg-primary-light h-3 rounded-full">
+                        <motion.div initial={{ width: `0%` }} whileInView={{ width: fill(fps), transition: { duration: 1.5, ease: [0.39, 0.21, 0.12, 0.96] } }} viewport={{ amount: 0.5, once: true }} className="bg-blue h-3 rounded-full" />
                     </div>
-                    <div className="flex flex-col w-full bg-primary light:bg-primary-light sm:h-7 h-6 rounded-full">
+                    <span className="text-sm brightness-75 whitespace-nowrap">{fps} FPS</span>
+                </div>
+                <div className="flex flex-row gap-2 w-full items-center">
+                    <img src={oldIcon} alt={`Compared client icon`} className="h-7 w-7" />
+                    <div className="flex flex-col w-full bg-primary light:bg-primary-light h-3 rounded-full">
                         <motion.div
                             initial={{ width: `0%` }}
-                            whileInView={{ width: `${compProgressBar * 100}%`, transition: { duration: 1.5, ease: [0.39, 0.21, 0.12, 0.96] } }}
+                            whileInView={{ width: fill(oldFps), transition: { duration: 1.5, ease: [0.39, 0.21, 0.12, 0.96] } }}
                             viewport={{ amount: 0.5, once: true }}
-                            className="bg-[#424C59] light:bg-[#8C99AA] sm:h-7 h-6 rounded-full"
-                            style={{ width: `${compProgressBar * 100}%` }}
+                            className="bg-[#424C59] light:bg-[#8C99AA] h-3 rounded-full"
                         />
                     </div>
-                    <div className="flex w-18 shrink-0">
-                        <p className="text-xl font-light text-white/75 light:text-black/75 whitespace-nowrap">{compValue}</p>
-                    </div>
+                    <span className="text-sm brightness-75 whitespace-nowrap">{oldFps} FPS</span>
                 </div>
-                <div className="flex sm:flex-row flex-col md:gap-5 gap-2 items-center">
-                    <Logo className="md:w-50 sm:w-30 w-50 sm:self-end self-center shrink-0" />
-                    <div className="flex flex-col w-full bg-primary light:bg-primary-light sm:h-7 h-6 rounded-full">
-                        <motion.div
-                            initial={{ width: `0%` }}
-                            whileInView={{ width: `${polyProgressBar * 100}%`, transition: { duration: 1.5, ease: [0.39, 0.21, 0.12, 0.96] } }}
-                            viewport={{ amount: 0.5, once: true }}
-                            className="bg-blue sm:h-7 h-6 rounded-full"
-                        />
-                    </div>
-                    <div className="flex w-18 shrink-0 sm:justify-start justify-center">
-                        <p className="text-xl whitespace-nowrap">{polyValue}</p>
-                    </div>
-                </div>
+            </div>
+            <div className="flex flex-col">
+                <p className="flex items-center gap-1 brightness-75 text-sm">
+                    <CPU className="h-4 w-4" />
+                    <span>{cpu}</span>
+                </p>
+                {gpu && (
+                    <p className="flex items-center gap-1 brightness-75 text-sm">
+                        <GPU className="h-4 w-4" />
+                        <span>{gpu}</span>
+                    </p>
+                )}
+                <p className="flex items-center gap-1 brightness-75 text-sm">
+                    <Ram className="h-4 w-4" />
+                    <span>{ram}</span>
+                </p>
             </div>
         </div>
     );

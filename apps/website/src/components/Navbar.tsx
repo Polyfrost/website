@@ -5,7 +5,6 @@ import BurgerIcon from './icons/Burger';
 import NightIcon from './icons/Night';
 import Logo from './Logo';
 import DayIcon from './icons/Day';
-import { useRouter } from '@tanstack/react-router';
 import BagIcon from './icons/Bag';
 import DownloadIcon from './icons/Download';
 import SparkleIcon from './icons/Sparkle';
@@ -19,7 +18,6 @@ import { latestReleaseUrl, type Download } from './DownloadDropdown';
 export default function Navbar({ atTop, featured }: { atTop: boolean; featured?: Download }) {
     const [extended, setExtended] = useState(false);
     const { resolvedTheme, setTheme } = useTheme();
-    const router = useRouter();
 
     const toggleTheme = () => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
 

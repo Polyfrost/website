@@ -203,7 +203,7 @@ function listDownloads(assets: RawRelease['assets']): Download[] {
 const loadRelease = createCache(async (): Promise<Release> => {
     const response = await fetch(`https://api.github.com/repos/${repo}/releases?per_page=10`, {
         headers: {
-            'accept': 'application/vnd.github+json',
+            accept: 'application/vnd.github+json',
             'user-agent': 'polyfrost-website',
             ...(process.env.GITHUB_TOKEN ? { authorization: `Bearer ${process.env.GITHUB_TOKEN}` } : {}),
         },

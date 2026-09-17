@@ -9,7 +9,6 @@ import ChecklistIcon from '#/components/icons/Checklist';
 import ClickIcon from '#/components/icons/Click';
 import ColorIcon from '#/components/icons/Color';
 import CubeIcon from '#/components/icons/Cube';
-import FastIcon from '#/components/icons/Fast';
 import DiscordIcon from '#/components/icons/Discord';
 import GitHubIcon from '#/components/icons/GitHub';
 import HUDIcon from '#/components/icons/HUD';
@@ -18,16 +17,18 @@ import SettingsIcon from '#/components/icons/Settings';
 import SmileIcon from '#/components/icons/Smile';
 import StarIcon from '#/components/icons/Star';
 import UIIcon from '#/components/icons/UI';
-import UsersIcon from '#/components/icons/Users';
 import Marquee from '#/components/Marquee';
 import MediaCarousel, { type MediaCarouselHandle } from '#/components/MediaCarousel';
 import ModCard from '#/components/ModCard';
-import RollingText from '#/components/RollingText';
+import Rolling from '#/components/Rolling';
 import ShowcaseButton from '#/components/ShowcaseButton';
 import StatCard from '#/components/StatCard';
 import LinkButton from '#/components/LinkButton';
 import { createServerFn } from '@tanstack/react-start';
 import { createCache } from '#/lib/cache';
+import Icon from '#/components/Icon';
+import CountUp from '#/components/CountUp';
+import { motion } from 'framer-motion';
 
 const noMods = { arr1: [], arr2: [] };
 
@@ -65,8 +66,6 @@ const getMods = createServerFn({ method: 'GET' }).handler(async () => {
 
 export const Route = createFileRoute('/projects/oneclient')({
     component: Oneclient,
-    // Neither server fn rejects on an upstream failure, but the call itself can still
-    // fail in transit on a client-side navigation — the page renders without either.
     loader: () =>
         Promise.all([getDownloads().catch(() => fallbackRelease), getMods().catch(() => noMods)]).then(([downloads, mods]) => ({
             downloads,
@@ -124,20 +123,12 @@ function Oneclient() {
                         The one client <span className="font-medium">you&apos;ll ever need.</span>
                     </h1>
                     <p className="sm:text-lg text-base font-light max-w-3xl text-center animate-enter" style={{ animationDelay: '0.2s' }}>
-                        OneClient ships the most bleeding-edge mods, while being 100% open source and community-driven.
+                        OneClient ships the most bleeding edge mods, while being 100% open source and community driven.
                     </p>
                     <div className="flex flex-col items-center gap-4 sm:w-fit w-full">
                         <div className="flex sm:flex-row flex-col gap-4 items-center sm:w-fit w-full">
                             <DownloadDropdown {...Route.useLoaderData().downloads} className="sm:py-1.5 py-1 px-2 sm:w-fit w-full" labelClassName="sm:text-lg! text-base!" color="blue" delay={0.3} />
-                            <LinkButton
-                                icon={<DiscordIcon className="sm:w-6 sm:h-6 w-5 h-5" />}
-                                label="Support"
-                                color="primary"
-                                className="sm:py-1.5 py-1 px-2 sm:w-fit w-full"
-                                labelClassName="sm:text-lg! text-base!"
-                                href="/discord"
-                                delay={0.4}
-                            />
+                            <LinkButton icon={<DiscordIcon className="sm:w-6 sm:h-6 w-5 h-5" />} label="Support" color="primary" className="sm:py-1.5 py-1 px-2 sm:w-fit w-full" labelClassName="sm:text-lg! text-base!" href="/discord" delay={0.4} />
                             <LinkButton
                                 icon={<GitHubIcon className="sm:w-6 sm:h-6 w-5 h-5" />}
                                 label="View on GitHub"
@@ -214,7 +205,7 @@ function Oneclient() {
                             aspect="video"
                             spacing={71}
                             images={[
-                                { light: '/modslight.webp', dark: '/mods.webp' },
+                                { light: '/uilight.webp', dark: '/ui.webp' },
                                 { light: '/themeslight.webp', dark: '/themes.webp' },
                                 { light: '/hudlight.webp', dark: '/hud.webp' },
                                 { light: '/settingslight.webp', dark: '/settings.webp' },
@@ -223,28 +214,34 @@ function Oneclient() {
                         />
                         <div className="relative h-27 md:flex hidden flex-row justify-between max-w-5xl w-full mx-auto gap-4 px-8">
                             <div className="relative flex flex-col justify-between items-start">
-                                <RollingText strings={['Sleek', 'Various', 'Extensive', 'Unified', 'Seamless']} activeIndex={activeIndex} wrapperClass="absolute top-0" textClass="font-light text-4.5xl whitespace-nowrap" delay={0.2} />
-                                <RollingText
-                                    strings={['User Interface', 'UI Themes', 'HUD Options', 'Mod Settings', 'World Hosting']}
-                                    activeIndex={activeIndex}
-                                    wrapperClass="absolute bottom-0"
-                                    textClass="font-medium text-4.5xl whitespace-nowrap"
-                                    delay={0.3}
-                                />
+                                <Rolling activeIndex={activeIndex} className="absolute top-0" delay={0.2}>
+                                    {['Sleek', 'Various', 'Extensive', 'Unified', 'Seamless'].map((title) => (
+                                        <p key={title} className="font-light text-4.5xl whitespace-nowrap">
+                                            {title}
+                                        </p>
+                                    ))}
+                                </Rolling>
+                                <Rolling activeIndex={activeIndex} className="absolute bottom-0" delay={0.3}>
+                                    {['User Interface', 'UI Themes', 'HUD Options', 'Mod Settings', 'World Hosting'].map((title) => (
+                                        <p key={title} className="font-medium text-4.5xl whitespace-nowrap">
+                                            {title}
+                                        </p>
+                                    ))}
+                                </Rolling>
                             </div>
-                            <RollingText
-                                strings={[
+                            <Rolling activeIndex={activeIndex} className="max-w-md absolute right-0" delay={0.3}>
+                                {[
                                     'OneClient features a clean and sleek user interface, meticulously designed by our in-house design team. Optimized for looking good without sacrificing ease of use.',
                                     'OneClient features various themes and customization options, allowing you to personalize the UI to your liking. Change the colors and UI styles to match your preferences.',
                                     'OneClient features extensive HUD options, providing you with all the information you need at a glance. Customize the HUD to show the information you want, where you want it.',
                                     'OneClient features unified mod settings, allowing you to configure all your mods in one place. No more searching through multiple configuration menus.',
                                     'OneClient features seamless world hosting, enabling you to spin up a server in seconds. Host your own world and play with your friends without any hassle.',
-                                ]}
-                                activeIndex={activeIndex}
-                                wrapperClass="max-w-md absolute right-0"
-                                textClass="font-light text-lg text-white/75 light:text-black/75 text-left"
-                                delay={0.3}
-                            />
+                                ].map((description) => (
+                                    <p key={description} className="font-light text-lg text-white/75 light:text-black/75 text-left">
+                                        {description}
+                                    </p>
+                                ))}
+                            </Rolling>
                         </div>
                     </div>
                 </div>
@@ -256,7 +253,8 @@ function Oneclient() {
                             The Latest & Greatest <span className="font-medium">Mods</span>
                         </h1>
                         <p className="sm:text-lg text-base font-light max-w-3xl text-center">
-                            We constantly research and look out for the best and newest performance mods. You can even drop in your own mods via Modrinth or CurseForge, and configure everything seamlessly right inside the in-game UI, thanks to OneConfig.
+                            We constantly research and look out for the best and newest performance mods. You can even drop in your own mods via Modrinth or CurseForge, and configure everything seamlessly right inside the in game UI, thanks to
+                            OneConfig.
                         </p>
                     </div>
                     <div className="w-full flex flex-col mt-10">
@@ -275,30 +273,18 @@ function Oneclient() {
                             </div>
                         </Marquee>
                     </div>
-                    <p className="sm:text-lg text-base font-light text-white/75 light:text-black/75 max-w-3xl text-center px-4">
-                        Already on another launcher? We have a standalone{' '}
-                        <a
-                            href={modpackUrl}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="text-white light:text-black underline decoration-white/30 light:decoration-black/30 hover:decoration-white light:hover:decoration-black underline-offset-4 duration-300"
-                        >
-                            Modrinth modpack
-                        </a>
-                        .
-                    </p>
                     <div className="flex lg:flex-row flex-col lg:gap-12 gap-4 px-4 mt-8 max-w-6xl w-full">
                         <InfoCard
                             icon={<LightningIcon className="h-6 w-6" />}
                             delay={0.1}
                             label="Always Ahead"
-                            description="We talk to leading figures in the modding community and mod creators to ensure we have the best and most up-to-date mods."
+                            description="We talk to leading figures in the modding community and mod creators to ensure we have the best and most up to date mods already bundled in."
                         />
                         <InfoCard
                             icon={<SettingsIcon className="h-6 w-6" />}
                             delay={0.2}
                             label="Unified Configuration"
-                            description="Built on top of OneConfig, OneClient bundles the best OneConfig compatible mods, giving you a unified configuration experience for a variety of different mods."
+                            description="Thanks to OneConfig, OneClient is able to provide the best unified configuration experience for all of our bundled mods and the majority of your own mods."
                         />
                         <InfoCard
                             icon={<ChecklistIcon className="h-6 w-6" />}
@@ -315,29 +301,55 @@ function Oneclient() {
                         Simply Insane <span className="font-medium">Performance</span>
                     </h1>
                     <p className="sm:text-lg text-base font-light max-w-3xl text-center">
-                        Feel the difference in performance with our native, web-less, 100% Rust launcher and extremely performant client architecture.
+                        We aim to provide the best performance for systems of all kinds and specifications. To do so we actively benchmark with the community and use that information to better optimize our client for all users.
                     </p>
-                    <div className="flex flex-col sm:gap-10 gap-6 max-w-6xl w-full">
-                        <StatCard label="Game Frames Per Second (FPS)" compValue="88 FPS" polyValue="97 FPS" compProgressBar={0.76} polyProgressBar={0.9} />
-                        <StatCard label="Game Startup Time" compValue="1m 02s" polyValue="32s" compProgressBar={0.92} polyProgressBar={0.47} />
-                        <StatCard label="Launcher RAM Usage" compValue="727 MB" polyValue="125 MB" compProgressBar={0.88} polyProgressBar={0.2} />
-                        <div className="bg-primary/50 light:bg-primary-light/50 w-full p-2 rounded-xl border border-white/10 light:border-white/15 backdrop-blur-[32px] shadow-[0px_6px_15px_0px_rgba(0,0,0,0.15)] light:shadow-[0px_6px_15px_0px_rgba(0,0,0,0.10)]">
-                            <p className="text-lg font-light text-white/75 light:text-black/75 text-center">*Testing done on a Lenovo Thinkpad T14S Gen 1 with Ryzen 5 Pro 4650U, Vega Graphics, 16GB RAM</p>
+                    <div className="flex flex-col sm:gap-10 px-4 gap-6 max-w-6xl w-full">
+                        <div className="flex flex-col gap-4">
+                            <div className="flex flex-row gap-10 items-center mx-auto justify-center">
+                                <div className="flex flex-col gap-2 items-center">
+                                    <Icon className="h-32 w-32" />
+                                    <p className="text-2xl font-bold">~910 FPS</p>
+                                </div>
+                                <p className="text-4xl font-bold">VS</p>
+                                <div className="flex flex-col gap-2 items-center">
+                                    <Rolling autoScroll className="h-32 w-32">
+                                        <img src="/lunarlogo.png" alt="" className="h-32 w-32" />
+                                        <img src="/dawnlogo.png" alt="" className="h-32 w-32" />
+                                        <img src="/faboptlogo.png" alt="" className="h-32 w-32" />
+                                    </Rolling>
+                                    <Rolling autoScroll className="h-8 w-32 text-center" delay={0.4}>
+                                        {[480, 280, 620].map((fps) => (
+                                            <motion.p key={fps} animate={{ color: '#FF4242', transition: { delay: 2, duration: 0.5, ease: [0.39, 0.21, 0.12, 0.96] } }} className="text-2xl font-bold whitespace-nowrap">
+                                                ~<CountUp to={fps} duration={3} /> FPS
+                                            </motion.p>
+                                        ))}
+                                    </Rolling>
+                                </div>
+                            </div>
+                            <p className="text-sm font-light text-white/60 light:text-black/60 text-center animate-enter" style={{ animationDelay: '0.6s' }}>
+                                Benchmark above featured in{' '}
+                                <a
+                                    href={'https://www.youtube.com/shorts/KH1fZU2oJx4'}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="text-white/90 light:text-black/90 underline decoration-white/30 light:decoration-black/30 hover:decoration-white light:hover:decoration-black underline-offset-4 duration-300"
+                                >
+                                    this video
+                                </a>
+                                , all benchmarks conducted in Sept 2026.
+                            </p>
                         </div>
-                    </div>
-                    <div className="flex lg:flex-row flex-col lg:gap-12 gap-4 max-w-6xl w-full">
-                        <InfoCard
-                            icon={<FastIcon className="h-6 w-6" />}
-                            delay={0.1}
-                            label="Extreme Optimization"
-                            description="Our focus on extreme optimization ensures the best performance with minimal resource usage."
-                        />
-                        <InfoCard
-                            icon={<UsersIcon className="h-6 w-6" />}
-                            delay={0.3}
-                            label="Community Driven"
-                            description="We actively listen to and work with the community to get feedback on the performance of our client on setups with various hardware and operating system configurations."
-                        />
+                        <div className="grid grid-cols-3 gap-4">
+                            <StatCard reviewer="Shiny" pfp="/reviewers/shiny.png" fps={800} oldFps={530} oldIcon="/faboptlogo.png" cpu="AMD Ryzen 7 2700X" gpu="AMD Radeon RX 580" ram="32 GB" />
+                            <StatCard reviewer="vx1zuro" pfp="/reviewers/vx1zuro.png" fps={280} oldFps={200} oldIcon="/lunarlogo.png" cpu="Intel Core Ultra 7 155H" gpu="Integrated" ram="16 GB" />
+                            <StatCard reviewer="oiupoyt" pfp="/reviewers/oiupoyt.png" fps={230} oldFps={100} oldIcon="/lunarlogo.png" cpu="AMD Ryzen 5 3500U" gpu="AMD Radeon Vega 8" ram="8 GB" />
+                            <StatCard reviewer="malt" pfp="/reviewers/default.png" fps={200} oldFps={60} oldIcon="/faboptlogo.png" cpu="Intel Core i5-7300U" gpu="Integrated" ram="8 GB" />
+                            <StatCard reviewer="KumiLuvs" pfp="/reviewers/KumiLuvs.png" fps={220} oldFps={170} oldIcon="/norisklogo.png" cpu="AMD Athlon 3000G" gpu="NVIDIA GTX 1050 Ti" ram="16 GB" />
+                            <StatCard reviewer="firecraftr" pfp="/reviewers/firecraftr.png" fps={90} oldFps={30} oldIcon="/lunarlogo.png" cpu="Intel Core i3-10110U" gpu="Integrated" ram="12 GB" />
+                            <StatCard reviewer="MichealBobek" pfp="/reviewers/MichealBobek.png" fps={400} oldFps={200} oldIcon="/dawnlogo.png" cpu="AMD Ryzen 5 5600X" gpu="NVIDIA RTX 4060 Ti" ram="16 GB" />
+                            <StatCard reviewer="unfath." pfp="/reviewers/unfath.png" fps={190} oldFps={100} oldIcon="/faboptlogo.png" cpu="Apple M1" gpu="Integrated" ram="16 GB" />
+                            <StatCard reviewer="baboswaka" pfp="/reviewers/baboswaka.png" fps={210} oldFps={90} oldIcon="/lunarlogo.png" cpu="Intel Core i7-1355U" gpu="Intel Iris Xe Graphics" ram="16 GB" />
+                        </div>
                     </div>
                 </div>
             </section>
@@ -347,7 +359,7 @@ function Oneclient() {
                         The Perfect <span className="font-medium">Launcher</span>
                     </h1>
                     <p className="sm:text-lg text-base font-light max-w-3xl text-center">
-                        With no ads or unnecessary bloat, OneClient's launcher provides the smoothest experience for managing your Minecraft mods. Install all your mods in one click and immediately get into the game.
+                        With no unnecessary bloat, OneClient's launcher provides the smoothest experience for managing your Minecraft mods. Install all your mods in one click and immediately get into the game.
                     </p>
                     <MediaCarousel
                         className="mt-8"
@@ -371,13 +383,13 @@ function Oneclient() {
                             icon={<UIIcon className="h-6 w-6" />}
                             delay={0.2}
                             label="Native App"
-                            description="Unlike most launchers, which use slow web technology to render their launcher, our entire launcher is written in Rust, resulting in performance rivaling Prism Launcher whilst looking clean."
+                            description="OneClient's launcher is a native desktop app built for performance while other client's launchers are built on resource heavy web based technologies."
                         />
                         <InfoCard
                             icon={<SmileIcon className="h-6 w-6" />}
                             delay={0.3}
                             label="Bloat-Free"
-                            description="The launcher will never have ads or unnecessary bloat. The goal will always to bring the best experience to our users with the features people want."
+                            description="The launcher will never have unnecessary bloat. The goal will always to bring the best experience to our users with the features people want."
                         />
                     </div>
                 </div>
@@ -388,8 +400,8 @@ function Oneclient() {
                         Flashy <span className="font-medium">Cosmetics</span>
                     </h1>
                     <p className="sm:text-lg text-base font-light max-w-3xl text-center">
-                        Show your drip with our custom-designed cosmetics. We work with 3D designers and Minecraft cosmetic creators to deliver the coolest designs. Your cosmetics will be visible to all other OneClient users, and it's a great way to support
-                        open-source modding!
+                        Show your drip with our custom designed cosmetics. We work with 3D designers and Minecraft cosmetic creators to deliver the coolest designs. Your cosmetics will be visible to all other OneClient users, and it's a great way to
+                        support open source modding!
                     </p>
                     <LinkButton
                         icon={<BagIcon className="sm:w-6 sm:h-6 w-5 h-5 text-white" />}
@@ -426,8 +438,8 @@ function Oneclient() {
                                     Dont Trust Us? <span className="font-normal">Read The Code...</span>
                                 </h1>
                             </div>
-							<p className="sm:text-xl text-base font-light text-white/75 light:text-black/75 max-w-2xl w-full">
-								Polyfrost has not had a single private repository since January 2026, and it never will. Can your favorite client say that?
+                            <p className="sm:text-xl text-base font-light text-white/75 light:text-black/75 max-w-2xl w-full">
+                                Polyfrost has not had a single private repository since January 2026, and it never will. Can your favorite client say that?
                             </p>
                             <div className="flex sm:flex-row flex-col sm:gap-4 gap-2 items-center sm:w-fit w-full">
                                 <DownloadDropdown {...Route.useLoaderData().downloads} className="sm:py-1.5 py-1 px-2 sm:w-fit w-full" labelClassName="sm:text-lg! text-base!" color="blue" />
