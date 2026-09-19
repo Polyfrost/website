@@ -303,23 +303,23 @@ function Oneclient() {
                     <p className="sm:text-lg text-base font-light max-w-3xl text-center">
                         We aim to provide the best performance for systems of all kinds and specifications. To do so we actively benchmark with the community and use that information to better optimize our client for all users.
                     </p>
-                    <div className="flex flex-col sm:gap-10 px-4 gap-6 max-w-6xl w-full">
+                    <div className="flex flex-col sm:gap-10 gap-6 max-w-6xl w-full">
                         <div className="flex flex-col gap-4">
-                            <div className="flex flex-row gap-10 items-center mx-auto justify-center">
+                            <div className="flex flex-row min-[470px]:gap-10 gap-5 items-center mx-auto justify-center">
                                 <div className="flex flex-col gap-2 items-center">
-                                    <Icon className="h-32 w-32" />
-                                    <p className="text-2xl font-bold">~910 FPS</p>
+                                    <Icon className="min-[470px]:h-32 min-[470px]:w-32 h-24 w-24" />
+                                    <p className="min-[470px]:text-2xl text-xl whitespace-nowrap font-bold">~910 FPS</p>
                                 </div>
-                                <p className="text-4xl font-bold">VS</p>
-                                <div className="flex flex-col gap-2 items-center">
-                                    <Rolling autoScroll className="h-32 w-32">
-                                        <img src="/lunarlogo.png" alt="" className="h-32 w-32" />
-                                        <img src="/dawnlogo.png" alt="" className="h-32 w-32" />
-                                        <img src="/faboptlogo.png" alt="" className="h-32 w-32" />
+                                <p className="min-[470px]:text-4xl text-2xl font-bold">VS</p>
+                                <div className="flex flex-col min-[470px]:w-32 w-24 gap-2 items-center">
+                                    <Rolling autoScroll className="min-[470px]:h-32 min-[470px]:w-32 h-24 w-24">
+                                        <img src="/lunarlogo.png" alt="" className="min-[470px]:h-32 min-[470px]:w-32 h-24 w-24" />
+                                        <img src="/dawnlogo.png" alt="" className="min-[470px]:h-32 min-[470px]:w-32 h-24 w-24" />
+                                        <img src="/faboptlogo.png" alt="" className="min-[470px]:h-32 min-[470px]:w-32 h-24 w-24" />
                                     </Rolling>
                                     <Rolling autoScroll className="h-8 w-32 text-center" delay={0.4}>
                                         {[480, 280, 620].map((fps) => (
-                                            <motion.p key={fps} animate={{ color: '#FF4242', transition: { delay: 2, duration: 0.5, ease: [0.39, 0.21, 0.12, 0.96] } }} className="text-2xl font-bold whitespace-nowrap">
+                                            <motion.p key={fps} animate={{ color: '#FF4242', transition: { delay: 2, duration: 0.5, ease: [0.39, 0.21, 0.12, 0.96] } }} className="min-[470px]:text-2xl text-xl font-bold whitespace-nowrap">
                                                 ~<CountUp to={fps} duration={3} /> FPS
                                             </motion.p>
                                         ))}
@@ -339,7 +339,7 @@ function Oneclient() {
                                 , all benchmarks conducted in Sept 2026.
                             </p>
                         </div>
-                        <div className="grid grid-cols-3 gap-4">
+                        <div className="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4">
                             <StatCard reviewer="Shiny" pfp="/reviewers/shiny.png" fps={800} oldFps={530} oldIcon="/faboptlogo.png" cpu="AMD Ryzen 7 2700X" gpu="AMD Radeon RX 580" ram="32 GB" />
                             <StatCard reviewer="vx1zuro" pfp="/reviewers/vx1zuro.png" fps={280} oldFps={200} oldIcon="/lunarlogo.png" cpu="Intel Core Ultra 7 155H" gpu="Integrated" ram="16 GB" />
                             <StatCard reviewer="oiupoyt" pfp="/reviewers/oiupoyt.png" fps={230} oldFps={100} oldIcon="/lunarlogo.png" cpu="AMD Ryzen 5 3500U" gpu="AMD Radeon Vega 8" ram="8 GB" />
