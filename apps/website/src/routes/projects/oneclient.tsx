@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useLayoutEffect, useRef, useState } from 'react';
-import DownloadDropdown, { fallbackRelease, getDownloads, modpackUrl } from '#/components/DownloadDropdown';
+import DownloadDropdown, { fallbackRelease, getDownloads, modpackUrl, prismGuideUrl } from '#/components/DownloadDropdown';
 import InfoCard from '#/components/InfoCard';
 import BagIcon from '#/components/icons/Bag';
 import ChecklistIcon from '#/components/icons/Checklist';
@@ -148,6 +148,13 @@ function Oneclient() {
                                 className="text-white/90 light:text-black/90 underline decoration-white/30 light:decoration-black/30 hover:decoration-white light:hover:decoration-black underline-offset-4 duration-300"
                             >
                                 Modrinth modpack
+                            </a>{' '}
+                            or as a{' '}
+                            <a
+                                href={prismGuideUrl}
+                                className="text-white/90 light:text-black/90 underline decoration-white/30 light:decoration-black/30 hover:decoration-white light:hover:decoration-black underline-offset-4 duration-300"
+                            >
+                                Prism Launcher instance
                             </a>
                         </p>
                     </div>

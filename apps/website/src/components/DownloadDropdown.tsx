@@ -42,6 +42,10 @@ export const latestReleaseUrl = `https://github.com/${repo}/releases/latest`;
 
 export const modpackUrl = 'https://modrinth.com/modpack/oneclient-modpack';
 
+export const prismInstanceUrl = 'https://data-v2.polyfrost.org/oneclient/bundles/generated/oneclient-1.8.9-ornithe-multimc.zip';
+
+export const prismGuideUrl = '/projects/oneclient/prism';
+
 const formats: Record<Format, OS> = {
     exe: 'windows',
     msi: 'windows',
@@ -114,6 +118,11 @@ const extras: Download[] = [
         title: 'Modrinth Modpack',
         fileName: 'oneclient-modpack',
         url: modpackUrl,
+    },
+    {
+        title: 'Prism Launcher (1.8.9)',
+        fileName: 'oneclient-1.8.9-ornithe-multimc.zip',
+        url: prismGuideUrl,
     },
     {
         title: 'AUR (oneclient-bin)',
