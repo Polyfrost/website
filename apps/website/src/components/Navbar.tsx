@@ -1,5 +1,6 @@
 import { useTheme } from 'next-themes';
 import { useState } from 'react';
+import { useNavigate } from '@tanstack/react-router';
 import Button from './Button';
 import BurgerIcon from './icons/Burger';
 import NightIcon from './icons/Night';
@@ -18,6 +19,7 @@ import { latestReleaseUrl, type Download } from './DownloadDropdown';
 export default function Navbar({ atTop, featured }: { atTop: boolean; featured?: Download }) {
     const [extended, setExtended] = useState(false);
     const { resolvedTheme, setTheme } = useTheme();
+    const navigate = useNavigate();
 
     const toggleTheme = () => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
 
@@ -29,6 +31,8 @@ export default function Navbar({ atTop, featured }: { atTop: boolean; featured?:
                 top: elementPosition - header,
                 behavior: 'smooth',
             });
+        } else {
+            navigate({ to: '/projects/oneclient', hash: id, hashScrollIntoView: false }).then(() => requestAnimationFrame(() => handleClickScroll(id, header)));
         }
     };
 

@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, Link } from '@tanstack/react-router';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useLayoutEffect, useRef, useState } from 'react';
@@ -66,6 +66,7 @@ const getMods = createServerFn({ method: 'GET' }).handler(async () => {
 
 export const Route = createFileRoute('/projects/oneclient')({
     component: Oneclient,
+    staleTime: Infinity,
     loader: () =>
         Promise.all([getDownloads().catch(() => fallbackRelease), getMods().catch(() => noMods)]).then(([downloads, mods]) => ({
             downloads,
@@ -150,12 +151,12 @@ function Oneclient() {
                                 Modrinth modpack
                             </a>{' '}
                             (1.21.1+) or{' '}
-                            <a
-                                href={prismGuideUrl}
+                            <Link
+                                to={prismGuideUrl}
                                 className="text-white/90 light:text-black/90 underline decoration-white/30 light:decoration-black/30 hover:decoration-white light:hover:decoration-black underline-offset-4 duration-300"
                             >
                                 Prism instance
-                            </a>{' '}
+                            </Link>{' '}
                             (1.8.9)
                         </p>
                     </div>
