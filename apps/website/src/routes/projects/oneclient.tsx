@@ -149,13 +149,14 @@ function Oneclient() {
                             >
                                 Modrinth modpack
                             </a>{' '}
-                            or as a{' '}
+                            (1.21.1+) or{' '}
                             <a
                                 href={prismGuideUrl}
                                 className="text-white/90 light:text-black/90 underline decoration-white/30 light:decoration-black/30 hover:decoration-white light:hover:decoration-black underline-offset-4 duration-300"
                             >
-                                Prism Launcher instance
-                            </a>
+                                Prism instance
+                            </a>{' '}
+                            (1.8.9)
                         </p>
                     </div>
                     <div className="perspective-normal transform-3d animate-hover max-w-5xl">
