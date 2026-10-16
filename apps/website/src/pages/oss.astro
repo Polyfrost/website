@@ -1,0 +1,148 @@
+---
+import Button from '@components/base/Button.astro';
+import Header from '@components/base/Header.astro';
+import Paragraph from '@components/base/Paragraph.astro';
+import Section from '@components/base/Section.astro';
+import Layout from '@layouts/Layout.astro';
+import { Code } from 'astro:components';
+import configConst from '~/utils/site-info';
+
+// Left will be the only visible code block on small screens
+const leftCodeBlock = `public class MyConfig extends Config {
+
+	@Switch(
+		name = "Sub Switch",
+		category = "General"
+	)
+	public static boolean subSwitch = false;
+
+	@Dropdown(
+		name = "Sub Dropdown",
+		category = "General"
+	)
+	public static int subSwitch = 0;
+
+	@DualOption(
+		name = "Sub Dual Option",
+		category = "General"
+	)
+	public static int subDualOption = 0;
+
+	public MyConfig() {
+		super(new Mod("My Mod", ModType.UTIL_QOL), "config.json");
+		addDependency("subSwitch", () -> {
+			// Do stuff here
+		});
+	}
+}`;
+
+const rightCodeBlock = leftCodeBlock;
+---
+
+<Layout description="Our unwavering commitment to open source" title="Open Source">
+	<Section class="relative h-screen flex-row items-center justify-center md:min-h-[600px]" maxWidth="1920px" wFull>
+		<div class="codeblock_container codeblock_left -left-12">
+			<Code code={leftCodeBlock} lang="java" theme="github-light" />
+		</div>
+		<div class="flex flex-col items-center justify-center gap-y-4">
+			<Header align="center" class="max-w-[600px] text-navy-peony" size="xxl"> Open Source, Forever </Header>
+			<Paragraph class="max-w-[400px] text-center text-navy-peony lg:max-w-[600px]">
+				We believe it is the right of the user and developer to know what code they are trusting to run behind the scenes.
+			</Paragraph>
+			<Button href={configConst.socials.github} iconLeft="github" style="secondary">GitHub </Button>
+		</div>
+		<div class="codeblock_container -right-12 after:-scale-x-125">
+			<Code code={rightCodeBlock} lang="java" theme="github-light" />
+		</div>
+	</Section>
+
+	<Section colReverse={false} tabindex="0">
+		<div class="flex justify-center" slot="left">
+			<img alt="stuff" class="w-64 max-sm:w-full" src="/media/oss/page_media_1.svg" />
+		</div>
+
+		<div slot="right">
+			<Header class="text-navy-peony" size="xl"> Rooted from the developers </Header>
+			<Paragraph class="max-w-[500px] text-gray-400" size="md">
+				Our developers learned and built on open source for years. Many even made their own contributions on our projects before joining our team.
+			</Paragraph>
+		</div>
+	</Section>
+
+	<Section tabindex="0">
+		<div slot="left">
+			<Header class="text-navy-peony" size="xl"> Makes development faster </Header>
+			<Paragraph class="max-w-[500px] text-gray-400" size="md">
+				Open source lets us join forces with other developers in our community. This means new features and bug fixes come much faster, and way better.
+			</Paragraph>
+		</div>
+
+		<div class="flex justify-center" slot="right">
+			<img alt="stuff" class="w-64 max-sm:w-full" src="/media/oss/page_media_2.svg" />
+		</div>
+	</Section>
+
+	<Section colReverse={false} tabindex="0">
+		<div class="flex justify-center" slot="left">
+			<img alt="stuff" class="w-64 max-sm:w-full" src="/media/oss/page_media_3.svg" />
+		</div>
+
+		<div slot="right">
+			<Header class="text-navy-peony" size="xl"> Makes our code safer </Header>
+			<Paragraph class="max-w-[500px] text-gray-400" size="md">
+				There's no definite way to prevent anything from becoming malicious. But, open sourcing our code brings extra eyes to catch, and fix exploits before they’re abused.
+			</Paragraph>
+		</div>
+	</Section>
+
+	<Section class="flex-col items-center justify-center" wrapperClass="flex justify-center items-center mb-40">
+		<div class="relative flex flex-col items-center justify-center gap-y-1">
+			<Header class="text-center text-header-page text-navy-peony" size="xl"> Contribute to our GitHub! </Header>
+			<div class="flex flex-row items-center justify-center gap-x-2">
+				<Button href={configConst.socials.github} iconLeft="github" style="secondary">GitHub </Button>
+			</div>
+		</div>
+	</Section>
+</Layout>
+
+<style lang="postcss">
+	.codeblock_container {
+		position: absolute;
+		max-width: 20vw;
+		@apply max-md:hidden;
+
+		&.codeblock_left {
+			@media not all and (min-width: 768px) {
+				display: block;
+				left: 50%;
+				transform: translate(-50%, 0);
+				max-width: none;
+				z-index: -1;
+				filter: blur(2.5px);
+			}
+		}
+
+		& :global(.astro-code) {
+			background-color: transparent !important;
+			border: none !important;
+			overflow: hidden !important;
+			position: relative;
+			border-radius: 0 !important;
+			opacity: 0.7;
+
+			& :global(.line::before) {
+				content: '';
+				display: none;
+			}
+		}
+
+		&::after {
+			content: '';
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			top: 0;
+			background-image: linear-gradient(to right, rgba(255, 255, 255, 0), theme('colors.gray.50 / 75%') 90%, theme('colors.gray.50') 100%);
+		}
+	}
+</style>

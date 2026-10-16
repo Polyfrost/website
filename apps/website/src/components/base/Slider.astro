@@ -1,0 +1,64 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+interface Props extends HTMLAttributes<'div'> {
+	dir?: string;
+	wrapperClass?: string;
+	childrenNum: number;
+	childrenSize?: string;
+	speed?: string;
+}
+
+const { dir = 'left', wrapperClass = '', childrenNum, childrenSize = '256px', speed = '25s' } = Astro.props;
+---
+
+<div
+	class={`slider w-full ${dir === 'right' ? 'reverse' : ''}  ${wrapperClass}`}
+>
+	<div class="wrapper flex flex-row gap-2.5">
+		<slot class="content" />
+		<slot class="content" />
+	</div>
+</div>
+
+<!--
+	credit to modrinth's implementation! here is their CSS code:
+	https://github.com/modrinth/knossos/blob/d6ba3f3adfd8f52b85f83e53660d3d87cd0bc9ea/pages/index.vue#L620-L675
+	oh and since theirs is in AGPL, please note that this codeblock is also AGPL
+-->
+<style define:vars={{ childrenNum, childrenSize, speed }} lang="scss">
+	.slider {
+		.wrapper {
+			animation: var(--speed) linear infinite slide;
+			@media (prefers-reduced-motion) {
+				animation: none;
+			}
+			@keyframes slide {
+				from {
+					transform: translateX(0);
+				}
+				to {
+					transform: translateX(calc((var(--childrenSize) + 10px) * -1 * var(--childrenNum)));
+				}
+			}
+		}
+
+		/**
+		&:hover > .wrapper, &.reverse:hover > .wrapper {
+			animation-play-state: paused;
+		}
+		*/
+
+		&.reverse > .wrapper {
+			animation: var(--speed) linear infinite slide-reverse;
+			@keyframes slide-reverse {
+				from {
+					transform: translateX(calc((var(--childrenSize) + 10px) * -1 * var(--childrenNum)));
+				}
+				to {
+					transform: translateX(0);
+				}
+			}
+		}
+	}
+</style>

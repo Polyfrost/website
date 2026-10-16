@@ -1,0 +1,13 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+Contact: mailto:security@polyfrost.org
+Expires:
+Encryption: https://polyfrost.org/.gpg/admins.gpg
+Preferred-Languages: en
+Canonical: https://polyfrost.org/.well-known/security.txt
+Policy: https://polyfrost.org/legal/security
+-----BEGIN PGP SIGNATURE-----
+
+
+-----END PGP SIGNATURE-----

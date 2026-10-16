@@ -1,0 +1,17 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import type { Icon as IconType } from 'virtual:astro-icon';
+import { Icon } from 'astro-icon/components';
+
+interface Props extends HTMLAttributes<'div'> {
+	icon: IconType;
+	text?: string;
+}
+
+const { icon, text = 'Hiiii', ...rest } = Astro.props;
+---
+
+<div {...rest} class="w-[256px] shrink-0 rounded-xl bg-primary-100">
+	<Icon class="mx-auto my-[28px] text-white" name={icon} size={48} />
+	<p class="mx-auto rounded-b-xl bg-primary-200 py-[7px] pl-[12px] pr-[32px] text-[14px] text-white">{text}</p>
+</div>

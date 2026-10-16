@@ -1,0 +1,20 @@
+---
+import Header from '@components/base/Header.astro';
+import Paragraph from '@components/base/Paragraph.astro';
+import Section from '@components/base/Section.astro';
+import Layout from '@layouts/Layout.astro';
+
+const policy = `
+Currently, we do not offer any services that require a intellectual property policy!
+This will be updated in the future, if necessary.
+`.trim();
+---
+
+<Layout title="Intellectual Property Policy">
+	<Section class="items-start justify-center pt-32" hFull>
+		<div class="w-full flex flex-col items-start justify-start text-navy-peony">
+			<Header>Intellectual Property Policy</Header>
+			<Paragraph class="whitespace-pre-line">{policy}</Paragraph>
+		</div>
+	</Section>
+</Layout>
