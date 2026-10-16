@@ -1,0 +1,24 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+const sizes = {
+	xs: 'text-xs',
+	sm: 'text-sm',
+	md: 'text-base',
+	lg: 'text-lg',
+	xl: 'text-xl',
+};
+
+interface Props extends HTMLAttributes<'p'> {
+	text?: string;
+	size?: keyof typeof sizes;
+}
+
+const { text = '', size = 'md', ...props } = Astro.props;
+
+const className = [sizes[size], props.class].join(' ');
+---
+
+<p class={className} {...props}>
+	{text || <slot />}
+</p>

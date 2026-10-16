@@ -1,0 +1,55 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+interface Props extends HTMLAttributes<'section'> {
+	maxWidth?: 'none' | String;
+	colReverse?: boolean;
+	wrapperClass?: string;
+	childClass?: string;
+	wFull?: boolean;
+	hFull?: boolean;
+}
+
+const {
+	maxWidth = '1024px',
+	colReverse = true,
+	wrapperClass = '',
+	childClass = '',
+	wFull = true,
+	hFull = false,
+	...props
+} = Astro.props;
+
+const twoColumn = Astro.slots.has('left') || Astro.slots.has('right');
+
+const twoColumnClasses = ` ${maxWidth === 'none' ? 'justify-center' : 'justify-center lg:justify-between'}
+	${colReverse ? 'flex-col-reverse' : 'flex-col'} lg:flex-row items-center`;
+
+const className = `max-w-[${maxWidth}] ${hFull ? 'min-h-screen' : 'h-auto'}  ${wFull ? 'w-full' : `w-[${maxWidth}]`} flex gap-x-20 gap-y-4 px-5 xl:px-0${twoColumn ? twoColumnClasses : ''}${props.class ? ` ${props.class}` : ''}`;
+const childClassName
+	= 'relative w-full flex flex-col items-center text-center md:w-auto md:items-start md:text-left';
+---
+
+<section
+	class={`w-full flex justify-center outline-none first:max-md:mt-24 ${wrapperClass ?? ''}`}
+>
+	<div class={className} {...props}>
+		{
+			twoColumn
+? (
+				<>
+					<div class={`${childClassName}  ${childClass ?? ''}`}>
+						<slot name="left" />
+					</div>
+
+					<div class={`${childClassName}  ${childClass ?? ''}`}>
+						<slot name="right" />
+					</div>
+				</>
+			)
+: (
+				<slot />
+			)
+		}
+	</div>
+</section>

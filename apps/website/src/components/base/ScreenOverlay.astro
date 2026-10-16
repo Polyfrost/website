@@ -1,0 +1,13 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+interface Props extends HTMLAttributes<'div'> {
+	zIndex?: number;
+}
+
+const { zIndex = 0, ...rest } = Astro.props;
+---
+
+<div class="pointer-events-none absolute left-0 top-0">
+	<div class={`z-[ fixed h-screen w-screen opacity-0 transition-opacity${zIndex}] bg-black/30 ${rest.class}`} {...rest}></div>
+</div>

@@ -1,0 +1,19 @@
+---
+import Header from '@components/base/Header.astro';
+import Paragraph from '@components/base/Paragraph.astro';
+import Section from '@components/base/Section.astro';
+import Layout from '@layouts/Layout.astro';
+
+const policy = `
+Branding...
+`.trim();
+---
+
+<Layout title="Branding Policy">
+	<Section class="items-start justify-center pt-32" hFull>
+		<div class="w-full flex flex-col items-start justify-start text-navy-peony">
+			<Header>Branding Policy</Header>
+			<Paragraph class="whitespace-pre-line">{policy}</Paragraph>
+		</div>
+	</Section>
+</Layout>

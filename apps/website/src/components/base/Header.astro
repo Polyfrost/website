@@ -1,0 +1,82 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+const sizes = {
+	xxl: 'h1',
+	xl: 'h2',
+	lg: 'h2',
+	md: 'h3',
+	sm: 'h4',
+	xs: 'h5',
+	xxs: 'h6',
+};
+
+type Headers = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+
+interface Props extends HTMLAttributes<Headers> {
+	size?: keyof typeof sizes;
+	align?: 'left' | 'center' | 'right' | 'inherit';
+	inheritSize?: boolean;
+}
+
+const { size = 'lg', align = 'inherit', inheritSize = false, class: className, ...attr } = Astro.props;
+const Element = sizes[size] as any;
+---
+
+<Element
+	{...attr}
+	class:list={[
+		className,
+		{
+			'header': !inheritSize,
+			[`text-${align}`]: align !== 'inherit',
+			'page-header': size === 'xxl' || size === 'xl',
+		},
+	]}
+>
+	<slot />
+</Element>
+
+<style lang="scss">
+	h1.header {
+		@apply text-header-lg font-semibold;
+	}
+
+	h2.header {
+		@apply text-header font-semibold;
+	}
+
+	h3.header {
+		@apply text-header-sm font-semibold;
+	}
+
+	h4.header {
+		@apply text-body-lg font-medium;
+	}
+
+	h5.header {
+		@apply text-body font-medium;
+	}
+
+	h6.header {
+		@apply text-body-sm font-medium;
+	}
+
+	h1, h2 {
+		&.page-header {
+			@apply text-header-page;
+		}
+	}
+
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		& :global(b) {
+			@apply text-blue-500;
+			font-weight: inherit;
+		}
+	}
+</style>

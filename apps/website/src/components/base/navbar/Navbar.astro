@@ -1,0 +1,36 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import config from '@utils/site-info';
+import NavbarElement from '../navbar/NavbarElement.astro';
+
+interface Props extends HTMLAttributes<'div'> {
+	dark?: boolean;
+}
+const props = Astro.props;
+---
+
+<div
+	{...props}
+	class="absolute z-[9999] h-screen max-h-[110px] w-full flex flex-row justify-center px-3 text-[16px]"
+>
+	<nav
+		class="max-w-[1024px] w-full flex flex-col items-center justify-between md:flex-row"
+	>
+		<ul class="flex flex-row justify-start gap-4 max-md:mt-4">
+			{
+				config.navbar.left.map((element, index) => (
+					<NavbarElement dark={props.dark} {element} {index} />
+				))
+			}
+		</ul>
+		<ul
+			class="flex flex-row flex-wrap justify-evenly max-sm:w-full md:justify-end sm:gap-4"
+		>
+			{
+				config.navbar.right.map((element, index) => (
+					<NavbarElement dark={props.dark} {element} {index} />
+				))
+			}
+		</ul>
+	</nav>
+</div>

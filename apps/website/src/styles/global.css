@@ -1,0 +1,85 @@
+* {
+	font-family: 'Poppins', sans-serif;
+	-webkit-tap-highlight-color: transparent;
+}
+
+@layer base {
+	:focus-visible {
+		@apply outline-none ring ring-blue-500;
+	}
+
+	/* Has to be split because css parser moment */
+	::-moz-selection {
+		@apply bg-blue-500/20;
+	}
+
+	::selection {
+		@apply bg-blue-500/20;
+	}
+
+	html,
+	body {
+		@apply text-[15px] md:text-[16px] lg:text-[19px] leading-6;
+	}
+
+	a {
+		-webkit-user-drag: none;
+	}
+}
+
+/* [data-scroll-container], [data-scroll-section] {
+	transform-style: preserve-3d;
+	will-change: transform;
+	perspective: 1px;
+} */
+
+main {
+	@apply overflow-x-hidden;
+}
+
+/* Codeblocks */
+.astro-code {
+	padding: 10px;
+	border-radius: 16px;
+	border: 1px solid rgba(65, 74, 88, 1);
+	width: 100%;
+	line-height: 18px;
+}
+
+.astro-code code {
+	white-space: pre-wrap;
+	padding: 10px;
+	padding-bottom: 0;
+	color: #546e7a;
+}
+
+.astro-code code::before {
+	counter-reset: listing;
+}
+
+.astro-code code span {
+	font-family: 'Roboto Mono', monospace !important;
+}
+
+.astro-code code span.line {
+	counter-increment: listing;
+	text-align: left;
+	float: left;
+	clear: left;
+	font-size: 13px;
+	white-space: pre;
+}
+
+.astro-code code span.line::before {
+	content: counter(listing) ' ';
+	display: inline-block;
+	float: left;
+	width: 2em;
+	padding: 0;
+	margin-left: auto;
+	margin-right: 1ch;
+	/* margin-right: 10px; */
+	text-align: right;
+	font-family: 'Roboto Mono', monospace !important;
+	font-size: 13px;
+}

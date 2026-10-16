@@ -1,0 +1,48 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+interface Props extends HTMLAttributes<'div'> {}
+
+const { ...attr } = Astro.props;
+---
+
+<div {...attr}>
+	<slot />
+</div>
+
+<style>
+	@media (hover: hover) {
+		div {
+		}
+
+		div::-webkit-scrollbar {
+			display: block;
+			width: 5px;
+		}
+
+		div::-webkit-scrollbar:hover {
+			opacity: 1;
+		}
+
+		div::-webkit-scrollbar-button {
+			display: none;
+		}
+
+		div::-webkit-scrollbar-track {
+			background-color: #00000000;
+		}
+
+		div::-webkit-scrollbar-track-piece {
+			background-color: #00000000;
+		}
+
+		div::-webkit-scrollbar-thumb {
+			background-color: #00000000;
+			border-radius: 24px;
+		}
+
+		div::-webkit-scrollbar-thumb:hover {
+			background-color: #00000040;
+		}
+	}
+</style>

@@ -1,0 +1,64 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import type { Icon as IconType } from 'virtual:astro-icon';
+import { Icon } from 'astro-icon/components';
+
+const styles = {
+	// TODO: adjust active / disabled colors
+	primary: 'bg-blue-500 text-white hover:bg-blue-400 active:bg-blue-600 disabled:bg-blue-800 disabled:text-white-1/4',
+	secondary: 'bg-blue-20 text-blue-60 border-[1px] border-blue-30 hover:bg-blue-200 active:bg-blue-300 disabled:bg-blue-50 disabled:text-blue-200',
+	ghost: 'bg-transparent text-blue-500 hover:bg-blue-20 active:bg-blue-30 disabled:bg-transparent disabled:text-blue-200',
+};
+
+const sizes = {
+	sm: 'px-4 py-2 text-sm',
+	md: 'px-5 py-3 text-md',
+	lg: 'px-6 py-3 text-lg rounded-2xl',
+};
+
+const iconSize = {
+	sm: 17,
+	md: 20,
+	lg: 24,
+};
+
+interface Props extends HTMLAttributes<'button'> {
+	style?: keyof typeof styles;
+	size?: keyof typeof sizes;
+	text?: string;
+	iconLeft?: IconType;
+	iconRight?: IconType;
+	href?: string;
+}
+
+const { style = 'primary', size = 'md', text = '', iconLeft = '', iconRight = '', ...rest } = Astro.props;
+
+const className = [
+	'flex flex-row justify-center items-center text-center focus-visible:ring-offset-4 focus-visible:outline-offset-4',
+	'rounded-xl font-medium',
+	styles[style],
+	sizes[size],
+	'transition-colors',
+	rest.class,
+].join(' ');
+
+const Element = rest.href ? 'a' : 'button';
+---
+
+<Element {...rest} class={className}>
+	{
+		iconLeft && (
+			<span class="mr-2">
+				<Icon name={iconLeft} size={iconSize[size]} />
+			</span>
+		)
+	}
+	{text || <slot />}
+	{
+		iconRight && (
+			<span class="ml-2">
+				<Icon name={iconRight} size={iconSize[size]} />
+			</span>
+		)
+	}
+</Element>
