@@ -42,6 +42,10 @@ export const latestReleaseUrl = `https://github.com/${repo}/releases/latest`;
 
 export const modpackUrl = 'https://modrinth.com/modpack/oneclient-modpack';
 
+export const prismInstanceUrl = 'https://data-v2.polyfrost.org/oneclient/bundles/generated/oneclient-1.8.9-ornithe-multimc.zip';
+
+export const prismGuideUrl = '/projects/oneclient/prism';
+
 const formats: Record<Format, OS> = {
     exe: 'windows',
     msi: 'windows',
@@ -111,9 +115,14 @@ const formatLabels: Record<Format, string> = {
 // Not tied to a release asset, so these are always listed and never auto-selected as the featured download.
 const extras: Download[] = [
     {
-        title: 'Modrinth Modpack',
+        title: 'Modrinth Modpack (1.21.1+)',
         fileName: 'oneclient-modpack',
         url: modpackUrl,
+    },
+    {
+        title: 'Prism Launcher (1.8.9)',
+        fileName: 'oneclient-1.8.9-ornithe-multimc.zip',
+        url: prismGuideUrl,
     },
     {
         title: 'AUR (oneclient-bin)',
@@ -299,7 +308,7 @@ export default function DownloadDropdown({
                 <div className="absolute top-full left-0 w-full pt-2 group-hover:block hidden">
                     <div className="flex flex-col bg-primary light:bg-primary-light rounded-xl border border-white/10 light:border-white/15 overflow-hidden">
                         {downloads.map((download, index) => (
-                            <a key={index} href={download.url} target="_blank" rel="noreferrer" className="text-center py-1.5 px-2 hover:brightness-110 bg-primary/50 light:bg-primary-light/50 duration-300">
+                            <a key={index} href={download.url} target={download.url.startsWith('/') ? undefined : '_blank'} rel="noreferrer" className="text-center py-1.5 px-2 hover:brightness-110 bg-primary/50 light:bg-primary-light/50 duration-300">
                                 {download.title}
                             </a>
                         ))}

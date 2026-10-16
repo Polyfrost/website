@@ -10,33 +10,43 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ProjectsOneclientRouteImport } from './routes/projects/oneclient'
+import { Route as ProjectsOneclientPrismRouteImport } from './routes/projects/oneclient_.prism'
 
 const ProjectsOneclientRoute = ProjectsOneclientRouteImport.update({
   id: '/projects/oneclient',
   path: '/projects/oneclient',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProjectsOneclientPrismRoute = ProjectsOneclientPrismRouteImport.update({
+  id: '/projects/oneclient_/prism',
+  path: '/projects/oneclient/prism',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/projects/oneclient': typeof ProjectsOneclientRoute
+  '/projects/oneclient/prism': typeof ProjectsOneclientPrismRoute
 }
 export interface FileRoutesByTo {
   '/projects/oneclient': typeof ProjectsOneclientRoute
+  '/projects/oneclient/prism': typeof ProjectsOneclientPrismRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/projects/oneclient': typeof ProjectsOneclientRoute
+  '/projects/oneclient_/prism': typeof ProjectsOneclientPrismRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/projects/oneclient'
+  fullPaths: '/projects/oneclient' | '/projects/oneclient/prism'
   fileRoutesByTo: FileRoutesByTo
-  to: '/projects/oneclient'
-  id: '__root__' | '/projects/oneclient'
+  to: '/projects/oneclient' | '/projects/oneclient/prism'
+  id: '__root__' | '/projects/oneclient' | '/projects/oneclient_/prism'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   ProjectsOneclientRoute: typeof ProjectsOneclientRoute
+  ProjectsOneclientPrismRoute: typeof ProjectsOneclientPrismRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +58,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProjectsOneclientRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/projects/oneclient_/prism': {
+      id: '/projects/oneclient_/prism'
+      path: '/projects/oneclient/prism'
+      fullPath: '/projects/oneclient/prism'
+      preLoaderRoute: typeof ProjectsOneclientPrismRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   ProjectsOneclientRoute: ProjectsOneclientRoute,
+  ProjectsOneclientPrismRoute: ProjectsOneclientPrismRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

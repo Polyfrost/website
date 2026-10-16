@@ -1,8 +1,8 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, Link } from '@tanstack/react-router';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useLayoutEffect, useRef, useState } from 'react';
-import DownloadDropdown, { fallbackRelease, getDownloads, modpackUrl } from '#/components/DownloadDropdown';
+import DownloadDropdown, { fallbackRelease, getDownloads, modpackUrl, prismGuideUrl } from '#/components/DownloadDropdown';
 import InfoCard from '#/components/InfoCard';
 import BagIcon from '#/components/icons/Bag';
 import ChecklistIcon from '#/components/icons/Checklist';
@@ -66,6 +66,7 @@ const getMods = createServerFn({ method: 'GET' }).handler(async () => {
 
 export const Route = createFileRoute('/projects/oneclient')({
     component: Oneclient,
+    staleTime: Infinity,
     loader: () =>
         Promise.all([getDownloads().catch(() => fallbackRelease), getMods().catch(() => noMods)]).then(([downloads, mods]) => ({
             downloads,
@@ -148,7 +149,15 @@ function Oneclient() {
                                 className="text-white/90 light:text-black/90 underline decoration-white/30 light:decoration-black/30 hover:decoration-white light:hover:decoration-black underline-offset-4 duration-300"
                             >
                                 Modrinth modpack
-                            </a>
+                            </a>{' '}
+                            (1.21.1+) or{' '}
+                            <Link
+                                to={prismGuideUrl}
+                                className="text-white/90 light:text-black/90 underline decoration-white/30 light:decoration-black/30 hover:decoration-white light:hover:decoration-black underline-offset-4 duration-300"
+                            >
+                                Prism instance
+                            </Link>{' '}
+                            (1.8.9)
                         </p>
                     </div>
                     <div className="perspective-normal transform-3d animate-hover max-w-5xl">
