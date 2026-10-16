@@ -27,7 +27,7 @@ mkPnpmPackage {
                 let
                     baseName = baseNameOf (toString name);
                 in
-                !(builtins.elem baseName [ "dist" "node_modules" ".astro" ]);
+                !(builtins.elem baseName [ "dist" "node_modules" ".astro" ".output" ]);
         };
         filter = lib.sources.cleanSourceFilter;
     };
@@ -43,6 +43,9 @@ mkPnpmPackage {
         pnpm website build
     '';
 
+    # Point directly to the Nitro output directory relative to the workspace root
+    distDir = "apps/website/.output";
+
     buildEnv = {
         ASTRO_TELEMETRY_DISABLED = "1";
     };
@@ -51,22 +54,13 @@ mkPnpmPackage {
         makeBinaryWrapper
     ];
 
-    installPhase = ''
-        runHook preInstall
+    # Wrap the Nitro server entrypoint after pnpm2nix moves distDir into $out
+    postInstall = ''
+        mkdir -p "$out/bin"
 
-        mkdir -p "$out"/{bin,share}
-
-        # Copy all the astro files to the output
-        cp -r ./apps/website/dist/* "$out"/share/
-
-        # Make a wrapper command to start the server
-        makeWrapper ${lib.getExe nodejs-slim} "$out"/bin/start-server \
+        makeWrapper ${lib.getExe nodejs-slim} "$out/bin/start-server" \
              --inherit-argv0 \
-             --add-flags $out/share/server/entry.mjs
-
-        # chmod +x "$out"/bin/start-server
-
-        runHook postInstall
+             --add-flags "$out/server/index.mjs"
     '';
 
     meta = {
