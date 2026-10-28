@@ -1,0 +1,138 @@
+---
+import Button from '@components/base/Button.astro';
+import Header from '@components/base/Header.astro';
+import Paragraph from '@components/base/Paragraph.astro';
+import Section from '@components/base/Section.astro';
+import Layout from '@layouts/Layout.astro';
+import { PLUS_BACKEND_URL } from '@utils/plus';
+
+export const prerender = false;
+
+const ALPHABET = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
+const LOADERS: Record<string, string> = {
+	minecraft: 'Vanilla',
+	Forge: 'Forge',
+	NeoForge: 'NeoForge',
+	Quilt: 'Quilt',
+	Fabric: 'Fabric',
+	Ornithe: 'Ornithe',
+};
+
+interface SharedInstance {
+	meta: {
+		name: string;
+		mc_version: string;
+		mc_loader: string;
+	};
+	expires_at?: string | null;
+}
+
+function normalize(raw: string): string | null {
+	const code = raw
+		.replace(/[-\s]/g, '')
+		.toUpperCase()
+		.replace(/O/g, '0')
+		.replace(/[IL]/g, '1');
+	if (code.length !== 8 || [...code].some(ch => !ALPHABET.includes(ch)))
+		return null;
+	return code;
+}
+
+const code = normalize(Astro.params.code ?? '');
+let state: 'found' | 'missing' | 'gone' | 'error' = 'missing';
+let instance: SharedInstance | null = null;
+
+if (code) {
+	try {
+		const response = await fetch(`${PLUS_BACKEND_URL}/v1/oneclient/shares/${code}`, {
+			headers: { Accept: 'application/json' },
+			signal: AbortSignal.timeout(5000),
+		});
+		if (response.ok) {
+			instance = await response.json() as SharedInstance;
+			state = 'found';
+		}
+		else if (response.status === 410) {
+			state = 'gone';
+		}
+		else if (response.status !== 404) {
+			state = 'error';
+		}
+	}
+	catch {
+		state = 'error';
+	}
+}
+
+if (state === 'missing' || state === 'gone')
+	Astro.response.status = state === 'gone' ? 410 : 404;
+Astro.response.headers.set('Cache-Control', 'no-store');
+Astro.response.headers.set('X-Robots-Tag', 'noindex');
+
+const pretty = code ? `${code.slice(0, 4)}-${code.slice(4)}` : '';
+const appLink = code ? `oneclient://share/${code}` : '';
+const name = instance?.meta.name ?? 'A shared instance';
+const loader = instance ? (LOADERS[instance.meta.mc_loader] ?? instance.meta.mc_loader) : '';
+const expires = instance?.expires_at ? new Date(instance.expires_at) : null;
+const title = state === 'found' ? `${name} on OneClient` : 'Shared instance';
+---
+
+<Layout description="Open a OneClient instance someone shared with you." title={title}>
+	<Section class="flex-col items-center justify-center py-28 text-center lg:py-36" wrapperClass="min-h-screen">
+		<div class="mx-auto max-w-2xl w-full flex flex-col items-center gap-y-4">
+			{state === 'found' && (
+				<>
+					<span class="rounded-full bg-blue-50 px-4 py-1 text-sm text-blue-600 font-medium">Shared OneClient instance</span>
+					<Header align="center" class="break-words text-navy-peony tracking-tight" size="xxl">{name}</Header>
+					<Paragraph class="text-lightslategray" size="lg">
+						Minecraft {instance?.meta.mc_version} · {loader}
+					</Paragraph>
+					<div class="mt-4 flex flex-row flex-wrap items-center justify-center gap-4">
+						<Button href={appLink} iconLeft="download" size="lg">Open in OneClient</Button>
+						<Button href="/projects/oneclient" size="lg" style="secondary">Get OneClient</Button>
+					</div>
+					<Paragraph class="mt-6 text-lightslategray" size="sm">
+						Nothing happened? Open OneClient, choose to import a shared instance, and enter the code
+						<span class="font-mono text-navy-peony font-semibold">{pretty}</span>.
+					</Paragraph>
+					{expires && (
+						<Paragraph class="text-lightslategray" size="sm">
+							This link works until {expires.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}.
+						</Paragraph>
+					)}
+				</>
+			)}
+
+			{state === 'gone' && (
+				<>
+					<Header align="center" class="text-navy-peony tracking-tight" size="xxl">This share has ended</Header>
+					<Paragraph class="text-lightslategray" size="lg">
+						The person who shared it stopped sharing, or the link expired. Ask them for a new one.
+					</Paragraph>
+				</>
+			)}
+
+			{state === 'missing' && (
+				<>
+					<Header align="center" class="text-navy-peony tracking-tight" size="xxl">No instance with that code</Header>
+					<Paragraph class="text-lightslategray" size="lg">
+						Check the link. Share codes look like ABCD-EFGH.
+					</Paragraph>
+				</>
+			)}
+
+			{state === 'error' && (
+				<>
+					<Header align="center" class="text-navy-peony tracking-tight" size="xxl">Shared instance</Header>
+					<Paragraph class="text-lightslategray" size="lg">
+						We couldn't load the details right now, but you can still open it in OneClient.
+					</Paragraph>
+					<div class="mt-4 flex flex-row flex-wrap items-center justify-center gap-4">
+						<Button href={appLink} iconLeft="download" size="lg">Open in OneClient</Button>
+						<Button href="/projects/oneclient" size="lg" style="secondary">Get OneClient</Button>
+					</div>
+				</>
+			)}
+		</div>
+	</Section>
+</Layout>
