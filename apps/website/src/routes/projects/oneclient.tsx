@@ -124,7 +124,7 @@ function Oneclient() {
                         The one client <span className="font-medium">you&apos;ll ever need.</span>
                     </h1>
                     <p className="sm:text-lg text-base font-light max-w-3xl text-center animate-enter" style={{ animationDelay: '0.2s' }}>
-                        OneClient ships the most bleeding edge mods, while being 100% open source and community driven.
+                        OneClient ships the most bleeding edge mods, while being <b>open source</b> and community driven.
                     </p>
                     <div className="flex flex-col items-center gap-4 sm:w-fit w-full">
                         <div className="flex sm:flex-row flex-col gap-4 items-center sm:w-fit w-full">
